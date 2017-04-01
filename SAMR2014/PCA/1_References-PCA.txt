@@ -1,0 +1,15 @@
+(Some) References:
+
+
+Abdi, H., & Williams, L.J. (2010). Principal component analysis. Wiley Interdisciplinary Reviews: Computational Statistics, 2, 433-459. 
+
+Abdi, H., & Valentin, D. (2007). Multiple correspondence analysis. In N.J. Salkind (Ed.): Encyclopedia of Measurement and Statistics. Thousand Oaks (CA): Sage. pp. 651-657. 
+
+Beaton, D., Chin Fatt C.R., & Abdi, H. (2014). An ExPosition of multivariate analysis with the Singular Value Decomposition in R. Computational Statistics & Data Analysis, 72, 176-189.
+
+Greenacre, M., & Blasius, J. (2006). Multiple Correspondence Analysis and Related Methods. CRC Press.
+
+Greenacre, M. J. (2007). Correspondence analysis in practice. CRC Press.
+
+
+Data simulated from: Pinkham, A.E., Sasson, N.J., Beaton, D., Abdi, H., Kohler, C.G., & Penn, D.L. (2012). Qualitatively distinct factors contribute to elevated rates of paranoia in autism and schizophrenia. Journal of Abnormal Psychology, 121, 767-777.

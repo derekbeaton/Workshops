@@ -1,0 +1,24 @@
+(Some) References:
+
+Data and notation:
+Abdi, H., Edelman, B., Valentin, D., & Dowling, W.J. (2009). Experimental Design and Analysis for Psychology. Oxford: Oxford University Press. http://utdallas.edu/~herve
+
+
+(Some) Data simulated from: Pinkham, A.E., Sasson, N.J., Beaton, D., Abdi, H., Kohler, C.G., & Penn, D.L. (2012). Qualitatively distinct factors contribute to elevated rates of paranoia in autism and schizophrenia. Journal of Abnormal Psychology, 121, 767-777.
+
+
+Other resources for when things get difficult:
+Fox, J., Weisberg, S. (2011). An R Companion to Applied Regression. Sage. http://socserv.socsci.mcmaster.ca/jfox/Books/Companion/
+
+Bates, D. (2005). Fitting linear mixed models in R. R news, 5(1), 27-30.
+Chicago. 
+
+Baayen, R. H., Davidson, D. J., & Bates, D. M. (2008). Mixed-effects modeling with crossed random effects for subjects and items. Journal of memory and language, 59(4), 390-412.
+
+
+
+Websites:
+# http://ww2.coastal.edu/kingw/statistics/R-tutorials/formulae.html
+# http://www.cookbook-r.com/Statistical_analysis/ANOVA/#mixed-design-anova
+# http://personality-project.org/r/r.anova.html
+# http://conjugateprior.org/2013/01/formulae-in-r-anova/
