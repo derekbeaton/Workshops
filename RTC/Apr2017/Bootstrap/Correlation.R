@@ -55,7 +55,7 @@ boot.indices.2 <- sample(nrow(PRICE.DATA),nrow(PRICE.DATA),replace=T)
 boot.2 <- PRICE.DATA[boot.indices.2,]	
 	
 dev.new()
-plot(boot.2,pch=20,asp=1,main=paste0("PERMUTED American Beer in CAD (355ml serving)\n r = ", round(cor(boot.2)[2,1],digits=3)),xlab="CAD: LCBO",ylab="CAD: TW",col="mediumorchid4",cex=2)
+plot(boot.2,pch=20,asp=1,main=paste0("BOOTSTRAPPED American Beer in CAD (355ml serving)\n r = ", round(cor(boot.2)[2,1],digits=3)),xlab="CAD: LCBO",ylab="CAD: TW",col="mediumorchid4",cex=2)
 text(boot.2,labels=rownames(boot.2),pos=3,cex=.65,col="mediumorchid4")
 
 
@@ -68,17 +68,21 @@ text(boot.2,labels=rownames(boot.2),pos=3,cex=.65,col="mediumorchid4")
 #########
 #############
 
-iters <- 1000
+iters <- 10000
 boot.rs <- vector("numeric",iters)
 for(i in 1:iters){
 	
 	boot.indices <- sample(nrow(PRICE.DATA),nrow(PRICE.DATA),replace=T)
 	boot.rs[i] <- cor(PRICE.DATA[boot.indices,])[2,1]
+	
+	if( (i%%250)	==0){
+		print(i)
+	}
 		
 }
 
 dev.new()
-hist(boot.rs,breaks=25,xlim=c(-1,1),border="white",col="mediumorchid4",main="Bootstrap Distribution",xlab="Bootstrapped correlations")
+hist(boot.rs,breaks=25,xlim=c(.5,1),border="white",col="mediumorchid4",main="Bootstrap Distribution",xlab="Bootstrapped correlations")
 
 
 ## First, we compute the confidence intervals (as percentiles)
@@ -92,7 +96,7 @@ abline(v= cor.test.res$estimate,col="olivedrab3",lty=1,lwd=1.75)
 
 # Let's zoom in a bit.
 dev.new()
-hist(boot.rs,breaks=50,xlim=c(.5,1),border="white",col="mediumorchid4",main="Bootstrap: CIs",xlab="Bootstrapped correlations")
+hist(boot.rs,breaks=25,xlim=c(.5,1),border="white",col="mediumorchid4",main="Bootstrap: CIs",xlab="Bootstrapped correlations")
 abline(v= CIs[1],col="firebrick3",lty=2,lwd=1.75)
 abline(v= CIs[2],col="firebrick3",lty=2,lwd=1.75)
 abline(v= cor.test.res$estimate,col="olivedrab3",lty=1,lwd=3)

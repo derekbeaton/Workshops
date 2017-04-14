@@ -18,9 +18,9 @@ cor.test.res <- cor.test(PRICE.DATA[,1],PRICE.DATA[,2])
 	## we need some help from our friend the linear model (regression)
 lm.res <- lm(TW_CAD~LCBO_CAD,data= PRICE.DATA)
 	## equivalence
-cor(PRICE.DATA$TW_CAD,predict(lm.res))
+cor(PRICE.DATA$TW_CAD,PRICE.DATA$LCBO_CAD)
 cor(PRICE.DATA$TW_CAD,lm.res$fitted.values)
-
+cor(PRICE.DATA$TW_CAD,predict(lm.res))
 
 ### Rule 0: Visualize your data, espeically before you do anything.
 dev.new()
@@ -131,12 +131,17 @@ for(i in 1:nrow(PRICE.DATA)){
 loo.cor <- cor(PRICE.DATA$TW_CAD,pred.vals)
 loo.mpse <- mean((PRICE.DATA$TW_CAD - pred.vals) ^ 2)
 
-plot(split.mat,pch=20,col="black")
-points(loo.cor, loo.mpse,col="red",pch=20)
 
 dev.new()
-boxplot(split.mat[,1])
+boxplot(split.mat[,1],main="Correlation: S-H predictions and original values")
+points(loo.cor,col="red",pch=20,cex=1.75)
+legend("topright",legend="LOO-CV",col="red",pt.cex=1.75,pch=20)
+
 dev.new()
-boxplot(split.mat[,2])
+boxplot(split.mat[,2],main="Error: S-H predictions and original values")
+points(loo.mpse,col="red",pch=20,cex=1.75)
+legend("topright",legend="LOO-CV",col="red",pt.cex=1.75,pch=20)
 
-
+plot(split.mat,pch=20,col="black",main="Split-Half: similarity vs. error")
+points(loo.cor, loo.mpse,col="red",pch=20,cex=1.75)
+legend("topright",legend="LOO-CV",col="red",pt.cex=1.75,pch=20)

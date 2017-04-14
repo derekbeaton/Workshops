@@ -25,17 +25,17 @@ epGraphs(pca.res,contributionPlots=F,correlationPlotter=F)
 #############
 #########
 #####
-#				What does a split-half look like?
+#				Turn split-half into a test
 #####
 #########
 #############
 
-	ortho.dists_fi <- ortho.dists_p <- matrix(NA,nrow(CAD.ABV.RATING),100)
-		rownames(ortho.dists_fi) <- rownames(ortho.dists_p) <- rownames(CAD.ABV.RATING)
-	sh2.cors_fi <- sh1.cors_fi <- matrix(NA,100,3)	
-	sh2.fj_dist.cors <- sh1.fj_dist.cors <- sh2.p_dist.cors <- sh1.p_dist.cors <- vector("numeric",100)
 	
 iters <- 1000
+	ortho.dists_fi <- ortho.dists_p <- matrix(NA,nrow(CAD.ABV.RATING),iters)
+		rownames(ortho.dists_fi) <- rownames(ortho.dists_p) <- rownames(CAD.ABV.RATING)
+	sh2.cors_fi <- sh1.cors_fi <- matrix(NA,iters,3)	
+	sh2.fj_dist.cors <- sh1.fj_dist.cors <- sh2.p_dist.cors <- sh1.p_dist.cors <- vector("numeric",iters)
 for(i in 1:iters){
 	
 	pca.sh1 <- sort(sample(1:nrow(CAD.ABV.RATING),nrow(CAD.ABV.RATING)/2))
@@ -71,9 +71,26 @@ for(i in 1:iters){
 	ortho.dists_fi[,i] <- rowSums(preds_fi)	
 		
 }
-
 PRESS_p <- colSums(ortho.dists_p)
 PRESS_fi <- colSums(ortho.dists_fi)
 
 
-### need visualizers.
+### Just a few visualizers for now.
+
+colnames(sh1.cors_fi) <- paste0("Comp. ",1:3)
+dev.new()
+boxplot(sh1.cors_fi,main="S-H Component Scores",col=c("red","green","blue"), ylab="Correlation values",xlab="Components")
+
+dev.new()
+boxplot(rbind(cbind(sh1.fj_dist.cors,sh1.p_dist.cors),cbind(sh2.fj_dist.cors,sh2.p_dist.cors)),col=c("mediumorchid4","olivedrab4"),main="Correlation: S-H Score and Mahalanobis Distances")
+
+dev.new()
+boxplot(cbind(PRESS_fi,PRESS_p),col=c("mediumorchid4","olivedrab4"),main="Correlation: S-H PRESS Scores and Vectors")
+
+
+rownames(ortho.dists_fi) <- rownames(ortho.dists_p) <- abbreviate(rownames(ortho.dists_fi),2)
+dev.new()
+boxplot(t(ortho.dists_p),main="S-H Orthogonal Distance: Singular Vectors")
+
+dev.new()
+boxplot(t(ortho.dists_fi),main="S-H Orthogonal Distance: Component Scores")

@@ -69,8 +69,6 @@ boot_anova_2 = ezANOVA(
 dev.new()
 interaction.plot(boot.aov.2$REGION, boot.aov.2$PALE.v.NOT, boot.aov.2$RATEBEER_StyleRating,type="b",xlab="REGION",ylab="STYLE RATINGS",trace.label="",pch=c(20,22),cex=2,lwd=2,col=c("mediumorchid4","darkseagreen"))
 
-
-
 	
 iters <- 1000
 	## real iterations to do
@@ -108,5 +106,4 @@ for(i in 1:iters){
 	}
 }
 
-
-## OK this visualization is a bit harder. Come back to it very soon.
+## Need visualizers.
