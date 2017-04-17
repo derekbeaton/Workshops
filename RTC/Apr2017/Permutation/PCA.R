@@ -33,7 +33,7 @@ set.seed(13)		## set a seed for the random number generator so we can recreate t
 
 ## A permutation
 perm.pca.1 <- apply(DATA,2,sample)
-	rownames(perm.pca.1) <- rownames(CAD.ABV.RATING)
+	rownames(perm.pca.1) <- rownames(DATA)
 	
 perm.pca.res.1 <- epPCA(perm.pca.1,scale=T,DESIGN= DESIGN,graphs=F)
 prettyScree(perm.pca.res.1$ExPosition.Data$eigs)
@@ -41,7 +41,7 @@ epGraphs(perm.pca.res.1,contributionPlots=F,correlationPlotter=F)
 
 ## Another permutation
 perm.pca.2 <- apply(DATA,2,sample)
-	rownames(perm.pca.2) <- rownames(CAD.ABV.RATING)
+	rownames(perm.pca.2) <- rownames(DATA)
 	
 perm.pca.res.2 <- epPCA(perm.pca.2,scale=T,DESIGN= DESIGN,graphs=F)
 prettyScree(perm.pca.res.2$ExPosition.Data$eigs)
@@ -63,7 +63,7 @@ perm.comps <- matrix(NA,pca.iters,length(perm.pca.res.1$ExPosition.Data$eigs))
 for(i in 1:pca.iters){
 	
 	perm.pca <- apply(DATA,2,sample)
-	perm.pca.res <- epPCA(perm.pca,scale=T,DESIGN= DESIGN,graphs=F)
+	perm.pca.res <- epPCA(perm.pca,scale=T,graphs=F)
 	
 	perm.comps[i,1:length(perm.pca.res$ExPosition.Data$eigs)] <- perm.pca.res$ExPosition.Data$eigs
 	
@@ -71,7 +71,6 @@ for(i in 1:pca.iters){
 		print(i)
 	}
 }
-
 
 ## Visualize the distribution of permuted eigenvalues with cut-offs
 cut.off <- sort(perm.comps[,1])[round(nrow(perm.comps)*.95)]

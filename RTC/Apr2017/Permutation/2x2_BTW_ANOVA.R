@@ -88,7 +88,7 @@ for(i in 1:iters){
 	
 	### This takes a little bit longer than correlation, so we will tell ourselves on how many iterations it has been
 	perm.fs[i,] <- perm_aov$ANOVA$F
-	if(i%%10==0){
+	if(i%%100==0){
 		print(i)
 	}
 }

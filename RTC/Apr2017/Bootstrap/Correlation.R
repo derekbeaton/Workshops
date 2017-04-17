@@ -68,14 +68,14 @@ text(boot.2,labels=rownames(boot.2),pos=3,cex=.65,col="mediumorchid4")
 #########
 #############
 
-iters <- 10000
+iters <- 1000
 boot.rs <- vector("numeric",iters)
 for(i in 1:iters){
 	
 	boot.indices <- sample(nrow(PRICE.DATA),nrow(PRICE.DATA),replace=T)
 	boot.rs[i] <- cor(PRICE.DATA[boot.indices,])[2,1]
 	
-	if( (i%%250)	==0){
+	if( (i%%100)==0){
 		print(i)
 	}
 		
@@ -83,7 +83,6 @@ for(i in 1:iters){
 
 dev.new()
 hist(boot.rs,breaks=25,xlim=c(.5,1),border="white",col="mediumorchid4",main="Bootstrap Distribution",xlab="Bootstrapped correlations")
-
 
 ## First, we compute the confidence intervals (as percentiles)
 CIs <- sort(boot.rs)[round(c(length(boot.rs)*.025,length(boot.rs)*.975))]

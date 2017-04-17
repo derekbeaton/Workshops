@@ -81,6 +81,10 @@ for(i in 1:iters){
 	## project and store
 	boot.vars[,,i] <- boot.compute.fj(DATA, res = pca.res)
 	
+	if(i%%100==0){
+		print(i)
+	}	
+	
 }
 
 
@@ -107,5 +111,5 @@ for(i in 1:3){
 }
 
 ## Get bootstrap ratios
-boot.ratio.test(boot.vars)
+BSRs <- boot.ratio.test(boot.vars)
 

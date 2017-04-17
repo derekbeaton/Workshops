@@ -15,6 +15,7 @@ ratings_anova = ezANOVA(
     , wid = BEER.NAME
     , between = c(REGION,PALE.v.NOT)
     , type = 3
+    , return_aov = T    
 )
 
 ### Rule 0: Visualize your data, espeically before you do anything.
@@ -48,6 +49,7 @@ boot_anova_1 = ezANOVA(
     , wid = BEER.NAME
     , between = c(REGION,PALE.v.NOT)
     , type = 3
+    , return_aov = T    
 )
 
 dev.new()
@@ -71,8 +73,6 @@ interaction.plot(boot.aov.2$REGION, boot.aov.2$PALE.v.NOT, boot.aov.2$RATEBEER_S
 
 	
 iters <- 1000
-	## real iterations to do
-#iters <- max(round(1/ratings_anova$ANOVA$p))+1
 boot.fs <- matrix(NA,iters,3)
 	colnames(boot.fs) <- c("REGION","PALE.v.NOT","REGION:PALE.v.NOT")
 	
@@ -106,4 +106,51 @@ for(i in 1:iters){
 	}
 }
 
-## Need visualizers.
+
+## For something like ANOVA, it makes more sense to visualize the means (especially cell wise) than the F-values
+	## though, anything can be saved and visualized from ANOVA (or any other technique)
+	## for example, ez calls into R's linear model function and it is therefore possible to get coefficients
+	
+CIs_REGION <- apply(boot.region.means,2,function(x){ sort(x)[round(c(length(x)*.025,length(x)*.975))] })
+CIs_PALE <- apply(boot.pale.means,2,function(x){ sort(x)[round(c(length(x)*.025,length(x)*.975))] })
+CIs_INTERACTION <- apply(boot.cell.means,c(1,2),function(x){ sort(x)[round(c(length(x)*.025,length(x)*.975))] })
+	
+aov.means <- model.tables(ratings_anova$aov,type="means")
+		
+dev.new()
+hist(boot.region.means[,1],breaks=30,border="white",col="mediumorchid2",main="REGION: Bootstrap Distribution",xlab="REGION: Bootstrapped means",xlim=c(min(boot.region.means),max(boot.region.means)))
+abline(v=aov.means$tables$REGION[1],lwd=3,col="olivedrab4")
+abline(v=CIs_REGION[,1],lwd=1.75,col="firebrick4",lty=2)
+hist(boot.region.means[,2],breaks=30,border="white",col="mediumorchid4",add=T)
+abline(v=aov.means$tables$REGION[2],lwd=3,col="olivedrab2")
+abline(v=CIs_REGION[,2],lwd=1.75,col="firebrick2",lty=2)
+
+
+dev.new()
+hist(boot.pale.means[,1],breaks=30,border="white",col="mediumorchid2",main="PALE v NOT: Bootstrap Distribution",xlab="PALE v NOT: Bootstrapped means",xlim=c(min(boot.pale.means),max(boot.pale.means)))
+abline(v=aov.means$tables$PALE.v.NOT[1],lwd=3,col="olivedrab4")
+abline(v= CIs_PALE[,1],lwd=1.75,col="firebrick4",lty=2)
+hist(boot.pale.means[,2],breaks=30,border="white",col="mediumorchid4",add=T)
+abline(v=aov.means$tables$PALE.v.NOT[2],lwd=3,col="olivedrab2")
+abline(v= CIs_PALE[,2],lwd=1.75,col="firebrick2",lty=2)
+
+
+	## for this one it would be better to have density curves
+dev.new()
+hist(boot.cell.means[1,1,],breaks=25,border="white",col="mediumorchid1",main="INTERACTION: Bootstrap Distribution",xlab="INTERACTION: Bootstrapped means",xlim=c(min(boot.cell.means),max(boot.cell.means)))
+hist(boot.cell.means[1,2,],breaks=25,border="white",col="mediumorchid2",add=T)
+hist(boot.cell.means[2,1,],breaks=25,border="white",col="mediumorchid3",add=T)
+hist(boot.cell.means[2,2,],breaks=25,border="white",col="mediumorchid4",add=T)
+
+
+
+
+abline(v=aov.means$tables$PALE.v.NOT[1],lwd=3,col="olivedrab4")
+abline(v= CIs_PALE[,1],lwd=1.75,col="firebrick4",lty=2)
+hist(boot.pale.means[,2],breaks=30,border="white",col="mediumorchid4",add=T)
+abline(v=aov.means$tables$PALE.v.NOT[2],lwd=3,col="olivedrab2")
+abline(v= CIs_PALE[,2],lwd=1.75,col="firebrick2",lty=2)
+
+
+
+

@@ -10,7 +10,7 @@ load('../Data/CAD.ABV.RATING.rda')
 
 	## split the data into a DATA variable and a DESIGN (which tells us where the beers are from)
 DATA <- CAD.ABV.RATING[,1:3]
-DESIGN <- CAD.ABV.RATING$REGION
+DESIGN <- CAD.ABV.RATING $REGION
 	
 	## Standard PCA
 pca.res <- epPCA(DATA,scale=T,DESIGN= DESIGN,graphs=F)
@@ -20,6 +20,18 @@ pca.res <- epPCA(DATA,scale=T,DESIGN= DESIGN,graphs=F)
 prettyScree(pca.res$ExPosition.Data$eigs)
 	### Component scores for rows and columns
 epGraphs(pca.res,contributionPlots=F,correlationPlotter=F)
+
+
+## TODO
+#############
+#########
+#####
+#				Example of split-half
+#####
+#########
+#############
+
+
 
 
 #############
@@ -32,21 +44,21 @@ epGraphs(pca.res,contributionPlots=F,correlationPlotter=F)
 
 	
 iters <- 1000
-	ortho.dists_fi <- ortho.dists_p <- matrix(NA,nrow(CAD.ABV.RATING),iters)
-		rownames(ortho.dists_fi) <- rownames(ortho.dists_p) <- rownames(CAD.ABV.RATING)
+	ortho.dists_fi <- ortho.dists_p <- matrix(NA,nrow(DATA),iters)
+		rownames(ortho.dists_fi) <- rownames(ortho.dists_p) <- rownames(DATA)
 	sh2.cors_fi <- sh1.cors_fi <- matrix(NA,iters,3)	
 	sh2.fj_dist.cors <- sh1.fj_dist.cors <- sh2.p_dist.cors <- sh1.p_dist.cors <- vector("numeric",iters)
 for(i in 1:iters){
 	
-	pca.sh1 <- sort(sample(1:nrow(CAD.ABV.RATING),nrow(CAD.ABV.RATING)/2))
-	pca.sh2 <- setdiff(1:nrow(CAD.ABV.RATING),pca.sh1)
+	pca.sh1 <- sort(sample(1:nrow(DATA),nrow(DATA)/2))
+	pca.sh2 <- setdiff(1:nrow(DATA),pca.sh1)
 	
-	pca.res_sh1 <- epPCA(CAD.ABV.RATING[pca.sh1,1:3],scale=T,DESIGN= CAD.ABV.RATING$REGION[pca.sh1],graphs=F)
-	pca.sh2.from.sh1 <- supplementaryRows(CAD.ABV.RATING[pca.sh2,1:3],pca.res_sh1)
+	pca.res_sh1 <- epPCA(DATA[pca.sh1,1:3],scale=T,graphs=F)
+	pca.sh2.from.sh1 <- supplementaryRows(DATA[pca.sh2,1:3],pca.res_sh1)
 	sh2.pred.p <- (pca.sh2.from.sh1$fii %*% diag(1/pca.res_sh1$ExPosition.Data$pdq$Dv))		
 			
-	pca.res_sh2 <- epPCA(CAD.ABV.RATING[pca.sh2,1:3],scale=T,DESIGN= CAD.ABV.RATING$REGION[pca.sh2],graphs=F)
-	pca.sh1.from.sh2 <- supplementaryRows(CAD.ABV.RATING[pca.sh1,1:3],pca.res_sh2)
+	pca.res_sh2 <- epPCA(DATA[pca.sh2,1:3],scale=T,graphs=F)
+	pca.sh1.from.sh2 <- supplementaryRows(DATA[pca.sh1,1:3],pca.res_sh2)
 	sh1.pred.p <- (pca.sh1.from.sh2$fii %*% diag(1/pca.res_sh2$ExPosition.Data$pdq$Dv))
 
 	## similarities
@@ -69,6 +81,10 @@ for(i in 1:iters){
 	two.minus.pred_fi <- (pca.res_sh2$ExPosition.Data$fi - pca.sh2.from.sh1$fii)^2
 	preds_fi <- rbind(one.minus.pred_fi, two.minus.pred_fi)[rownames(ortho.dists_fi),]	
 	ortho.dists_fi[,i] <- rowSums(preds_fi)	
+	
+	if(i%%100==0){
+		print(i)
+	}
 		
 }
 PRESS_p <- colSums(ortho.dists_p)
