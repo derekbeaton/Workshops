@@ -1,0 +1,555 @@
+###HW1 -- computing Chi2 from a contingency table.#
+##The objectives of this homework are:#
+	## 1: to use variables#
+	## 2: to use operations on vectors#
+	## 3: print output to the screen (for use via script)	#
+##Note: see the script we did in class, in addition to the readings outlined for this week (Introduction to Statistics in R, Dalgaard) #
+## 2015/9/3 modified by Juchi Yu#
+###Do not change anything in this block#
+	authors.data <- rbind(#
+						cbind(7836, 13112, 6026),#
+						cbind(53655,102383,42413),#
+						cbind(115615, 184541, 59226),#
+						cbind(161926, 340479, 62754),#
+						cbind(38177, 105101, 12670),#
+						cbind(46371, 58367, 14299)#
+					)#
+	rownames(authors.data) <- c('Rousseau','Chateaubriand','Hugo','Zola','Proust','Giraudoux')#
+	colnames(authors.data) <- c('PERIOD','COMMA','OTHER.PUNCTUATION')#
+	row.sums <- rowSums(authors.data)#
+	column.sums <- colSums(authors.data)#
+	grand.sum <- sum(authors.data)#
+###Do not change anything in this block#
+###HERE: print to the screen: the row sums, the column sums, and the grand sum#
+print(list("row_sums" = row.sums, "column_sums" = column.sums, "grand_sum" = grand.sum))#
+###HERE: create two new variables -- one is 'row.frequencies' the other is 'column.frequencies'#
+	##row.frequencies should be computed as the row sums divided by the grand sum#
+	##column.frequencies should be computed as the column sums divided by the grand sum#
+row.frequencies <- row.sums/grand.sum#
+column.frequencies <- column.sums/grand.sum#
+####Do not change anything in this block#
+	observed.table <- authors.data#
+	expected.table <- (row.frequencies %o% column.frequencies) * grand.sum#
+		#a trick to make the table into a vector -- so we can do vectorized operations#
+	observed.table.flattened <- c(observed.table)#
+	expected.table.flattened <- c(expected.table)#
+####Do not change anything in this block#
+###HERE: 	create a new variable called 'chi2.vector'#
+	##		use 'observed.table.flattened' and 'expected.table.flattened' exactly as specified in the Chi2 formula#
+		#	see https://en.wikipedia.org/wiki/Chi-squared_test#Example_chi-squared_test_for_categorical_data#
+chi2.vector <- (observed.table.flattened-expected.table.flattened)^2/expected.table.flattened#
+###HERE: 	You will have to use a function that will sum all the elements in a vector. #
+	##		create a variable called 'chi2' which is the summed values of the elements in 'chi2.vector' #
+		#	Then print the 'chi2' variable to the screen#
+chi2 <- sum(chi2.vector)#
+print(chi2)
+load("/Users/derek/Desktop/NEUROSYNTHWORDS.rda")
+ls()
+words.in
+words.in[1:100]
+words.in[,1:100]
+dim(words.in)
+words.in[1:100,]
+words.in[101:200,]
+words.in[201:300,]
+words.in[301:400,]
+words.in[401:500,]
+words.in[501:600,]
+words.in[601:700,]
+words.in[701:800,]
+words.in[801:900,]
+words.in[901:1000,]
+words.in[1001:1100,]
+words.in[1101:1200,]
+words.in[1201:1300,]
+words.in[1301:1400,]
+words.in[1401:1500,]
+words.in[1501:1600,]
+words.in[1601:1700,]
+words.in[1701:1800,]
+words.in[1801:1900,]
+words.in[1901:2000,]
+words.in[1201:2100,]
+words.in[1001:2100,]
+words.in[2001:2100,]
+words.in[2101:2200,]
+words.in[2201:2300,]
+words.in[2301:2400,]
+words.in[2401:2500,]
+words.in[2501:2600,]
+words.in %in% "phil"
+grep("phil",words.in)
+grep("ph",words.in)
+grep("phil",as.matrix(words.in))
+words.in[2048]
+words.in[2048,]
+words.in[2084,]
+words.in[2601:2700,]
+words.in[2701:2800,]
+words.in[2801:2900,]
+words.in[2901:3000,]
+words.in[3001:3100,]
+words.in[3101:3200,]
+#08-15-2016#
+#Bilingual book survey#
+#Correspondence Analysis on student descriptions#
+rm(list=ls())#
+# clears all variables#
+#setwd("C:/Users/Amy/Documents/R_backup/BilingualBookSurvey")#
+# sets working directory#
+#=============================#
+#Packages & libraries needed#
+#=============================#
+library(ExPosition)#
+#==========================================================================#
+# CALLING ALL DATA AND CREATING SUBSET DATA FRAME FOR ANALYSIS#
+#==========================================================================#
+   #-----------------------------------------------------------------------#
+   # CALLING THE DATA IN WIDE FORMAT#
+   #-----------------------------------------------------------------------#
+#~~~~~~~~~~~~~~#
+#File Names#
+#~~~~~~~~~~~~~~#
+#BilingualBook_05-26-16_220pm#
+df <- read.csv("BilingualBook_05-26-16_220pm.csv", header=TRUE); #
+head(df)#
+summary(df)#
+str(df)#
+SubDF<-data.frame(df$ID,df$Min.3yrs,df$No.TreatPreschool,df$No.TreatPK,df$Yrs.TreatedPreschool,df$YrsTreatPK2,df$Bk.Type,df$How.Read2,df$Culture,#
+		df$Dom.Lang,df$Lang.Input,df$Family.Read,df$HeadStart2, df$OtherSchool, df$PrivPrac_HH, df$OtherSet,#
+		df$No.TreatBin, df$HeadStart3, df$OtherSchool3, df$PrivPrac_HH3, df$OtherSet3)#
+	colnames(SubDF)<-c('ID','SLP','Treated_OLSTC','Experience','Yrs.TreatPreschool','YrsTreatPK2','BookType','HowSLPsReadAloud','Culture','Dom','Input', #
+		'DoesFamilyReadAloud','HeadStartX','OtherSchoolX', 'PrivPrac_HHX','OtherSetting','OLSTC','HeadStart','OtherSchool',#
+		'PrivPrac_HH','OtherSettings')#
+head(SubDF)#
+summary(SubDF)#
+New<-na.omit(SubDF)#
+#Omits NAs#
+	colnames(New)<-c('ID','SLP','Treated_OLSTC','Experience','Yrs.TreatPreschool','YrsTreatPK2','BookType','HowSLPsReadAloud','Culture','Dom','Input',#
+		'DoesFamilyReadAloud','HeadStartX','OtherSchoolX','PrivPrac_HHX','OtherSettingX','OLSTC','HeadStart',#
+		'OtherSchool','PrivPrac_HH','OtherSettings')#
+head(New)#
+head(New)#
+summary(New)#
+#---------------------------------------------#
+#Subsetting outliers - ADD THESE AS SUPPLEMENTARY VARIABLES#
+#---------------------------------------------#
+outliers<-New[c(31,46,65,73,84), ]#
+#this code creates a subset of data for SLP33, SLP48, SLP67, SLP75, SLP87#
+#These SLPs gave English input (SLP33, SLP67, SLP75, SLP87) or used English books (SLP48).#
+outliers#
+head(outliers)#
+summary(outliers)#
+#write.csv(outliers, "outliers.csv", row.names=TRUE)#
+# creating a .csv file so I can make sure I have selected the correct subjects#
+# and can analyze the data#
+#---------------------------------------------#
+#Removing outliers & 3 SLP-Assistants from the dataset#
+#---------------------------------------------#
+NewA<-New[-c(31,46, 65,73,84), ]#
+#this code creates a subset of data for SLP33, SLP67, SLP75, SLP87#
+head(NewA)#
+summary(NewA)#
+SLP_As<-New[c(11,18,19), ]#
+#This code creates a subset of data for SLP-As.#
+head(SLP_As)#
+summary(SLP_As)#
+#write.csv(SLP_As, "SLP_As.csv", row.names=TRUE)#
+# creating a .csv file so I can make sure I have selected the correct subjects#
+# and can analyze the data#
+NewB<-NewA[-c(11,18,19), ]#
+#this code removes the SLP-A data, which is SLP11, SLP18, SLP19#
+head(NewB)#
+summary(NewB)#
+New<-NewB#
+#=============================================#
+#Active Variables#
+#=============================================#
+New2<-data.frame(New$BookType, New$HowSLPsReadAloud,New$Experience,New$DoesFamilyReadAloud)#
+	colnames(New2)<-c('BookType','HowSLPsReadAloud?','Experience','DoesFamilyReadAloud?')#
+	rownames(New2)<-c(New$ID)#
+head(New2)#
+summary(New2)#
+str(New2)#
+MCA_Analysis<-New2
+#==================================================#
+#MULTIPLE CORRESPONDENCE ANALYSIS - THIS CODE WORKS#
+#==================================================#
+res_MCA2active<-epMCA(MCA_Analysis,make_data_nominal = TRUE, DESIGN = NULL, make_design_nominal = NULL,#
+masses = NULL, weights = NULL, hellinger = FALSE,#
+symmetric = TRUE, correction = c("b"),graphs = TRUE, k = 0); head(res_MCA2active)#
+epGraphs(res_MCA2active,main=NULL,biplots=TRUE,contributionPlots=FALSE)#
+#---------------------------------------------#
+#OVERLAYING SUPPLEMENTARY VARIABLES - THIS CODE WORKS#
+#---------------------------------------------#
+nominal.sup <- makeNominalData(SuppVariables)#
+res_Supp<-supplementaryCols(nominal.sup, res_MCA2active)#
+all.data <- rbind(res_MCA2active$ExPosition.Data$fj)#
+all.colors <- rbind(res_MCA2active$Plotting.Data$fj.col,as.matrix(rep("firebrick2",nrow(res_MCA2active$Plotting.Data$fj.col))))#
+#prettyPlot#
+all.data <- rbind(res_MCA2active$ExPosition.Data$fj,res_Supp$fjj)#
+all.colors <- rbind(res_MCA2active$Plotting.Data$fj.col,as.matrix(rep("firebrick2",nrow(res_Supp$fjj))))#
+prettyPlot(all.data,main=NULL,col=all.colors)#
+#Plots active & supplementary variables
+nominal.sup <- makeNominalData(SuppVariables)
+SuppVariables<-data.frame(New$Dom,New$Culture,New$Input,New$HeadStart,New$OtherSchool,New$PrivPrac_HH,New$OtherSettings)#
+	colnames(SuppVariables)<-c('Dom','Culture','Input','HeadStart','OtherSchool','PrivPrac_HH','OtherSettings')
+nominal.sup <- makeNominalData(SuppVariables)
+nominal.sup
+res_Supp<-supplementaryCols(nominal.sup, res_MCA2active)
+all.data <- rbind(res_MCA2active$ExPosition.Data$fj)#
+all.colors <- rbind(res_MCA2active$Plotting.Data$fj.col,as.matrix(rep("firebrick2",nrow(res_MCA2active$Plotting.Data$fj.col))))
+#prettyPlot#
+all.data <- rbind(res_MCA2active$ExPosition.Data$fj,res_Supp$fjj)#
+all.colors <- rbind(res_MCA2active$Plotting.Data$fj.col,as.matrix(rep("firebrick2",nrow(res_Supp$fjj))))#
+prettyPlot(all.data,main=NULL,col=all.colors)
+str(SuppObservations)
+nominal.supObs <- makeNominalData(SuppObservations)
+SuppObservations<-data.frame(outliers$BookType, outliers$HowSLPsReadAloud,outliers$Experience,outliers$DoesFamilyReadAloud)#
+	colnames(SuppObservations)<-c('BookType','HowSLPsReadAloud?','Experience','DoesFamilyReadAloud?')#
+	rownames(SuppObservations)<-c(New$ID)
+SuppObservations<-data.frame(outliers$BookType, outliers$HowSLPsReadAloud,outliers$Experience,outliers$DoesFamilyReadAloud)
+colnames(SuppObservations)<-c('BookType','HowSLPsReadAloud?','Experience','DoesFamilyReadAloud?')
+rownames(SuppObservations)<-c(New$ID)
+SuppObservations
+New$ID
+nominal.supObs <- makeNominalData(SuppObservations)
+res_SuppObs<-supplementaryRows(nominal.supObs, res_MCA2active)
+nominal.supObs
+res_MCA2active$ExPosition.Data$fi
+res_MCA2active$ExPosition.Data$fj
+dim(nominal.supObs)
+dim(res_MCA2active$ExPosition.Data$fj)
+colnames(res_MCA2active$ExPosition.Data$fj)
+rownames(res_MCA2active$ExPosition.Data$fj)
+rownames(nominal.supObs)
+colnames(nominal.supObs)
+setdiff(rownames(res_MCA2active$ExPosition.Data$fj),colnames(nominal.supObs))
+setdiff(colnames(nominal.supObs),rownames(res_MCA2active$ExPosition.Data$fj))
+SuppVariables
+colnames(SuppVariables)
+colnames(SuppObs)
+colnames(SuppObservations)
+colnames(MCA_Analysis)
+summary(MCA_Analysis)
+summary(SuppObservations)
+nominal.supObs
+empty.nom <- matrix(NA,nrow(nominal.supObs),nrow(res_MCA2active$ExPosition.Data$fj))#
+rownames(empty.nom) <- rownames(nominal.supObs)#
+colnames(empty.nom) <- rownames(res_MCA2active$ExPosition.Data$fj)#
+#
+empty.nom[rownames(nominal.supObs),intersect(rownames(res_MCA2active$ExPosition.Data$fj),colnames(nominal.supObs))] <- nominal.supObs[,intersect(rownames(res_MCA2active$ExPosition.Data$fj),colnames(nominal.supObs))]
+res_SuppObs_DB<-supplementaryRows(empty.nom, res_MCA2active)
+str(MCA_Analysis)
+str(SuppObservations)
+#############################################################################
+## Outlier workshop Part B ###
+#############################################################################
+# Get working directory set up#
+getwd()#
+setwd(".\\ONDRI\\R\\Outliers_Package")#
+getwd()#
+list.files(pattern = "\\.csv$")
+#############################################################################
+## Outlier workshop Part B ###
+#############################################################################
+# Get working directory set up#
+getwd()#
+#setwd(".\\ONDRI\\R\\Outliers_Package")#
+setwd('~derek/Desktop/')#
+getwd()
+list.files(pattern = "\\.csv$")
+require(outlieRs)
+# Importing the data#
+nidat <- read.table("sample_image.csv",header=T,sep=",")#
+dim(nidat)#
+nidat[1:3,1:3]
+## Outlier workshop Part B
+getwd()
+setwd('~derek/Desktop/')
+list.files(pattern = "\\.csv$")
+# RStudio
+# # # install.packages("devtools")
+# # # require(devtools)
+# # # install_github("derekbeaton/outlieRs", subdir="Package")
+require(outlieRs)
+# Importing the data
+nidat <- read.table("sample_image.csv",header=T,sep=",")
+dim(nidat)
+head(nidat)
+nidat[1:3,1:3]
+nidat[1,1:4]
+nidat[c(1,3,5),1:4]
+colnames(nidat)
+str(nidat)
+summary(nidat)
+nidat[1:3,1:3]
+# moving identifier into rownames
+nidat1 <- nidat[,-1] # removing first column
+nidat1[1:3,1:3]
+rownames(nidat1) <- nidat$Session
+head(nidat$Session)
+head(nidat[,"Session"])
+nidat1[1:3,1:3]
+nidat2 <- apply(nidat1,2,function(i){(i-mean(i,na.rm=T))/sd(i,na.rm=T)})
+##### MCD!
+?multiOut
+mcdResult <- multiOut(nidat2,rmdo_alpha=0.9)
+names(mcdResult)
+mcdOut <- mcdResult$outlier_decision
+head(mcdOut)
+table(mcdOut$mcd_outlier)
+printOuts(mcdResult)
+##### Boot-MCD!
+bootResult <- mcd.boot_find.outliers(nidat2)
+bootOut <- bootResult$outlier_decision
+head(bootOut)
+# RPCA
+rpcaResult <- rpca_find.outliers(nidat2)
+rpcaOut <- rpcaResult$outlier_decision
+head(rpcaOut)
+allOut0 <- merge(mcdOut,bootOut)
+allOut <- merge(allOut0,rpcaOut)
+head(allOut)
+allOut1 <- allOut[,-1]
+rownames(allOut1) <- allOut$ID
+head(allOut1)
+allOutSums <- rowSums(allOut1)
+head(allOutSums)
+table(allOutSums)
+allOut1[which(allOutSums != 0),]
+colMeans(allOut1)
+table(allOut1$mcd_outlier,allOut1$rpca_outlier)
+clindat <- read.table("sample_clinical.csv",header=T,sep=",")
+clindat1 <- clindat[which(clindat$redcap_event_name == "visit_1_screening_arm_5"),]
+clindat2 <- clindat1[,c("subject_id","age","sex")]
+clindat3 <- clindat2[,-1]
+rownames(clindat3) <- clindat2$subject_id
+covars <- merge(clindat3,nidat2[,"Global_ST.TIC"],by=0)
+head(covars)
+covars1 <- covars[,-1]
+rownames(covars1) <- covars$Row.names
+colnames(covars1)[3] <- "TIC"
+head(covars1)
+str(covars1)
+covars[,"sex"] <- ifelse(covars[,"sex"]==1,"FEMALE","MALE")
+head(covars)
+covars1 <- covars[,-1]
+rownames(covars1) <- covars$Row.names
+colnames(covars1)[3] <- "TIC"
+head(covars1)
+str(covars1)
+nidat3 <- apply(nidat2[,-2],2,function(i){resid(lm(i ~ covars1[,"age"]  * covars1[,"TIC"] * as.factor(covars1[,"sex"])))})
+cor(nidat3,covars1[,c("age","TIC")]) # correlation between each covariate and variable should be gone
+mcdResultC <- multiOut(nidat3,rmdo_alpha=0.9)
+mcdResult1 <- multiOut(nidat2[,-2],rmdo_alpha=0.9) # removing TIC for direct comparison
+mcdOutC <- mcdResultC$outlier_decision
+mcdOut1 <- mcdResult1$outlier_decision
+head(mcdOutC)
+head(mcdOut1)
+table(mcdOutC$mcd_outlier,mcdOut1$mcd_outlier)
+# Example: OND01_SMH_5015
+dev.new()
+plot(nidat2[,c("Global_sCSF","Global_parenchyma")],cex=1.3,pch="+",
+col=ifelse(rownames(nidat2)=="OND01_SMH_5015","red","blue"),
+main="Without Correction")
+dev.new()#
+plot(nidat3[,c("Global_sCSF","Global_parenchyma")],cex=1.3,pch="+",#
+     col=ifelse(rownames(nidat3)=="OND01_SMH_5015","red","blue"),#
+     main="With Correction\n(age, sex, TIC)")
+load("/Users/derek/Desktop/3646613.RData")
+setwd("/Volumes/JOHNNYFIVE/Professional/Workshops/")
+load('./Data/REGION.STYLE.RATING.rda')
+setwd("/Volumes/JOHNNYFIVE/Professional/Workshops/RTC2017/Apr2017")#
+load('./Data/REGION.STYLE.RATING.rda')
+setwd("/Volumes/JOHNNYFIVE/Professional/Workshops/RTC/Apr2017")#
+load('./Data/REGION.STYLE.RATING.rda')
+ls()
+REGION.STYLE.RATING
+set.seed(29)#
+iters <- 1000#
+perm.ts <- vector("numeric",iters)#
+for(i in 1:iters){#
+  perm.t <- transform(REGION.STYLE.RATING,RATEBEER_StyleRating=sample(RATEBEER_StyleRating))#
+  perm_t = t.test(perm.t$RATEBEER_StyleRating~perm.t$REGION, #
+                  var.equal = TRUE, #
+                  paired = FALSE)#
+  perm.ts[i] <- perm_t$statistic#
+  }
+perm.ts
+cut.off <- sort(perm.ts^2)[round(length(perm.ts)*.95)]#
+hist(perm.ts^2,breaks=50,xlim=c(0,max(t.byregion$statistic^2, c(perm.ts^2))*1.1),border="white",col="mediumorchid4",main="Permutation T: Effect of region",xlab="Permuted t-squared")#
+abline(v= cut.off,col="firebrick3",lty=2,lwd=1.75)#
+abline(v= t.byregion$statistic^2,col="olivedrab3",lty=1,lwd=1.75)
+t.byregion = t.test(REGION.STYLE.RATING$RATEBEER_StyleRating~REGION.STYLE.RATING$REGION, #
+                    var.equal = TRUE, #
+                    paired = FALSE)
+cut.off <- sort(perm.ts^2)[round(length(perm.ts)*.95)]#
+hist(perm.ts^2,breaks=50,xlim=c(0,max(t.byregion$statistic^2, c(perm.ts^2))*1.1),border="white",col="mediumorchid4",main="Permutation T: Effect of region",xlab="Permuted t-squared")
+abline(v= cut.off,col="firebrick3",lty=2,lwd=1.75)#
+abline(v= t.byregion$statistic^2,col="olivedrab3",lty=1,lwd=1.75)
+ttest.p <- max(1/iters,sum(perm.ts^2 > t.byregion$statistic^2)/iters)
+ttest.p
+cut.off <- sort(perm.ts^2)[round(length(perm.ts)*.95)]#
+hist(perm.ts^2,breaks=50,xlim=c(0,max(t.byregion$statistic^2, c(perm.ts^2))*1.1),border="white",col="mediumorchid4",main="Permutation T: Effect of region",xlab="Permuted t-squared")#
+abline(v= cut.off,col="firebrick3",lty=2,lwd=1.75)#
+abline(v= t.byregion$statistic^2,col="olivedrab3",lty=1,lwd=1.75)
+REGION.STYLE.RATING$RATEBEER_StyleRating~REGION.STYLE.RATING$REGION
+REGION.STYLE.RATING$REGION
+summary(REGION.STYLE.RATING$REGION)
+setwd("/Volumes/JOHNNYFIVE/Professional/Workshops/RTC/Apr2017")#
+#
+load('./Data/LCBO.TW.CAD.rda')
+?t.test
+setwd("/Volumes/JOHNNYFIVE/Professional/Workshops/RTC/Apr2017")#
+#
+load('./Data/LCBO.TW.CAD.rda')#
+#
+t.CAD = t.test(x=LCBO.TW.CAD$LCBO_CAD_serving,y=REGION.STYLE.RATING$REGION, paired = FALSE)
+t.CAD = t.test(x=LCBO.TW.CAD$LCBO_CAD_serving,y=LCBO.TW.CAD$TW_CAD_serving, paired = FALSE)
+t.CAD
+ls()
+summary(REGION.STYLE.RATING)
+sample(y=REGION.STYLE.RATING$REGION)
+sample(REGION.STYLE.RATING$REGION)
+REGION.STYLE.RATING$RATEBEER_StyleRating
+REGION.STYLE.RATING$RATEBEER_StyleRating[REGION.STYLE.RATING$REGION=="USA"]
+USA <- REGION.STYLE.RATING$RATEBEER_StyleRating[REGION.STYLE.RATING$REGION=="USA"]#
+CAN <- REGION.STYLE.RATING$RATEBEER_StyleRating[REGION.STYLE.RATING$REGION=="CAN"]
+USA
+CAN
+setwd("/Volumes/JOHNNYFIVE/Professional/Workshops/RTC/Apr2017")#
+#
+load('./Data/LCBO.TW.CAD.rda')#
+#
+USA <- REGION.STYLE.RATING$RATEBEER_StyleRating[REGION.STYLE.RATING$REGION=="USA"]#
+CAN <- REGION.STYLE.RATING$RATEBEER_StyleRating[REGION.STYLE.RATING$REGION=="CAN"]#
+#
+t.byregion = t.test(REGION.STYLE.RATING$RATEBEER_StyleRating~REGION.STYLE.RATING$REGION, #
+                    var.equal = TRUE, #
+                    paired = FALSE) #
+#
+db_t.byregion = t.test(x= USA, y=CAN, #
+                    var.equal = TRUE, #
+                    paired = FALSE)
+t.byregion
+db_t.byregion
+db_t.byregion = t.test(x=CAN, y= USA, #
+                    var.equal = TRUE, #
+                    paired = FALSE)
+db_t.byregion
+t.byregion
+perm.t
+setwd("/Volumes/JOHNNYFIVE/Professional/Workshops/RTC/Apr2017")#
+#
+load('./Data/LCBO.TW.CAD.rda')#
+#
+USA <- REGION.STYLE.RATING$RATEBEER_StyleRating[REGION.STYLE.RATING$REGION=="USA"]#
+CAN <- REGION.STYLE.RATING$RATEBEER_StyleRating[REGION.STYLE.RATING$REGION=="CAN"]#
+#
+t.byregion = t.test(REGION.STYLE.RATING$RATEBEER_StyleRating~REGION.STYLE.RATING$REGION, #
+                    var.equal = TRUE, #
+                    paired = FALSE) #
+#
+db_t.byregion = t.test(x=CAN, y= USA, #
+                    var.equal = TRUE, #
+                    paired = FALSE) #
+set.seed(29)#
+iters <- 1000#
+#
+db_perm.ts <- perm.ts <- vector("numeric",iters)#
+for(i in 1:iters){#
+  perm.t <- transform(REGION.STYLE.RATING,RATEBEER_StyleRating=sample(RATEBEER_StyleRating))#
+  perm_t = t.test(perm.t$RATEBEER_StyleRating~perm.t$REGION, #
+                  var.equal = TRUE, #
+                  paired = FALSE)#
+  perm.ts[i] <- perm_t$statistic                  #
+ db_t.byregion_perm = t.test(x=CAN, y= sample(USA), #
+                    var.equal = TRUE, #
+                    paired = FALSE)                   #
+  db_perm.ts[i] <- db_t.byregion_perm$statistic#
+}
+perm.ts
+db_perm.ts
+rm(list=ls())
+gc()
+setwd("/Volumes/JOHNNYFIVE/Professional/Workshops/RTC/Apr2017")#
+#setwd("~/4_Resources/Workshops/Resampling/RTC/Permutation")#
+	## load data for this example#
+load('../Data/LCBO.TW.CAD.rda')
+setwd("/Volumes/JOHNNYFIVE/Professional/Workshops/RTC/Apr2017")#
+#setwd("~/4_Resources/Workshops/Resampling/RTC/Permutation")#
+	## load data for this example#
+load('./Data/LCBO.TW.CAD.rda')
+setwd("/Volumes/JOHNNYFIVE/Professional/Workshops/RTC/Apr2017")#
+#setwd("~/4_Resources/Workshops/Resampling/RTC/Permutation")#
+	## load data for this example#
+load('./Data/LCBO.TW.CAD.rda')
+## split the data into two separate variables for later use#
+PRICE.DATA <- LCBO.TW.CAD[,c("LCBO_CAD_serving","TW_CAD_serving")]#
+	colnames(PRICE.DATA) <- c("LCBO_CAD","TW_CAD")
+PRICE.DATA
+PRICE.DATA
+setwd("/Volumes/JOHNNYFIVE/Professional/Workshops/RTC/Apr2017")#
+#setwd("~/4_Resources/Workshops/Resampling/RTC/Permutation")#
+	## load data for this example#
+load('./Data/LCBO.TW.CAD.rda')#
+#load('../Data/LCBO.TW.CAD.rda')#
+#
+	## split the data into two separate variables for later use#
+PRICE.DATA <- LCBO.TW.CAD[,c("LCBO_CAD_serving","TW_CAD_serving")]#
+	colnames(PRICE.DATA) <- c("LCBO_CAD","TW_CAD")#
+t.price = t.test(x=PRICE.DATA[,1],y= PRICE.DATA[,2]#
+                    var.equal = TRUE, #
+                    paired = T)
+setwd("/Volumes/JOHNNYFIVE/Professional/Workshops/RTC/Apr2017")#
+#setwd("~/4_Resources/Workshops/Resampling/RTC/Permutation")#
+	## load data for this example#
+load('./Data/LCBO.TW.CAD.rda')#
+#load('../Data/LCBO.TW.CAD.rda')#
+#
+	## split the data into two separate variables for later use#
+PRICE.DATA <- LCBO.TW.CAD[,c("LCBO_CAD_serving","TW_CAD_serving")]#
+	colnames(PRICE.DATA) <- c("LCBO_CAD","TW_CAD")#
+t.price = t.test(x=PRICE.DATA[,1],y= PRICE.DATA[,2],#
+                    var.equal = TRUE, #
+                    paired = T)
+t.price
+set.seed(29)#
+iters <- 1000#
+#
+perm.ts <- vector("numeric",iters)#
+for(i in 1:iters){#
+  perm_t = t.test(x=PRICE.DATA[,1],y=sample(PRICE.DATA[,2]),#
+                  var.equal = TRUE, #
+                  paired = T)#
+  perm.ts[i] <- perm_t$statistic                  #
+}
+perm.ts
+set.seed(29)#
+iters <- 1000#
+#
+perm.ts <- vector("numeric",iters)#
+for(i in 1:iters){#
+  perm_t = t.test(x=PRICE.DATA[,1],y=sample(PRICE.DATA[,2]),#
+                  var.equal = TRUE, #
+                  paired = F)#
+  perm.ts[i] <- perm_t$statistic                  #
+}
+perm.ts
+t.price
+t.price = t.test(x=PRICE.DATA[,1],y=PRICE.DATA[,2],#
+                    var.equal = TRUE, #
+                    paired = F)
+t.price
+set.seed(29)#
+iters <- 1000#
+#
+perm.ts <- vector("numeric",iters)#
+for(i in 1:iters){#
+  perm_t = t.test(x=PRICE.DATA[,1],y=sample(PRICE.DATA[,2]),#
+                  var.equal = TRUE, #
+                  paired = T)#
+  perm.ts[i] <- perm_t$statistic                  #
+}
+perm.ts

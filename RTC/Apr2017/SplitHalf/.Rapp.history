@@ -1,0 +1,1810 @@
+rm(list=ls())#
+gc()#
+#
+# library(ExPosition)#
+# library(ez)#
+# library(psych)#
+#
+	## load data for this example#
+load('../Data/LCBO.TW.CAD.rda')#
+#
+	## split the data into two separate variables for later use#
+PRICE.DATA <- LCBO.TW.CAD[,c("LCBO_CAD_serving","TW_CAD_serving")]#
+	colnames(PRICE.DATA) <- c("LCBO_CAD","TW_CAD")#
+cost.ratio <- LCBO.TW.CAD[,"LCBO.v.TW_CostRatio"]#
+#
+	## parametric approach.#
+cor.test.res <- cor.test(PRICE.DATA[,1],PRICE.DATA[,2])#
+	## we need some help from our friend the linear model (regression)#
+lm.res <- lm(TW_CAD~LCBO_CAD,data= PRICE.DATA)#
+	## equivalence#
+cor(PRICE.DATA$TW_CAD,predict(lm.res))#
+cor(PRICE.DATA$TW_CAD,lm.res$fitted.values)
+dev.new()#
+plot(PRICE.DATA,pch=20,asp=1,main=paste0("American Beer in CAD (355ml serving)\n r = ", round(cor.test.res$estimate,digits=3)),xlab="CAD: LCBO",ylab="CAD: TW",col=ifelse(cost.ratio>1,"mediumorchid4","olivedrab4"),cex=2)#
+text(PRICE.DATA,labels=rownames(PRICE.DATA),pos=3,cex=.65,col=ifelse(cost.ratio>1,"mediumorchid4","olivedrab4"))#
+abline(lm.res,col="blue",lty=2,lwd=1.75)
+rm(list=ls())#
+gc()#
+#
+# library(ExPosition)#
+# library(ez)#
+# library(psych)#
+#
+	## load data for this example#
+load('../Data/LCBO.TW.CAD.rda')#
+#
+	## split the data into two separate variables for later use#
+PRICE.DATA <- LCBO.TW.CAD[,c("LCBO_CAD_serving","TW_CAD_serving")]#
+	colnames(PRICE.DATA) <- c("LCBO_CAD","TW_CAD")#
+cost.ratio <- LCBO.TW.CAD[,"LCBO.v.TW_CostRatio"]#
+#
+	## parametric approach.#
+cor.test.res <- cor.test(PRICE.DATA[,1],PRICE.DATA[,2])#
+	## we need some help from our friend the linear model (regression)#
+lm.res <- lm(TW_CAD~LCBO_CAD,data= PRICE.DATA)#
+	## equivalence#
+cor(PRICE.DATA$TW_CAD,predict(lm.res))#
+cor(PRICE.DATA$TW_CAD,lm.res$fitted.values)#
+### Rule 0: Visualize your data, espeically before you do anything.#
+dev.new()#
+plot(PRICE.DATA,pch=20,asp=1,main=paste0("American Beer in CAD (355ml serving)\n r = ", round(cor.test.res$estimate,digits=3)),xlab="CAD: LCBO",ylab="CAD: TW",col=ifelse(cost.ratio>1,"mediumorchid4","olivedrab4"),cex=2)#
+text(PRICE.DATA,labels=rownames(PRICE.DATA),pos=3,cex=.65,col=ifelse(cost.ratio>1,"mediumorchid4","olivedrab4"))#
+abline(lm.res,col="blue",lty=2,lwd=1.75)#
+##############
+##########
+######
+#				What does split-half look like?#
+######
+##########
+##############
+#
+set.seed(13)		## set a seed for the random number generator so we can recreate the result exactly#
+PD.sh.1.indices <- sort(sample(nrow(PRICE.DATA),round(nrow(PRICE.DATA)*.5),replace=F))#
+PD.sh.2.indices <- setdiff(1:nrow(PRICE.DATA),PD.sh.1.indices)#
+#
+PD.sh.1.lm_2 <- lm(TW_CAD~LCBO_CAD,data=PRICE.DATA,subset=PD.sh.1.indices)#
+PD.sh.2.lm_2 <- lm(TW_CAD~LCBO_CAD,data=PRICE.DATA,subset=PD.sh.2.indices)	#
+PD.2.from.1 <- predict(PD.sh.1.lm_2, PRICE.DATA[PD.sh.2.indices,])#
+PD.1.from.2 <- predict(PD.sh.2.lm_2, PRICE.DATA[PD.sh.1.indices,])	#
+#
+sh.predicted <- c(PD.2.from.1,PD.1.from.2)[rownames(PRICE.DATA)]	#
+	## similarity.#
+split.cor <- cor(sh.predicted,PRICE.DATA$TW_CAD)#
+	## prediction error.#
+split.mpse <- mean((PRICE.DATA$TW_CAD - sh.predicted) ^ 2)
+PD.sh.1.lm_2
+plot(PD.sh.1.lm_2)
+dev.new()#
+plot(PRICE.DATA,pch=20,asp=1,main=paste0("American Beer in CAD (355ml serving)\n r = ", round(cor.test.res$estimate,digits=3)),xlab="CAD: LCBO",ylab="CAD: TW",col="grey80",cex=2)#
+text(PRICE.DATA,labels=rownames(PRICE.DATA),pos=3,cex=.65,col="grey80")
+dev.new()#
+plot(PRICE.DATA,pch=20,asp=1,main=paste0("American Beer in CAD (355ml serving)\n r = ", round(cor.test.res$estimate,digits=3)),xlab="CAD: LCBO",ylab="CAD: TW",col="grey80",cex=2)#
+#text(PRICE.DATA,labels=rownames(PRICE.DATA),pos=3,cex=.65,col="grey80")#
+points(PRICE.DATA[PD.sh.1.indices,],col="mediumorchid4")
+dev.new()#
+plot(PRICE.DATA,pch=20,asp=1,main=paste0("American Beer in CAD (355ml serving)\n r = ", round(cor.test.res$estimate,digits=3)),xlab="CAD: LCBO",ylab="CAD: TW",col="grey80",cex=2)#
+#text(PRICE.DATA,labels=rownames(PRICE.DATA),pos=3,cex=.65,col="grey80")#
+points(PRICE.DATA[PD.sh.1.indices,],col="mediumorchid4",pch=20)
+dev.new()#
+plot(PRICE.DATA,pch=20,asp=1,main=paste0("American Beer in CAD (355ml serving)\n r = ", round(cor.test.res$estimate,digits=3)),xlab="CAD: LCBO",ylab="CAD: TW",col="grey80",cex=2)#
+#text(PRICE.DATA,labels=rownames(PRICE.DATA),pos=3,cex=.65,col="grey80")#
+points(PRICE.DATA[PD.sh.1.indices,],col="mediumorchid4",pch=20,cex=2)
+dev.new()#
+plot(PRICE.DATA,pch=20,asp=1,main=paste0("American Beer in CAD (355ml serving)\n r = ", round(cor.test.res$estimate,digits=3)),xlab="CAD: LCBO",ylab="CAD: TW",col="grey80",cex=2)#
+#text(PRICE.DATA,labels=rownames(PRICE.DATA),pos=3,cex=.65,col="grey80")#
+points(PRICE.DATA[PD.sh.1.indices,],col="mediumorchid4",pch=20,cex=2)#
+abline(PD.sh.1.lm_2,col="mediumorchid4",lty=2,lwd=2)
+dev.new()#
+plot(PRICE.DATA,pch=20,asp=1,main=paste0("American Beer in CAD (355ml serving)\n r = ", round(cor.test.res$estimate,digits=3)),xlab="CAD: LCBO",ylab="CAD: TW",col="grey80",cex=2)#
+#text(PRICE.DATA,labels=rownames(PRICE.DATA),pos=3,cex=.65,col="grey80")#
+points(PRICE.DATA[PD.sh.1.indices,],col="mediumorchid4",pch=20,cex=2)#
+abline(lm.res,col="blue",lty=2,lwd=1.75)#
+abline(PD.sh.1.lm_2,col="mediumorchid4",lty=1,lwd=2)
+PD.2.from.1
+dev.new()#
+plot(PRICE.DATA,pch=20,asp=1,main=paste0("American Beer in CAD (355ml serving)\n r = ", round(cor.test.res$estimate,digits=3)),xlab="CAD: LCBO",ylab="CAD: TW",col="grey80",cex=2)#
+#text(PRICE.DATA,labels=rownames(PRICE.DATA),pos=3,cex=.65,col="grey80")#
+points(PRICE.DATA[PD.sh.1.indices,],col="mediumorchid4",pch=20,cex=2)#
+abline(lm.res,col="blue",lty=2,lwd=1.75)#
+abline(PD.sh.1.lm_2,col="mediumorchid4",lty=1,lwd=2)#
+plot(cbind(PRICE.DATA[,1],PD.2.from.1))
+dev.new()#
+plot(PRICE.DATA,pch=20,asp=1,main=paste0("American Beer in CAD (355ml serving)\n r = ", round(cor.test.res$estimate,digits=3)),xlab="CAD: LCBO",ylab="CAD: TW",col="grey80",cex=2)#
+#text(PRICE.DATA,labels=rownames(PRICE.DATA),pos=3,cex=.65,col="grey80")#
+points(PRICE.DATA[PD.sh.1.indices,],col="mediumorchid4",pch=20,cex=2)#
+abline(lm.res,col="blue",lty=2,lwd=1.75)#
+abline(PD.sh.1.lm_2,col="mediumorchid4",lty=1,lwd=2)#
+points(cbind(PRICE.DATA[,1],PD.2.from.1),pch=20,cex=1.5,col="firebrick4")
+dev.new()#
+plot(PRICE.DATA,pch=20,asp=1,main=paste0("American Beer in CAD (355ml serving)\n r = ", round(cor.test.res$estimate,digits=3)),xlab="CAD: LCBO",ylab="CAD: TW",col="grey80",cex=2)#
+#text(PRICE.DATA,labels=rownames(PRICE.DATA),pos=3,cex=.65,col="grey80")#
+points(PRICE.DATA[PD.sh.1.indices,],col="mediumorchid4",pch=20,cex=2)#
+abline(lm.res,col="blue",lty=2,lwd=1.75)#
+abline(PD.sh.1.lm_2,col="mediumorchid4",lty=1,lwd=2)#
+points(cbind(PRICE.DATA[,1],PD.2.from.1),pch=20,cex=1.5,col="seagreen3")
+### Rule 0: Visualize your data, espeically before you do anything.#
+dev.new()#
+plot(PRICE.DATA,pch=20,asp=1,main=paste0("American Beer in CAD (355ml serving)\n r = ", round(cor.test.res$estimate,digits=3)),xlab="CAD: LCBO",ylab="CAD: TW",col=ifelse(cost.ratio>1,"mediumorchid4","olivedrab4"),cex=2)#
+points(cbind(PRICE.DATA[,1],predict(lm.res),col="seagreen3",pch=20,cex=1.5)#
+abline(lm.res,col="blue",lty=2,lwd=1.75)
+dev.new()#
+plot(PRICE.DATA,pch=20,asp=1,main=paste0("American Beer in CAD (355ml serving)\n r = ", round(cor.test.res$estimate,digits=3)),xlab="CAD: LCBO",ylab="CAD: TW",col="mediumorchid4",cex=2)#
+points(cbind(PRICE.DATA[,1],predict(lm.res)),col="seagreen3",pch=20,cex=1.5)
+dev.new()#
+plot(PRICE.DATA,pch=20,asp=1,main=paste0("American Beer in CAD (355ml serving)\n r = ", round(cor.test.res$estimate,digits=3)),xlab="CAD: LCBO",ylab="CAD: TW",col="mediumorchid4",cex=2)#
+points(cbind(PRICE.DATA[,1],predict(lm.res)),col="seagreen3",pch=20,cex=1.5)#
+abline(lm.res,col="blue",lty=2,lwd=1.75)
+### Rule 0: Visualize your data, espeically before you do anything.#
+dev.new()#
+plot(PRICE.DATA,pch=20,asp=1,main=paste0("American Beer in CAD (355ml serving)\n r = ", round(cor.test.res$estimate,digits=3)),xlab="CAD: LCBO",ylab="CAD: TW",col="mediumorchid4",cex=2)#
+abline(lm.res,col="blue",lty=2,lwd=1.75)#
+points(cbind(PRICE.DATA[,1],predict(lm.res)),col="seagreen3",pch=20,cex=1.5)
+### Visualize the prediction of the full data.#
+dev.new()#
+plot(PRICE.DATA,pch=20,asp=1,main=paste0("American Beer in CAD (355ml serving)\n r = ", round(cor.test.res$estimate,digits=3)),xlab="CAD: LCBO",ylab="CAD: TW",col="mediumorchid4",cex=2)#
+abline(lm.res,col="blue",lty=2,lwd=1.75)#
+points(cbind(PRICE.DATA[,1],predict(lm.res)),col="seagreen3",pch=20,cex=1.5)#
+for(i in 1:nrow(PRICE.DATA)){#
+	x1 <- x0 <- PRICE.DATA[i,1]#
+	y0 <- PRICE.DATA[i,2]#
+	y1 <- predict(lm.res)[i]#
+	segments(x0,y0,x1,y1,lty=2,col="seagreen3")#
+}
+max(c(PRICE.DATA[,2],predict(lm.res))
+max(c(PRICE.DATA[,2],predict(lm.res)))
+### Visualize the prediction of the full data.#
+dev.new()#
+plot(PRICE.DATA,pch=20,asp=1,main=paste0("American Beer in CAD (355ml serving)\n r = ", round(cor.test.res$estimate,digits=3)),xlab="CAD: LCBO",ylab="CAD: TW",col="mediumorchid4",cex=2,ylim=c(min(c(PRICE.DATA[,2],predict(lm.res))),max(c(PRICE.DATA[,2],predict(lm.res)))))#
+abline(lm.res,col="blue",lty=2,lwd=1.75)#
+points(cbind(PRICE.DATA[,1],predict(lm.res)),col="seagreen3",pch=20,cex=1.5)#
+for(i in 1:nrow(PRICE.DATA)){#
+	x1 <- x0 <- PRICE.DATA[i,1]#
+	y0 <- PRICE.DATA[i,2]#
+	y1 <- predict(lm.res)[i]#
+	segments(x0,y0,x1,y1,lty=2,col="seagreen3")#
+}
+dev.new()#
+plot(PRICE.DATA,pch=20,asp=1,main=paste0("American Beer in CAD (355ml serving)\n r = ", round(cor.test.res$estimate,digits=3)),xlab="CAD: LCBO",ylab="CAD: TW",col="grey80",cex=2)#
+#text(PRICE.DATA,labels=rownames(PRICE.DATA),pos=3,cex=.65,col="grey80")#
+points(PRICE.DATA[PD.sh.1.indices,],col="mediumorchid4",pch=20,cex=2)#
+abline(lm.res,col="blue",lty=2,lwd=1.75)#
+abline(PD.sh.1.lm_2,col="mediumorchid4",lty=1,lwd=2)#
+points(cbind(PRICE.DATA[,1],predict(lm.res)),col="seagreen3",pch=20,cex=1.5)#
+for(i in 1:nrow(PRICE.DATA)){#
+	x1 <- x0 <- PRICE.DATA[i,1]#
+	y0 <- PRICE.DATA[i,2]#
+	y1 <- predict(lm.res)[i]#
+	segments(x0,y0,x1,y1,lty=2,col="seagreen3")#
+}#
+points(cbind(PRICE.DATA[,1],PD.2.from.1),pch=20,cex=1.5,col="seagreen3")
+dev.new()#
+plot(PRICE.DATA,pch=20,asp=1,main=paste0("American Beer in CAD (355ml serving)\n r = ", round(cor.test.res$estimate,digits=3)),xlab="CAD: LCBO",ylab="CAD: TW",col="grey80",cex=2)#
+#text(PRICE.DATA,labels=rownames(PRICE.DATA),pos=3,cex=.65,col="grey80")#
+points(PRICE.DATA[PD.sh.1.indices,],col="mediumorchid4",pch=20,cex=2)#
+abline(lm.res,col="blue",lty=2,lwd=1.75)#
+abline(PD.sh.1.lm_2,col="mediumorchid4",lty=1,lwd=2)
+dev.new()#
+plot(PRICE.DATA,pch=20,asp=1,main=paste0("American Beer in CAD (355ml serving)\n r = ", round(cor.test.res$estimate,digits=3)),xlab="CAD: LCBO",ylab="CAD: TW",col="grey80",cex=2)#
+#text(PRICE.DATA,labels=rownames(PRICE.DATA),pos=3,cex=.65,col="grey80")#
+points(PRICE.DATA[PD.sh.1.indices,],col="mediumorchid4",pch=20,cex=2)#
+abline(lm.res,col="blue",lty=2,lwd=1.75)#
+abline(PD.sh.1.lm_2,col="mediumorchid4",lty=1,lwd=2)#
+#points(cbind(PRICE.DATA[,1],predict(lm.res)),col="seagreen3",pch=20,cex=1.5)#
+for(i in 1:nrow(PRICE.DATA)){#
+	x1 <- x0 <- PRICE.DATA[i,1]#
+	y0 <- PRICE.DATA[i,2]#
+	y1 <- predict(lm.res)[i]#
+	segments(x0,y0,x1,y1,lty=2,col="seagreen3")#
+}#
+points(cbind(PRICE.DATA[,1],PD.2.from.1),pch=20,cex=1.5,col="seagreen3")
+dev.new()#
+plot(PRICE.DATA,pch=20,asp=1,main=paste0("American Beer in CAD (355ml serving)\n r = ", round(cor.test.res$estimate,digits=3)),xlab="CAD: LCBO",ylab="CAD: TW",col="grey80",cex=2)#
+#text(PRICE.DATA,labels=rownames(PRICE.DATA),pos=3,cex=.65,col="grey80")#
+points(PRICE.DATA[PD.sh.1.indices,],col="mediumorchid4",pch=20,cex=2)#
+abline(lm.res,col="blue",lty=2,lwd=1.75)#
+abline(PD.sh.1.lm_2,col="mediumorchid4",lty=1,lwd=2)#
+points(cbind(PRICE.DATA[PD.sh.1.indices,1],predict(PD.sh.1.lm_2)),col="mediumorchid4",pch=20,cex=1)
+dev.new()#
+plot(PRICE.DATA,pch=20,asp=1,main=paste0("American Beer in CAD (355ml serving)\n r = ", round(cor.test.res$estimate,digits=3)),xlab="CAD: LCBO",ylab="CAD: TW",col="grey80",cex=2)#
+#text(PRICE.DATA,labels=rownames(PRICE.DATA),pos=3,cex=.65,col="grey80")#
+points(PRICE.DATA[PD.sh.1.indices,],col="mediumorchid4",pch=20,cex=2)#
+abline(lm.res,col="blue",lty=2,lwd=1.75)#
+abline(PD.sh.1.lm_2,col="mediumorchid4",lty=1,lwd=2)#
+points(cbind(PRICE.DATA[PD.sh.1.indices,1],predict(PD.sh.1.lm_2)),col="mediumorchid4",pch=20,cex=1)#
+for(i in 1:length(PD.sh.1.indices)){#
+	x1 <- x0 <- PRICE.DATA[PD.sh.1.indices[[i],1]#
+	y0 <- PRICE.DATA[PD.sh.1.indices[[i],2]#
+	y1 <- predict(PD.sh.1.lm_2)[i]#
+	segments(x0,y0,x1,y1,lty=2,col="seagreen3")#
+}
+dev.new()#
+plot(PRICE.DATA,pch=20,asp=1,main=paste0("American Beer in CAD (355ml serving)\n r = ", round(cor.test.res$estimate,digits=3)),xlab="CAD: LCBO",ylab="CAD: TW",col="grey80",cex=2)#
+#text(PRICE.DATA,labels=rownames(PRICE.DATA),pos=3,cex=.65,col="grey80")#
+points(PRICE.DATA[PD.sh.1.indices,],col="mediumorchid4",pch=20,cex=2)#
+abline(lm.res,col="blue",lty=2,lwd=1.75)#
+abline(PD.sh.1.lm_2,col="mediumorchid4",lty=1,lwd=2)#
+points(cbind(PRICE.DATA[PD.sh.1.indices,1],predict(PD.sh.1.lm_2)),col="mediumorchid4",pch=20,cex=1)
+x1 <- x0 <- PRICE.DATA[PD.sh.1.indices[[i],1]
+dev.new()#
+plot(PRICE.DATA,pch=20,asp=1,main=paste0("American Beer in CAD (355ml serving)\n r = ", round(cor.test.res$estimate,digits=3)),xlab="CAD: LCBO",ylab="CAD: TW",col="grey80",cex=2)#
+#text(PRICE.DATA,labels=rownames(PRICE.DATA),pos=3,cex=.65,col="grey80")#
+points(PRICE.DATA[PD.sh.1.indices,],col="mediumorchid4",pch=20,cex=2)#
+abline(lm.res,col="blue",lty=2,lwd=1.75)#
+abline(PD.sh.1.lm_2,col="mediumorchid4",lty=1,lwd=2)#
+points(cbind(PRICE.DATA[PD.sh.1.indices,1],predict(PD.sh.1.lm_2)),col="mediumorchid4",pch=20,cex=1)#
+for(i in 1:length(PD.sh.1.indices)){#
+	x1 <- x0 <- PRICE.DATA[PD.sh.1.indices[i],1]#
+	y0 <- PRICE.DATA[PD.sh.1.indices[i],2]#
+	y1 <- predict(PD.sh.1.lm_2)[i]#
+	segments(x0,y0,x1,y1,lty=2,col="seagreen3")#
+}
+dev.new()#
+plot(PRICE.DATA,pch=20,asp=1,main=paste0("American Beer in CAD (355ml serving)\n r = ", round(cor.test.res$estimate,digits=3)),xlab="CAD: LCBO",ylab="CAD: TW",col="grey80",cex=2)#
+#text(PRICE.DATA,labels=rownames(PRICE.DATA),pos=3,cex=.65,col="grey80")#
+points(PRICE.DATA[PD.sh.1.indices,],col="mediumorchid4",pch=20,cex=2)#
+abline(lm.res,col="blue",lty=2,lwd=1.75)#
+abline(PD.sh.1.lm_2,col="mediumorchid4",lty=1,lwd=2)#
+points(cbind(PRICE.DATA[PD.sh.1.indices,1],predict(PD.sh.1.lm_2)),col="mediumorchid4",pch=20,cex=1)#
+for(i in 1:length(PD.sh.1.indices)){#
+	x1 <- x0 <- PRICE.DATA[PD.sh.1.indices[i],1]#
+	y0 <- PRICE.DATA[PD.sh.1.indices[i],2]#
+	y1 <- predict(PD.sh.1.lm_2)[i]#
+	segments(x0,y0,x1,y1,lty=2,col="mediumorchid4")#
+}
+dev.new()#
+plot(PRICE.DATA,pch=20,asp=1,main=paste0("American Beer in CAD (355ml serving)\n r = ", round(cor.test.res$estimate,digits=3)),xlab="CAD: LCBO",ylab="CAD: TW",col="grey80",cex=2)#
+#text(PRICE.DATA,labels=rownames(PRICE.DATA),pos=3,cex=.65,col="grey80")#
+points(PRICE.DATA[PD.sh.1.indices,],col="mediumorchid4",pch=20,cex=2)#
+abline(lm.res,col="blue",lty=2,lwd=1.75)#
+abline(PD.sh.1.lm_2,col="mediumorchid4",lty=1,lwd=2)#
+points(cbind(PRICE.DATA[PD.sh.1.indices,1],predict(PD.sh.1.lm_2)),col="mediumorchid4",pch=20,cex=1)#
+for(i in 1:length(PD.sh.1.indices)){#
+	x1 <- x0 <- PRICE.DATA[PD.sh.1.indices[i],1]#
+	y0 <- PRICE.DATA[PD.sh.1.indices[i],2]#
+	y1 <- predict(PD.sh.1.lm_2)[i]#
+	segments(x0,y0,x1,y1,lty=2,col="mediumorchid4")#
+}#
+points(cbind(PRICE.DATA[,1],PD.2.from.1),pch=20,cex=1.5,col="seagreen3")
+PD.2.from.1
+dev.new()#
+plot(PRICE.DATA,pch=20,asp=1,main=paste0("American Beer in CAD (355ml serving)\n r = ", round(cor.test.res$estimate,digits=3)),xlab="CAD: LCBO",ylab="CAD: TW",col="grey80",cex=2)#
+#text(PRICE.DATA,labels=rownames(PRICE.DATA),pos=3,cex=.65,col="grey80")#
+points(PRICE.DATA[PD.sh.1.indices,],col="mediumorchid4",pch=20,cex=2)#
+abline(lm.res,col="blue",lty=2,lwd=1.75)#
+abline(PD.sh.1.lm_2,col="mediumorchid4",lty=1,lwd=2)#
+points(cbind(PRICE.DATA[PD.sh.1.indices,1],predict(PD.sh.1.lm_2)),col="mediumorchid4",pch=20,cex=1)#
+for(i in 1:length(PD.sh.1.indices)){#
+	x1 <- x0 <- PRICE.DATA[PD.sh.1.indices[i],1]#
+	y0 <- PRICE.DATA[PD.sh.1.indices[i],2]#
+	y1 <- predict(PD.sh.1.lm_2)[i]#
+	segments(x0,y0,x1,y1,lty=2,col="mediumorchid4")#
+}#
+points(cbind(PRICE.DATA[PD.sh.2.indices,1],PD.2.from.1),pch=20,cex=1.5,col="seagreen3")
+dev.new()#
+plot(PRICE.DATA,pch=20,asp=1,main=paste0("American Beer in CAD (355ml serving)\n r = ", round(cor.test.res$estimate,digits=3)),xlab="CAD: LCBO",ylab="CAD: TW",col="grey80",cex=2)#
+#text(PRICE.DATA,labels=rownames(PRICE.DATA),pos=3,cex=.65,col="grey80")#
+points(PRICE.DATA[PD.sh.1.indices,],col="mediumorchid4",pch=20,cex=2)#
+abline(lm.res,col="blue",lty=2,lwd=1.75)#
+abline(PD.sh.1.lm_2,col="mediumorchid4",lty=1,lwd=2)#
+points(cbind(PRICE.DATA[PD.sh.1.indices,1],predict(PD.sh.1.lm_2)),col="mediumorchid4",pch=20,cex=1)#
+for(i in 1:length(PD.sh.1.indices)){#
+	x1 <- x0 <- PRICE.DATA[PD.sh.1.indices[i],1]#
+	y0 <- PRICE.DATA[PD.sh.1.indices[i],2]#
+	y1 <- predict(PD.sh.1.lm_2)[i]#
+	segments(x0,y0,x1,y1,lty=2,col="mediumorchid4")#
+}#
+points(cbind(PRICE.DATA[PD.sh.2.indices,1],PD.2.from.1),pch=20,cex=1.5,col="seagreen3")#
+for(i in 1:length(PD.sh.2.indices)){#
+	x1 <- x0 <- PRICE.DATA[PD.sh.2.indices[i],1]#
+	y0 <- PRICE.DATA[PD.sh.2.indices[i],2]#
+	y1 <- PD.2.from.1[i]#
+	segments(x0,y0,x1,y1,lty=2,col="seagreen4")#
+}
+dev.new()#
+plot(PRICE.DATA,pch=20,asp=1,main=paste0("American Beer in CAD (355ml serving)\n r = ", round(cor.test.res$estimate,digits=3)),xlab="CAD: LCBO",ylab="CAD: TW",col="grey80",cex=2)#
+#text(PRICE.DATA,labels=rownames(PRICE.DATA),pos=3,cex=.65,col="grey80")#
+points(PRICE.DATA[PD.sh.1.indices,],col="mediumorchid4",pch=20,cex=2)#
+abline(lm.res,col="blue",lty=2,lwd=1.75)#
+abline(PD.sh.1.lm_2,col="mediumorchid4",lty=1,lwd=2)#
+points(cbind(PRICE.DATA[PD.sh.1.indices,1],predict(PD.sh.1.lm_2)),col="mediumorchid4",pch=20,cex=1)#
+for(i in 1:length(PD.sh.1.indices)){#
+	x1 <- x0 <- PRICE.DATA[PD.sh.1.indices[i],1]#
+	y0 <- PRICE.DATA[PD.sh.1.indices[i],2]#
+	y1 <- predict(PD.sh.1.lm_2)[i]#
+	segments(x0,y0,x1,y1,lty=2,col="mediumorchid4")#
+}#
+points(cbind(PRICE.DATA[PD.sh.2.indices,1],PD.2.from.1),pch=20,cex=1.5,col="seagreen3")#
+for(i in 1:length(PD.sh.2.indices)){#
+	x1 <- x0 <- PRICE.DATA[PD.sh.2.indices[i],1]#
+	y0 <- PRICE.DATA[PD.sh.2.indices[i],2]#
+	y1 <- PD.2.from.1[i]#
+	segments(x0,y0,x1,y1,lty=2,col="seagreen4")#
+}#
+for(i in 1:nrow(PRICE.DATA)){#
+	x1 <- x0 <- PRICE.DATA[i,1]#
+	y0 <- PRICE.DATA[i,2]#
+	y1 <- predict(lm.res)[i]#
+	segments(x0,y0,x1,y1,lty=2,col="blue")#
+}
+dev.new()#
+plot(PRICE.DATA,pch=20,asp=1,main=paste0("American Beer in CAD (355ml serving)\n r = ", round(cor.test.res$estimate,digits=3)),xlab="CAD: LCBO",ylab="CAD: TW",col="grey80",cex=2,ylim=c(min(c(PRICE.DATA[,2],predict(lm.res)))))
+c(min(c(PRICE.DATA[,2],predict(lm.res))))
+dev.new()#
+plot(PRICE.DATA,pch=20,asp=1,main=paste0("American Beer in CAD (355ml serving)\n r = ", round(cor.test.res$estimate,digits=3)),xlab="CAD: LCBO",ylab="CAD: TW",col="grey80",cex=2,ylim=c(min(PRICE.DATA[,2],predict(lm.res))))
+dev.new()#
+plot(PRICE.DATA,pch=20,asp=1,main=paste0("American Beer in CAD (355ml serving)\n r = ", round(cor.test.res$estimate,digits=3)),xlab="CAD: LCBO",ylab="CAD: TW",col="grey80",cex=2,ylim=c(min(c(PRICE.DATA[,2],PD.2.from.1)),max(c(PRICE.DATA[,2],predict(lm.res)))))
+dev.new()#
+plot(PRICE.DATA,pch=20,asp=1,main=paste0("American Beer in CAD (355ml serving)\n r = ", round(cor.test.res$estimate,digits=3)),xlab="CAD: LCBO",ylab="CAD: TW",col="grey80",cex=2,ylim=c(min(c(PRICE.DATA[,2],PD.2.from.1)),max(c(PRICE.DATA[,2],predict(lm.res)))))#
+#text(PRICE.DATA,labels=rownames(PRICE.DATA),pos=3,cex=.65,col="grey80")#
+points(PRICE.DATA[PD.sh.1.indices,],col="mediumorchid4",pch=20,cex=2)#
+abline(lm.res,col="blue",lty=2,lwd=1.75)#
+abline(PD.sh.1.lm_2,col="mediumorchid4",lty=1,lwd=2)#
+points(cbind(PRICE.DATA[PD.sh.1.indices,1],predict(PD.sh.1.lm_2)),col="mediumorchid4",pch=20,cex=1)#
+for(i in 1:length(PD.sh.1.indices)){#
+	x1 <- x0 <- PRICE.DATA[PD.sh.1.indices[i],1]#
+	y0 <- PRICE.DATA[PD.sh.1.indices[i],2]#
+	y1 <- predict(PD.sh.1.lm_2)[i]#
+	segments(x0,y0,x1,y1,lty=2,col="mediumorchid4")#
+}#
+points(cbind(PRICE.DATA[PD.sh.2.indices,1],PD.2.from.1),pch=20,cex=1.5,col="seagreen3")#
+for(i in 1:length(PD.sh.2.indices)){#
+	x1 <- x0 <- PRICE.DATA[PD.sh.2.indices[i],1]#
+	y0 <- PRICE.DATA[PD.sh.2.indices[i],2]#
+	y1 <- PD.2.from.1[i]#
+	segments(x0,y0,x1,y1,lty=2,col="seagreen4")#
+}
+dev.new()#
+plot(PRICE.DATA,pch=20,asp=1,main=paste0("American Beer in CAD (355ml serving)\n r = ", round(cor.test.res$estimate,digits=3)),xlab="CAD: LCBO",ylab="CAD: TW",col="grey80",cex=2,ylim=c(min(c(PRICE.DATA[,2],PD.2.from.1)),max(c(PRICE.DATA[,2],PD.2.from.1))))#
+#text(PRICE.DATA,labels=rownames(PRICE.DATA),pos=3,cex=.65,col="grey80")#
+points(PRICE.DATA[PD.sh.1.indices,],col="mediumorchid4",pch=20,cex=2)#
+abline(lm.res,col="blue",lty=2,lwd=1.75)#
+abline(PD.sh.1.lm_2,col="mediumorchid4",lty=1,lwd=2)#
+points(cbind(PRICE.DATA[PD.sh.1.indices,1],predict(PD.sh.1.lm_2)),col="mediumorchid4",pch=20,cex=1)#
+for(i in 1:length(PD.sh.1.indices)){#
+	x1 <- x0 <- PRICE.DATA[PD.sh.1.indices[i],1]#
+	y0 <- PRICE.DATA[PD.sh.1.indices[i],2]#
+	y1 <- predict(PD.sh.1.lm_2)[i]#
+	segments(x0,y0,x1,y1,lty=2,col="mediumorchid4")#
+}#
+points(cbind(PRICE.DATA[PD.sh.2.indices,1],PD.2.from.1),pch=20,cex=1.5,col="seagreen3")#
+for(i in 1:length(PD.sh.2.indices)){#
+	x1 <- x0 <- PRICE.DATA[PD.sh.2.indices[i],1]#
+	y0 <- PRICE.DATA[PD.sh.2.indices[i],2]#
+	y1 <- PD.2.from.1[i]#
+	segments(x0,y0,x1,y1,lty=2,col="seagreen4")#
+}
+rm(list=ls())#
+gc()#
+#
+# library(ExPosition)#
+# library(ez)#
+# library(psych)#
+#
+	## load data for this example#
+load('../Data/LCBO.TW.CAD.rda')#
+#
+	## split the data into two separate variables for later use#
+PRICE.DATA <- LCBO.TW.CAD[,c("LCBO_CAD_serving","TW_CAD_serving")]#
+	colnames(PRICE.DATA) <- c("LCBO_CAD","TW_CAD")#
+cost.ratio <- LCBO.TW.CAD[,"LCBO.v.TW_CostRatio"]#
+#
+	## parametric approach.#
+cor.test.res <- cor.test(PRICE.DATA[,1],PRICE.DATA[,2])#
+	## we need some help from our friend the linear model (regression)#
+lm.res <- lm(TW_CAD~LCBO_CAD,data= PRICE.DATA)#
+	## equivalence#
+cor(PRICE.DATA$TW_CAD,predict(lm.res))#
+cor(PRICE.DATA$TW_CAD,lm.res$fitted.values)#
+### Rule 0: Visualize your data, espeically before you do anything.#
+dev.new()#
+plot(PRICE.DATA,pch=20,asp=1,main=paste0("American Beer in CAD (355ml serving)\n r = ", round(cor.test.res$estimate,digits=3)),xlab="CAD: LCBO",ylab="CAD: TW",col=ifelse(cost.ratio>1,"mediumorchid4","olivedrab4"),cex=2)#
+text(PRICE.DATA,labels=rownames(PRICE.DATA),pos=3,cex=.65,col=ifelse(cost.ratio>1,"mediumorchid4","olivedrab4"))#
+abline(lm.res,col="blue",lty=2,lwd=1.75)#
+#
+### Visualize the prediction of the full data.#
+dev.new()#
+plot(PRICE.DATA,pch=20,asp=1,main=paste0("American Beer in CAD (355ml serving)\n r = ", round(cor.test.res$estimate,digits=3)),xlab="CAD: LCBO",ylab="CAD: TW",col="mediumorchid4",cex=2,ylim=c(min(c(PRICE.DATA[,2],predict(lm.res))),max(c(PRICE.DATA[,2],predict(lm.res)))))#
+abline(lm.res,col="blue",lty=2,lwd=1.75)#
+points(cbind(PRICE.DATA[,1],predict(lm.res)),col="seagreen3",pch=20,cex=1.5)#
+for(i in 1:nrow(PRICE.DATA)){#
+	x1 <- x0 <- PRICE.DATA[i,1]#
+	y0 <- PRICE.DATA[i,2]#
+	y1 <- predict(lm.res)[i]#
+	segments(x0,y0,x1,y1,lty=2,col="seagreen3")#
+}
+set.seed(13)		## set a seed for the random number generator so we can recreate the result exactly#
+PD.sh.1.indices <- sort(sample(nrow(PRICE.DATA),round(nrow(PRICE.DATA)*.5),replace=F))#
+PD.sh.2.indices <- setdiff(1:nrow(PRICE.DATA),PD.sh.1.indices)#
+#
+PD.sh.1.lm <- lm(TW_CAD~LCBO_CAD,data=PRICE.DATA,subset=PD.sh.1.indices)#
+PD.sh.2.lm <- lm(TW_CAD~LCBO_CAD,data=PRICE.DATA,subset=PD.sh.2.indices)	#
+PD.2.from.1 <- predict(PD.sh.1.lm, PRICE.DATA[PD.sh.2.indices,])#
+PD.1.from.2 <- predict(PD.sh.2.lm, PRICE.DATA[PD.sh.1.indices,])	#
+dev.new()#
+plot(PRICE.DATA,pch=20,asp=1,main=paste0("American Beer in CAD (355ml serving)\n r = ", round(cor.test.res$estimate,digits=3)),xlab="CAD: LCBO",ylab="CAD: TW",col="grey80",cex=2,ylim=c(min(c(PRICE.DATA[,2],PD.2.from.1)),max(c(PRICE.DATA[,2],PD.2.from.1))))#
+#text(PRICE.DATA,labels=rownames(PRICE.DATA),pos=3,cex=.65,col="grey80")#
+points(PRICE.DATA[PD.sh.1.indices,],col="mediumorchid4",pch=20,cex=2)#
+abline(lm.res,col="blue",lty=2,lwd=1.75)#
+abline(PD.sh.1.lm,col="mediumorchid4",lty=1,lwd=2)#
+points(cbind(PRICE.DATA[PD.sh.1.indices,1],predict(PD.sh.1.lm)),col="mediumorchid4",pch=20,cex=1)#
+for(i in 1:length(PD.sh.1.indices)){#
+	x1 <- x0 <- PRICE.DATA[PD.sh.1.indices[i],1]#
+	y0 <- PRICE.DATA[PD.sh.1.indices[i],2]#
+	y1 <- predict(PD.sh.1.lm)[i]#
+	segments(x0,y0,x1,y1,lty=2,col="mediumorchid4")#
+}#
+points(cbind(PRICE.DATA[PD.sh.2.indices,1],PD.2.from.1),pch=20,cex=1.5,col="seagreen3")#
+for(i in 1:length(PD.sh.2.indices)){#
+	x1 <- x0 <- PRICE.DATA[PD.sh.2.indices[i],1]#
+	y0 <- PRICE.DATA[PD.sh.2.indices[i],2]#
+	y1 <- PD.2.from.1[i]#
+	segments(x0,y0,x1,y1,lty=2,col="seagreen4")#
+}#
+sh.predicted <- c(PD.2.from.1,PD.1.from.2)[rownames(PRICE.DATA)]	#
+	## similarity.#
+split.cor <- cor(sh.predicted,PRICE.DATA$TW_CAD)#
+	## prediction error.#
+split.mpse <- mean((PRICE.DATA$TW_CAD - sh.predicted) ^ 2)
+dev.new()#
+plot(PRICE.DATA,pch=20,asp=1,main="American Beer in CAD (355ml serving)\n ",xlab="CAD: LCBO",ylab="CAD: TW",col="grey80",cex=2,ylim=c(min(c(PRICE.DATA[,2],PD.2.from.1)),max(c(PRICE.DATA[,2],PD.2.from.1))))#
+#text(PRICE.DATA,labels=rownames(PRICE.DATA),pos=3,cex=.65,col="grey80")#
+points(PRICE.DATA[PD.sh.1.indices,],col="mediumorchid4",pch=20,cex=2)#
+abline(lm.res,col="blue",lty=2,lwd=1.75)#
+abline(PD.sh.1.lm,col="mediumorchid4",lty=1,lwd=2)#
+points(cbind(PRICE.DATA[PD.sh.1.indices,1],predict(PD.sh.1.lm)),col="mediumorchid4",pch=20,cex=1)#
+for(i in 1:length(PD.sh.1.indices)){#
+	x1 <- x0 <- PRICE.DATA[PD.sh.1.indices[i],1]#
+	y0 <- PRICE.DATA[PD.sh.1.indices[i],2]#
+	y1 <- predict(PD.sh.1.lm)[i]#
+	segments(x0,y0,x1,y1,lty=2,col="mediumorchid4")#
+}#
+points(cbind(PRICE.DATA[PD.sh.2.indices,1],PD.2.from.1),pch=20,cex=1.5,col="seagreen3")#
+for(i in 1:length(PD.sh.2.indices)){#
+	x1 <- x0 <- PRICE.DATA[PD.sh.2.indices[i],1]#
+	y0 <- PRICE.DATA[PD.sh.2.indices[i],2]#
+	y1 <- PD.2.from.1[i]#
+	segments(x0,y0,x1,y1,lty=2,col="seagreen4")#
+}
+sh.predicted <- c(PD.2.from.1,PD.1.from.2)[rownames(PRICE.DATA)]	#
+	## similarity.#
+split.cor <- cor(sh.predicted,PRICE.DATA$TW_CAD)#
+	## prediction error.#
+split.mpse <- mean((PRICE.DATA$TW_CAD - sh.predicted) ^ 2)
+sh.predicted
+split.cor
+split.mpse
+##############
+##########
+######
+#				Turn split-half into a test#
+######
+##########
+##############
+#
+split.mat <- matrix(NA,100,2)#
+	colnames(split.mat) <- c("cor","mpse")	#
+for(i in 1:100){		#
+	PD.sh.1.indices <- sort(sample(nrow(PRICE.DATA),round(nrow(PRICE.DATA)*.5),replace=F))#
+	PD.sh.2.indices <- setdiff(1:nrow(PRICE.DATA),PD.sh.1.indices)#
+	PD.sh.1.lm <- lm(TW_CAD~LCBO_CAD,data=PRICE.DATA,subset=PD.sh.1.indices)#
+	PD.sh.2.lm <- lm(TW_CAD~LCBO_CAD,data=PRICE.DATA,subset=PD.sh.2.indices)	#
+	PD.2.from.1 <- predict(PD.sh.1.lm, PRICE.DATA[PD.sh.2.indices,])#
+	PD.1.from.2 <- predict(PD.sh.2.lm, PRICE.DATA[PD.sh.1.indices,])	#
+	sh.predicted <- c(PD.2.from.1,PD.1.from.2)[rownames(PRICE.DATA)]	#
+		## similarity#
+	split.cor <- cor(sh.predicted,PRICE.DATA$TW_CAD)#
+		## prediction error.#
+	split.mpse <- mean((PRICE.DATA$TW_CAD - sh.predicted) ^ 2)#
+	split.mat[i,1] <- split.cor#
+	split.mat[i,2] <- split.mpse	#
+}
+pred.vals <- vector("numeric",nrow(PRICE.DATA))#
+for(i in 1:nrow(PRICE.DATA)){#
+	pred.vals[i] <- predict(lm(TW_CAD~LCBO_CAD,data=PRICE.DATA[-i,]),PRICE.DATA[i,])#
+}#
+loo.cor <- cor(PRICE.DATA$TW_CAD,pred.vals)#
+loo.mpse <- mean((PRICE.DATA$TW_CAD - pred.vals) ^ 2)#
+#
+plot(split.mat,pch=20,col="black")#
+points(loo.cor, loo.mpse,col="red",pch=20)
+boxplot(t(split.mat))
+boxplot(split.mat)
+boxplot(split.mat[,1])
+boxplot(split.mat[,1])#
+boxplot(split.mat[,2])
+dev.new()#
+boxplot(split.mat[,1])#
+dev.new()#
+boxplot(split.mat[,2])
+rm(list=ls())#
+gc()#
+#
+library(InPosition)#
+library(ez)#
+# library(psych)#
+#
+	## load data for this example#
+load('../Data/REGION.STYLE.RATING.rda')#
+#
+	## parametric approach, with the ez package#
+ratings_anova = ezANOVA(#
+    data = REGION.STYLE.RATING#
+    , dv = RATEBEER_StyleRating#
+    , wid = BEER.NAME#
+    , between = c(REGION,PALE.v.NOT)#
+    , type = 3#
+)#
+#
+### Rule 0: Visualize your data, espeically before you do anything.#
+dev.new()#
+interaction.plot(REGION.STYLE.RATING$REGION, REGION.STYLE.RATING$PALE.v.NOT, REGION.STYLE.RATING$RATEBEER_StyleRating,type="b",xlab="REGION",ylab="STYLE RATINGS",trace.label="",pch=c(20,22),cex=2,lwd=2,col=c("mediumorchid4","darkseagreen"),main="2x2 ANOVA")
+# SH FOR ANOVA -- NOT SO BAD.#
+RSR.design <- makeNominalData(as.matrix(apply(REGION.STYLE.RATING[,2:3],1,paste,collapse="_")))#
+split.mat_aov <- matrix(NA,100,2)#
+	colnames(split.mat_aov) <- c("cor","mpse")	#
+for(i in 1:100){	#
+	aov.splits <- sh.by.design(RSR.design)#
+	ratings_anova_SH1 = suppressWarnings(ezANOVA(#
+	    data = droplevels(REGION.STYLE.RATING[aov.splits$sh1,])#
+	    , dv = RATEBEER.RATING..Style.#
+	    , wid = BEER#
+	    , between = c(REGION,PALE.v.NOT)#
+	    , type = 3#
+	    , return_aov = T    #
+	))#
+	ratings_anova_SH2 = suppressWarnings(ezANOVA(#
+	    data = droplevels(REGION.STYLE.RATING[aov.splits$sh2,])#
+	    , dv = RATEBEER.RATING..Style.#
+	    , wid = BEER#
+	    , between = c(REGION,PALE.v.NOT)#
+	    , type = 3#
+	    , return_aov = T    #
+	))#
+	aov.2.from.1 <- predict(ratings_anova_SH1$aov,REGION.STYLE.RATING[aov.splits$sh2,])	#
+	aov.1.from.2 <- predict(ratings_anova_SH2$aov,REGION.STYLE.RATING[aov.splits$sh1,])#
+	sh.predicted_aov <- c(aov.2.from.1,aov.1.from.2)[rownames(REGION.STYLE.RATING)]	#
+		## repro/correlation?#
+	split.cor_aov <- cor(sh.predicted_aov,REGION.STYLE.RATING$RATEBEER.RATING..Style.)#
+		## prediction error.#
+	split.mpse_aov <- mean((REGION.STYLE.RATING$RATEBEER.RATING..Style. - sh.predicted_aov) ^ 2)	#
+	split.mat_aov[i,1] <- split.cor_aov#
+	split.mat_aov[i,2] <- split.mpse_aov	#
+}
+##split half by design function#
+sh.by.design <- function(DES){#
+	sh1 <- sort(unname(unlist(apply(RSR.design,2,function(x){y<-which(x==1); sample(y, ifelse(runif(1,min=0,max=1)>.5,floor(length(y)/2), ceiling(length(y)/2) ))}))))#
+	sh2 <- setdiff(1:nrow(DES),sh1)#
+	return(list(sh1=sh1,sh2=sh2))#
+}
+# SH FOR ANOVA -- NOT SO BAD.#
+RSR.design <- makeNominalData(as.matrix(apply(REGION.STYLE.RATING[,2:3],1,paste,collapse="_")))#
+split.mat_aov <- matrix(NA,100,2)#
+	colnames(split.mat_aov) <- c("cor","mpse")	#
+for(i in 1:100){	#
+	aov.splits <- sh.by.design(RSR.design)#
+	ratings_anova_SH1 = suppressWarnings(ezANOVA(#
+	    data = droplevels(REGION.STYLE.RATING[aov.splits$sh1,])#
+	    , dv = RATEBEER.RATING..Style.#
+	    , wid = BEER#
+	    , between = c(REGION,PALE.v.NOT)#
+	    , type = 3#
+	    , return_aov = T    #
+	))#
+	ratings_anova_SH2 = suppressWarnings(ezANOVA(#
+	    data = droplevels(REGION.STYLE.RATING[aov.splits$sh2,])#
+	    , dv = RATEBEER.RATING..Style.#
+	    , wid = BEER#
+	    , between = c(REGION,PALE.v.NOT)#
+	    , type = 3#
+	    , return_aov = T    #
+	))#
+	aov.2.from.1 <- predict(ratings_anova_SH1$aov,REGION.STYLE.RATING[aov.splits$sh2,])	#
+	aov.1.from.2 <- predict(ratings_anova_SH2$aov,REGION.STYLE.RATING[aov.splits$sh1,])#
+	sh.predicted_aov <- c(aov.2.from.1,aov.1.from.2)[rownames(REGION.STYLE.RATING)]	#
+		## repro/correlation?#
+	split.cor_aov <- cor(sh.predicted_aov,REGION.STYLE.RATING$RATEBEER.RATING..Style.)#
+		## prediction error.#
+	split.mpse_aov <- mean((REGION.STYLE.RATING$RATEBEER.RATING..Style. - sh.predicted_aov) ^ 2)	#
+	split.mat_aov[i,1] <- split.cor_aov#
+	split.mat_aov[i,2] <- split.mpse_aov	#
+}
+rm(list=ls())#
+gc()#
+#
+library(InPosition)#
+library(ez)#
+# library(psych)#
+#
+##split half by design function#
+sh.by.design <- function(DES){#
+	sh1 <- sort(unname(unlist(apply(RSR.design,2,function(x){y<-which(x==1); sample(y, ifelse(runif(1,min=0,max=1)>.5,floor(length(y)/2), ceiling(length(y)/2) ))}))))#
+	sh2 <- setdiff(1:nrow(DES),sh1)#
+	return(list(sh1=sh1,sh2=sh2))#
+}#
+#
+	## load data for this example#
+load('../Data/REGION.STYLE.RATING.rda')#
+#
+	## parametric approach, with the ez package#
+ratings_anova = ezANOVA(#
+    data = REGION.STYLE.RATING#
+    , dv = RATEBEER_StyleRating#
+    , wid = BEER.NAME.NAME#
+    , between = c(REGION,PALE.v.NOT)#
+    , type = 3#
+)#
+#
+### Rule 0: Visualize your data, espeically before you do anything.#
+dev.new()#
+interaction.plot(REGION.STYLE.RATING$REGION, REGION.STYLE.RATING$PALE.v.NOT, REGION.STYLE.RATING$RATEBEER_StyleRating,type="b",xlab="REGION",ylab="STYLE RATINGS",trace.label="",pch=c(20,22),cex=2,lwd=2,col=c("mediumorchid4","darkseagreen"),main="2x2 ANOVA")
+rm(list=ls())#
+gc()#
+#
+library(InPosition)#
+library(ez)#
+# library(psych)#
+#
+##split half by design function#
+sh.by.design <- function(DES){#
+	sh1 <- sort(unname(unlist(apply(RSR.design,2,function(x){y<-which(x==1); sample(y, ifelse(runif(1,min=0,max=1)>.5,floor(length(y)/2), ceiling(length(y)/2) ))}))))#
+	sh2 <- setdiff(1:nrow(DES),sh1)#
+	return(list(sh1=sh1,sh2=sh2))#
+}#
+#
+	## load data for this example#
+load('../Data/REGION.STYLE.RATING.rda')#
+#
+	## parametric approach, with the ez package#
+ratings_anova = ezANOVA(#
+    data = REGION.STYLE.RATING#
+    , dv = RATEBEER_StyleRating#
+    , wid = BEER.NAME#
+    , between = c(REGION,PALE.v.NOT)#
+    , type = 3#
+)#
+#
+### Rule 0: Visualize your data, espeically before you do anything.#
+dev.new()#
+interaction.plot(REGION.STYLE.RATING$REGION, REGION.STYLE.RATING$PALE.v.NOT, REGION.STYLE.RATING$RATEBEER_StyleRating,type="b",xlab="REGION",ylab="STYLE RATINGS",trace.label="",pch=c(20,22),cex=2,lwd=2,col=c("mediumorchid4","darkseagreen"),main="2x2 ANOVA")
+# SH FOR ANOVA -- NOT SO BAD.#
+RSR.design <- makeNominalData(as.matrix(apply(REGION.STYLE.RATING[,2:3],1,paste,collapse="_")))#
+split.mat_aov <- matrix(NA,100,2)#
+	colnames(split.mat_aov) <- c("cor","mpse")	#
+for(i in 1:100){	#
+	aov.splits <- sh.by.design(RSR.design)#
+	ratings_anova_SH1 = suppressWarnings(ezANOVA(#
+	    data = droplevels(REGION.STYLE.RATING[aov.splits$sh1,])#
+	    , dv = RATEBEER_StyleRating#
+	    , wid = BEER.NAME#
+	    , between = c(REGION,PALE.v.NOT)#
+	    , type = 3#
+	    , return_aov = T    #
+	))#
+	ratings_anova_SH2 = suppressWarnings(ezANOVA(#
+	    data = droplevels(REGION.STYLE.RATING[aov.splits$sh2,])#
+	    , dv = RATEBEER_StyleRating#
+	    , wid = BEER.NAME#
+	    , between = c(REGION,PALE.v.NOT)#
+	    , type = 3#
+	    , return_aov = T    #
+	))#
+	aov.2.from.1 <- predict(ratings_anova_SH1$aov,REGION.STYLE.RATING[aov.splits$sh2,])	#
+	aov.1.from.2 <- predict(ratings_anova_SH2$aov,REGION.STYLE.RATING[aov.splits$sh1,])#
+	sh.predicted_aov <- c(aov.2.from.1,aov.1.from.2)[rownames(REGION.STYLE.RATING)]	#
+		## repro/correlation?#
+	split.cor_aov <- cor(sh.predicted_aov,REGION.STYLE.RATING$RATEBEER_StyleRating)#
+		## prediction error.#
+	split.mpse_aov <- mean((REGION.STYLE.RATING$RATEBEER_StyleRating - sh.predicted_aov) ^ 2)	#
+	split.mat_aov[i,1] <- split.cor_aov#
+	split.mat_aov[i,2] <- split.mpse_aov	#
+}
+split.mat_aov
+rm(list=ls())#
+gc()#
+#
+# library(ExPosition)#
+# library(ez)#
+# library(psych)#
+#
+	## load data for this example#
+load('../Data/LCBO.TW.CAD.rda')#
+#
+	## split the data into two separate variables for later use#
+PRICE.DATA <- LCBO.TW.CAD[,c("LCBO_CAD_serving","TW_CAD_serving")]#
+	colnames(PRICE.DATA) <- c("LCBO_CAD","TW_CAD")#
+cost.ratio <- LCBO.TW.CAD[,"LCBO.v.TW_CostRatio"]#
+#
+	## parametric approach.#
+cor.test.res <- cor.test(PRICE.DATA[,1],PRICE.DATA[,2])#
+	## we need some help from our friend the linear model (regression)#
+lm.res <- lm(TW_CAD~LCBO_CAD,data= PRICE.DATA)#
+	## equivalence#
+cor(PRICE.DATA$TW_CAD,predict(lm.res))#
+cor(PRICE.DATA$TW_CAD,lm.res$fitted.values)#
+### Rule 0: Visualize your data, espeically before you do anything.#
+dev.new()#
+plot(PRICE.DATA,pch=20,asp=1,main=paste0("American Beer in CAD (355ml serving)\n r = ", round(cor.test.res$estimate,digits=3)),xlab="CAD: LCBO",ylab="CAD: TW",col=ifelse(cost.ratio>1,"mediumorchid4","olivedrab4"),cex=2)#
+text(PRICE.DATA,labels=rownames(PRICE.DATA),pos=3,cex=.65,col=ifelse(cost.ratio>1,"mediumorchid4","olivedrab4"))#
+abline(lm.res,col="blue",lty=2,lwd=1.75)#
+#
+### Visualize the prediction of the full data.#
+dev.new()#
+plot(PRICE.DATA,pch=20,asp=1,main=paste0("American Beer in CAD (355ml serving)\n r = ", round(cor.test.res$estimate,digits=3)),xlab="CAD: LCBO",ylab="CAD: TW",col="mediumorchid4",cex=2,ylim=c(min(c(PRICE.DATA[,2],predict(lm.res))),max(c(PRICE.DATA[,2],predict(lm.res)))))#
+abline(lm.res,col="blue",lty=2,lwd=1.75)#
+points(cbind(PRICE.DATA[,1],predict(lm.res)),col="seagreen3",pch=20,cex=1.5)#
+for(i in 1:nrow(PRICE.DATA)){#
+	x1 <- x0 <- PRICE.DATA[i,1]#
+	y0 <- PRICE.DATA[i,2]#
+	y1 <- predict(lm.res)[i]#
+	segments(x0,y0,x1,y1,lty=2,col="seagreen3")#
+}
+### Visualize the prediction of the full data.#
+dev.new()#
+plot(PRICE.DATA,pch=20,asp=1,main=paste0("American Beer in CAD (355ml serving)\n r = ", round(cor.test.res$estimate,digits=3)),xlab="CAD: LCBO",ylab="CAD: TW",col="mediumorchid4",cex=2,ylim=c(min(c(PRICE.DATA[,2],predict(lm.res))),max(c(PRICE.DATA[,2],predict(lm.res)))))#
+abline(lm.res,col="blue",lty=2,lwd=1.75)#
+points(cbind(PRICE.DATA[,1],predict(lm.res)),col="seagreen3",pch=20,cex=1.5)#
+for(i in 1:nrow(PRICE.DATA)){#
+	x1 <- x0 <- PRICE.DATA[i,1]#
+	y0 <- PRICE.DATA[i,2]#
+	y1 <- predict(lm.res)[i]#
+	segments(x0,y0,x1,y1,lty=2,col="seagreen3")#
+}
+##############
+##########
+######
+#				What does split-half look like?#
+######
+##########
+##############
+#
+set.seed(13)		## set a seed for the random number generator so we can recreate the result exactly#
+#
+PD.sh.1.indices <- sort(sample(nrow(PRICE.DATA),round(nrow(PRICE.DATA)*.5),replace=F))#
+PD.sh.2.indices <- setdiff(1:nrow(PRICE.DATA),PD.sh.1.indices)#
+#
+PD.sh.1.lm <- lm(TW_CAD~LCBO_CAD,data=PRICE.DATA,subset=PD.sh.1.indices)#
+PD.sh.2.lm <- lm(TW_CAD~LCBO_CAD,data=PRICE.DATA,subset=PD.sh.2.indices)	#
+PD.2.from.1 <- predict(PD.sh.1.lm, PRICE.DATA[PD.sh.2.indices,])#
+PD.1.from.2 <- predict(PD.sh.2.lm, PRICE.DATA[PD.sh.1.indices,])
+dev.new()#
+plot(PRICE.DATA,pch=20,asp=1,main="American Beer in CAD (355ml serving)\n ",xlab="CAD: LCBO",ylab="CAD: TW",col="grey80",cex=2,ylim=c(min(c(PRICE.DATA[,2],PD.2.from.1)),max(c(PRICE.DATA[,2],PD.2.from.1))))#
+#text(PRICE.DATA,labels=rownames(PRICE.DATA),pos=3,cex=.65,col="grey80")#
+points(PRICE.DATA[PD.sh.1.indices,],col="mediumorchid4",pch=20,cex=2)#
+abline(lm.res,col="blue",lty=2,lwd=1.75)#
+abline(PD.sh.1.lm,col="mediumorchid4",lty=1,lwd=2)#
+points(cbind(PRICE.DATA[PD.sh.1.indices,1],predict(PD.sh.1.lm)),col="mediumorchid4",pch=20,cex=1)#
+for(i in 1:length(PD.sh.1.indices)){#
+	x1 <- x0 <- PRICE.DATA[PD.sh.1.indices[i],1]#
+	y0 <- PRICE.DATA[PD.sh.1.indices[i],2]#
+	y1 <- predict(PD.sh.1.lm)[i]#
+	segments(x0,y0,x1,y1,lty=2,col="mediumorchid4")#
+}#
+points(cbind(PRICE.DATA[PD.sh.2.indices,1],PD.2.from.1),pch=20,cex=1.5,col="seagreen3")#
+for(i in 1:length(PD.sh.2.indices)){#
+	x1 <- x0 <- PRICE.DATA[PD.sh.2.indices[i],1]#
+	y0 <- PRICE.DATA[PD.sh.2.indices[i],2]#
+	y1 <- PD.2.from.1[i]#
+	segments(x0,y0,x1,y1,lty=2,col="seagreen4")#
+}#
+sh.predicted <- c(PD.2.from.1,PD.1.from.2)[rownames(PRICE.DATA)]	#
+	## similarity.#
+split.cor <- cor(sh.predicted,PRICE.DATA$TW_CAD)#
+	## prediction error.#
+split.mpse <- mean((PRICE.DATA$TW_CAD - sh.predicted) ^ 2)
+##############
+##########
+######
+#				Turn split-half into a test#
+######
+##########
+##############
+#
+split.mat <- matrix(NA,100,2)#
+	colnames(split.mat) <- c("cor","mpse")	#
+iters <- 1000	#
+for(i in 1:iters){		#
+	PD.sh.1.indices <- sort(sample(nrow(PRICE.DATA),round(nrow(PRICE.DATA)*.5),replace=F))#
+	PD.sh.2.indices <- setdiff(1:nrow(PRICE.DATA),PD.sh.1.indices)#
+	PD.sh.1.lm <- lm(TW_CAD~LCBO_CAD,data=PRICE.DATA,subset=PD.sh.1.indices)#
+	PD.sh.2.lm <- lm(TW_CAD~LCBO_CAD,data=PRICE.DATA,subset=PD.sh.2.indices)	#
+	PD.2.from.1 <- predict(PD.sh.1.lm, PRICE.DATA[PD.sh.2.indices,])#
+	PD.1.from.2 <- predict(PD.sh.2.lm, PRICE.DATA[PD.sh.1.indices,])	#
+	sh.predicted <- c(PD.2.from.1,PD.1.from.2)[rownames(PRICE.DATA)]	#
+		## similarity#
+	split.cor <- cor(sh.predicted,PRICE.DATA$TW_CAD)#
+		## prediction error.#
+	split.mpse <- mean((PRICE.DATA$TW_CAD - sh.predicted) ^ 2)#
+	split.mat[i,1] <- split.cor#
+	split.mat[i,2] <- split.mpse	#
+}
+iters <- 1000#
+split.mat <- matrix(NA,iters,2)#
+	colnames(split.mat) <- c("cor","mpse")
+for(i in 1:iters){		#
+	PD.sh.1.indices <- sort(sample(nrow(PRICE.DATA),round(nrow(PRICE.DATA)*.5),replace=F))#
+	PD.sh.2.indices <- setdiff(1:nrow(PRICE.DATA),PD.sh.1.indices)#
+	PD.sh.1.lm <- lm(TW_CAD~LCBO_CAD,data=PRICE.DATA,subset=PD.sh.1.indices)#
+	PD.sh.2.lm <- lm(TW_CAD~LCBO_CAD,data=PRICE.DATA,subset=PD.sh.2.indices)	#
+	PD.2.from.1 <- predict(PD.sh.1.lm, PRICE.DATA[PD.sh.2.indices,])#
+	PD.1.from.2 <- predict(PD.sh.2.lm, PRICE.DATA[PD.sh.1.indices,])	#
+	sh.predicted <- c(PD.2.from.1,PD.1.from.2)[rownames(PRICE.DATA)]	#
+		## similarity#
+	split.cor <- cor(sh.predicted,PRICE.DATA$TW_CAD)#
+		## prediction error.#
+	split.mpse <- mean((PRICE.DATA$TW_CAD - sh.predicted) ^ 2)#
+	split.mat[i,1] <- split.cor#
+	split.mat[i,2] <- split.mpse	#
+}
+pred.vals <- vector("numeric",nrow(PRICE.DATA))#
+for(i in 1:nrow(PRICE.DATA)){#
+	pred.vals[i] <- predict(lm(TW_CAD~LCBO_CAD,data=PRICE.DATA[-i,]),PRICE.DATA[i,])#
+}#
+loo.cor <- cor(PRICE.DATA$TW_CAD,pred.vals)#
+loo.mpse <- mean((PRICE.DATA$TW_CAD - pred.vals) ^ 2)#
+#
+plot(split.mat,pch=20,col="black")#
+points(loo.cor, loo.mpse,col="red",pch=20)#
+#
+dev.new()#
+boxplot(split.mat[,1])#
+dev.new()#
+boxplot(split.mat[,2])
+rm(list=ls())#
+gc()#
+#
+library(InPosition)#
+library(ez)#
+# library(psych)#
+#
+##split half by design function#
+sh.by.design <- function(DES){#
+	sh1 <- sort(unname(unlist(apply(RSR.design,2,function(x){y<-which(x==1); sample(y, ifelse(runif(1,min=0,max=1)>.5,floor(length(y)/2), ceiling(length(y)/2) ))}))))#
+	sh2 <- setdiff(1:nrow(DES),sh1)#
+	return(list(sh1=sh1,sh2=sh2))#
+}#
+#
+	## load data for this example#
+load('../Data/REGION.STYLE.RATING.rda')#
+#
+	## parametric approach, with the ez package#
+ratings_anova = ezANOVA(#
+    data = REGION.STYLE.RATING#
+    , dv = RATEBEER_StyleRating#
+    , wid = BEER.NAME#
+    , between = c(REGION,PALE.v.NOT)#
+    , type = 3#
+)#
+#
+### Rule 0: Visualize your data, espeically before you do anything.#
+dev.new()#
+interaction.plot(REGION.STYLE.RATING$REGION, REGION.STYLE.RATING$PALE.v.NOT, REGION.STYLE.RATING$RATEBEER_StyleRating,type="b",xlab="REGION",ylab="STYLE RATINGS",trace.label="",pch=c(20,22),cex=2,lwd=2,col=c("mediumorchid4","darkseagreen"),main="2x2 ANOVA")
+# SH FOR ANOVA -- NOT SO BAD.#
+RSR.design <- makeNominalData(as.matrix(apply(REGION.STYLE.RATING[,2:3],1,paste,collapse="_")))#
+iters <- 1000	#
+split.mat_aov <- matrix(NA, iters,2)#
+	colnames(split.mat_aov) <- c("cor","mpse")	#
+for(i in 1:iters){		#
+	aov.splits <- sh.by.design(RSR.design)#
+	ratings_anova_SH1 = suppressWarnings(ezANOVA(#
+	    data = droplevels(REGION.STYLE.RATING[aov.splits$sh1,])#
+	    , dv = RATEBEER_StyleRating#
+	    , wid = BEER.NAME#
+	    , between = c(REGION,PALE.v.NOT)#
+	    , type = 3#
+	    , return_aov = T    #
+	))#
+	ratings_anova_SH2 = suppressWarnings(ezANOVA(#
+	    data = droplevels(REGION.STYLE.RATING[aov.splits$sh2,])#
+	    , dv = RATEBEER_StyleRating#
+	    , wid = BEER.NAME#
+	    , between = c(REGION,PALE.v.NOT)#
+	    , type = 3#
+	    , return_aov = T    #
+	))#
+	aov.2.from.1 <- predict(ratings_anova_SH1$aov,REGION.STYLE.RATING[aov.splits$sh2,])	#
+	aov.1.from.2 <- predict(ratings_anova_SH2$aov,REGION.STYLE.RATING[aov.splits$sh1,])#
+	sh.predicted_aov <- c(aov.2.from.1,aov.1.from.2)[rownames(REGION.STYLE.RATING)]	#
+		## repro/correlation?#
+	split.cor_aov <- cor(sh.predicted_aov,REGION.STYLE.RATING$RATEBEER_StyleRating)#
+		## prediction error.#
+	split.mpse_aov <- mean((REGION.STYLE.RATING$RATEBEER_StyleRating - sh.predicted_aov) ^ 2)	#
+	split.mat_aov[i,1] <- split.cor_aov#
+	split.mat_aov[i,2] <- split.mpse_aov	#
+}
+rm(list=ls())#
+gc()#
+#
+# library(ExPosition)#
+# library(ez)#
+# library(psych)#
+#
+	## load data for this example#
+load('../Data/LCBO.TW.CAD.rda')#
+#
+	## split the data into two separate variables for later use#
+PRICE.DATA <- LCBO.TW.CAD[,c("LCBO_CAD_serving","TW_CAD_serving")]#
+	colnames(PRICE.DATA) <- c("LCBO_CAD","TW_CAD")#
+cost.ratio <- LCBO.TW.CAD[,"LCBO.v.TW_CostRatio"]#
+#
+	## parametric approach.#
+cor.test.res <- cor.test(PRICE.DATA[,1],PRICE.DATA[,2])#
+	## we need some help from our friend the linear model (regression)#
+lm.res <- lm(TW_CAD~LCBO_CAD,data= PRICE.DATA)#
+	## equivalence#
+cor(PRICE.DATA$TW_CAD,predict(lm.res))#
+cor(PRICE.DATA$TW_CAD,lm.res$fitted.values)
+cor(PRICE.DATA$TW_CAD,PRICE.DATA$LCBO_CAD)#
+cor(PRICE.DATA$TW_CAD,lm.res$fitted.values)#
+cor(PRICE.DATA$TW_CAD,predict(lm.res))
+### Rule 0: Visualize your data, espeically before you do anything.#
+dev.new()#
+plot(PRICE.DATA,pch=20,asp=1,main=paste0("American Beer in CAD (355ml serving)\n r = ", round(cor.test.res$estimate,digits=3)),xlab="CAD: LCBO",ylab="CAD: TW",col=ifelse(cost.ratio>1,"mediumorchid4","olivedrab4"),cex=2)#
+text(PRICE.DATA,labels=rownames(PRICE.DATA),pos=3,cex=.65,col=ifelse(cost.ratio>1,"mediumorchid4","olivedrab4"))#
+abline(lm.res,col="blue",lty=2,lwd=1.75)
+### Visualize the prediction of the full data.#
+dev.new()#
+plot(PRICE.DATA,pch=20,asp=1,main=paste0("American Beer in CAD (355ml serving)\n r = ", round(cor.test.res$estimate,digits=3)),xlab="CAD: LCBO",ylab="CAD: TW",col="mediumorchid4",cex=2,ylim=c(min(c(PRICE.DATA[,2],predict(lm.res))),max(c(PRICE.DATA[,2],predict(lm.res)))))#
+abline(lm.res,col="blue",lty=2,lwd=1.75)#
+points(cbind(PRICE.DATA[,1],predict(lm.res)),col="seagreen3",pch=20,cex=1.5)#
+for(i in 1:nrow(PRICE.DATA)){#
+	x1 <- x0 <- PRICE.DATA[i,1]#
+	y0 <- PRICE.DATA[i,2]#
+	y1 <- predict(lm.res)[i]#
+	segments(x0,y0,x1,y1,lty=2,col="seagreen3")#
+}
+##############
+##########
+######
+#				What does split-half look like?#
+######
+##########
+##############
+#
+set.seed(13)		## set a seed for the random number generator so we can recreate the result exactly#
+#
+PD.sh.1.indices <- sort(sample(nrow(PRICE.DATA),round(nrow(PRICE.DATA)*.5),replace=F))#
+PD.sh.2.indices <- setdiff(1:nrow(PRICE.DATA),PD.sh.1.indices)#
+#
+PD.sh.1.lm <- lm(TW_CAD~LCBO_CAD,data=PRICE.DATA,subset=PD.sh.1.indices)#
+PD.sh.2.lm <- lm(TW_CAD~LCBO_CAD,data=PRICE.DATA,subset=PD.sh.2.indices)	#
+PD.2.from.1 <- predict(PD.sh.1.lm, PRICE.DATA[PD.sh.2.indices,])#
+PD.1.from.2 <- predict(PD.sh.2.lm, PRICE.DATA[PD.sh.1.indices,])	#
+dev.new()#
+plot(PRICE.DATA,pch=20,asp=1,main="American Beer in CAD (355ml serving)\n ",xlab="CAD: LCBO",ylab="CAD: TW",col="grey80",cex=2,ylim=c(min(c(PRICE.DATA[,2],PD.2.from.1)),max(c(PRICE.DATA[,2],PD.2.from.1))))#
+#text(PRICE.DATA,labels=rownames(PRICE.DATA),pos=3,cex=.65,col="grey80")#
+points(PRICE.DATA[PD.sh.1.indices,],col="mediumorchid4",pch=20,cex=2)#
+abline(lm.res,col="blue",lty=2,lwd=1.75)#
+abline(PD.sh.1.lm,col="mediumorchid4",lty=1,lwd=2)#
+points(cbind(PRICE.DATA[PD.sh.1.indices,1],predict(PD.sh.1.lm)),col="mediumorchid4",pch=20,cex=1)#
+for(i in 1:length(PD.sh.1.indices)){#
+	x1 <- x0 <- PRICE.DATA[PD.sh.1.indices[i],1]#
+	y0 <- PRICE.DATA[PD.sh.1.indices[i],2]#
+	y1 <- predict(PD.sh.1.lm)[i]#
+	segments(x0,y0,x1,y1,lty=2,col="mediumorchid4")#
+}#
+points(cbind(PRICE.DATA[PD.sh.2.indices,1],PD.2.from.1),pch=20,cex=1.5,col="seagreen3")#
+for(i in 1:length(PD.sh.2.indices)){#
+	x1 <- x0 <- PRICE.DATA[PD.sh.2.indices[i],1]#
+	y0 <- PRICE.DATA[PD.sh.2.indices[i],2]#
+	y1 <- PD.2.from.1[i]#
+	segments(x0,y0,x1,y1,lty=2,col="seagreen4")#
+}
+dev.new()#
+plot(PRICE.DATA,pch=20,asp=1,main="American Beer in CAD (355ml serving)\n ",xlab="CAD: LCBO",ylab="CAD: TW",col="grey80",cex=2,ylim=c(min(c(PRICE.DATA[,2],PD.2.from.1)),max(c(PRICE.DATA[,2],PD.2.from.1))))#
+#text(PRICE.DATA,labels=rownames(PRICE.DATA),pos=3,cex=.65,col="grey80")#
+points(PRICE.DATA[PD.sh.1.indices,],col="mediumorchid4",pch=20,cex=2)#
+abline(lm.res,col="blue",lty=2,lwd=1.75)#
+abline(PD.sh.1.lm,col="mediumorchid4",lty=1,lwd=2)#
+points(cbind(PRICE.DATA[PD.sh.1.indices,1],predict(PD.sh.1.lm)),col="mediumorchid4",pch=20,cex=1)
+dev.new()#
+plot(PRICE.DATA,pch=20,asp=1,main="American Beer in CAD (355ml serving)\n ",xlab="CAD: LCBO",ylab="CAD: TW",col="grey80",cex=2,ylim=c(min(c(PRICE.DATA[,2],PD.2.from.1)),max(c(PRICE.DATA[,2],PD.2.from.1))))#
+#text(PRICE.DATA,labels=rownames(PRICE.DATA),pos=3,cex=.65,col="grey80")#
+points(PRICE.DATA[PD.sh.1.indices,],col="mediumorchid4",pch=20,cex=2)#
+abline(lm.res,col="blue",lty=2,lwd=1.75)#
+abline(PD.sh.1.lm,col="mediumorchid4",lty=1,lwd=2)#
+points(cbind(PRICE.DATA[PD.sh.1.indices,1],predict(PD.sh.1.lm)),col="mediumorchid4",pch=20,cex=1)#
+for(i in 1:length(PD.sh.1.indices)){#
+	x1 <- x0 <- PRICE.DATA[PD.sh.1.indices[i],1]#
+	y0 <- PRICE.DATA[PD.sh.1.indices[i],2]#
+	y1 <- predict(PD.sh.1.lm)[i]#
+	segments(x0,y0,x1,y1,lty=2,col="mediumorchid4")#
+}
+dev.new()#
+plot(PRICE.DATA,pch=20,asp=1,main="American Beer in CAD (355ml serving)\n ",xlab="CAD: LCBO",ylab="CAD: TW",col="grey80",cex=2,ylim=c(min(c(PRICE.DATA[,2],PD.2.from.1)),max(c(PRICE.DATA[,2],PD.2.from.1))))#
+#text(PRICE.DATA,labels=rownames(PRICE.DATA),pos=3,cex=.65,col="grey80")#
+points(PRICE.DATA[PD.sh.1.indices,],col="mediumorchid4",pch=20,cex=2)#
+abline(lm.res,col="blue",lty=2,lwd=1.75)#
+abline(PD.sh.1.lm,col="mediumorchid4",lty=1,lwd=2)#
+points(cbind(PRICE.DATA[PD.sh.1.indices,1],predict(PD.sh.1.lm)),col="mediumorchid4",pch=20,cex=1)#
+for(i in 1:length(PD.sh.1.indices)){#
+	x1 <- x0 <- PRICE.DATA[PD.sh.1.indices[i],1]#
+	y0 <- PRICE.DATA[PD.sh.1.indices[i],2]#
+	y1 <- predict(PD.sh.1.lm)[i]#
+	segments(x0,y0,x1,y1,lty=2,col="mediumorchid4")#
+}#
+points(cbind(PRICE.DATA[PD.sh.2.indices,1],PD.2.from.1),pch=20,cex=1.5,col="seagreen3")#
+for(i in 1:length(PD.sh.2.indices)){#
+	x1 <- x0 <- PRICE.DATA[PD.sh.2.indices[i],1]#
+	y0 <- PRICE.DATA[PD.sh.2.indices[i],2]#
+	y1 <- PD.2.from.1[i]#
+	segments(x0,y0,x1,y1,lty=2,col="seagreen4")#
+}
+sh.predicted <- c(PD.2.from.1,PD.1.from.2)[rownames(PRICE.DATA)]	#
+	## similarity.#
+split.cor <- cor(sh.predicted,PRICE.DATA$TW_CAD)#
+	## prediction error.#
+split.mpse <- mean((PRICE.DATA$TW_CAD - sh.predicted) ^ 2)
+split.cor
+split.mpse
+##############
+##########
+######
+#				Turn split-half into a test#
+######
+##########
+##############
+iters <- 1000#
+split.mat <- matrix(NA,iters,2)#
+	colnames(split.mat) <- c("cor","mpse")	#
+for(i in 1:iters){		#
+	PD.sh.1.indices <- sort(sample(nrow(PRICE.DATA),round(nrow(PRICE.DATA)*.5),replace=F))#
+	PD.sh.2.indices <- setdiff(1:nrow(PRICE.DATA),PD.sh.1.indices)#
+	PD.sh.1.lm <- lm(TW_CAD~LCBO_CAD,data=PRICE.DATA,subset=PD.sh.1.indices)#
+	PD.sh.2.lm <- lm(TW_CAD~LCBO_CAD,data=PRICE.DATA,subset=PD.sh.2.indices)	#
+	PD.2.from.1 <- predict(PD.sh.1.lm, PRICE.DATA[PD.sh.2.indices,])#
+	PD.1.from.2 <- predict(PD.sh.2.lm, PRICE.DATA[PD.sh.1.indices,])	#
+	sh.predicted <- c(PD.2.from.1,PD.1.from.2)[rownames(PRICE.DATA)]	#
+		## similarity#
+	split.cor <- cor(sh.predicted,PRICE.DATA$TW_CAD)#
+		## prediction error.#
+	split.mpse <- mean((PRICE.DATA$TW_CAD - sh.predicted) ^ 2)#
+	split.mat[i,1] <- split.cor#
+	split.mat[i,2] <- split.mpse	#
+}
+pred.vals <- vector("numeric",nrow(PRICE.DATA))#
+for(i in 1:nrow(PRICE.DATA)){#
+	pred.vals[i] <- predict(lm(TW_CAD~LCBO_CAD,data=PRICE.DATA[-i,]),PRICE.DATA[i,])#
+}#
+loo.cor <- cor(PRICE.DATA$TW_CAD,pred.vals)#
+loo.mpse <- mean((PRICE.DATA$TW_CAD - pred.vals) ^ 2)
+plot(split.mat,pch=20,col="black")#
+points(loo.cor, loo.mpse,col="red",pch=20)
+plot(split.mat,pch=20,col="black",main="Split-Half: similarity vs. error")#
+points(loo.cor, loo.mpse,col="red",pch=20)#
+legend("topright",legend="LOO-CV",col="red",pt.cex=2)
+plot(split.mat,pch=20,col="black",main="Split-Half: similarity vs. error")#
+points(loo.cor, loo.mpse,col="red",pch=20,cex=1.75)#
+legend("topright",legend="LOO-CV",col="red",pt.cex=1.75,pch=20)
+dev.new()#
+boxplot(split.mat[,1])
+dev.new()#
+boxplot(split.mat[,1],main="Correlation: S-H predictions and original values")#
+dev.new()#
+boxplot(split.mat[,2],main="Error: S-H predictions and original values")
+dev.new()#
+boxplot(split.mat[,1],main="Correlation: S-H predictions and original values")#
+points(loo.cor,col="red")
+dev.new()#
+boxplot(split.mat[,1],main="Correlation: S-H predictions and original values")#
+points(loo.cor,col="red",pch=20,cex=1.75)
+dev.new()#
+boxplot(split.mat[,1],main="Correlation: S-H predictions and original values")#
+points(loo.cor,col="red",pch=20,cex=1.75)#
+legend("topright",legend="LOO-CV",col="red",pt.cex=1.75,pch=20)#
+#
+dev.new()#
+boxplot(split.mat[,2],main="Error: S-H predictions and original values")#
+points(loo.mpse,col="red",pch=20,cex=1.75)#
+legend("topright",legend="LOO-CV",col="red",pt.cex=1.75,pch=20)
+plot(split.mat,pch=20,col="black",main="Split-Half: similarity vs. error")#
+points(loo.cor, loo.mpse,col="red",pch=20,cex=1.75)#
+legend("topright",legend="LOO-CV",col="red",pt.cex=1.75,pch=20)
+rm(list=ls())#
+gc()#
+#
+library(ExPosition)#
+# library(ez)#
+# library(psych)#
+#
+	## load data for this example#
+load('../Data/CAD.ABV.RATING.rda')#
+#
+	## split the data into a DATA variable and a DESIGN (which tells us where the beers are from)#
+DATA <- CAD.ABV.RATING[,1:3]#
+DESIGN <- CAD.ABV.RATING$REGION#
+	## Standard PCA#
+pca.res <- epPCA(DATA,scale=T,DESIGN= DESIGN,graphs=F)#
+#
+### Rule 0: Visualize your data, espeically before you do anything.#
+	### Scree plot#
+prettyScree(pca.res$ExPosition.Data$eigs)#
+	### Component scores for rows and columns#
+epGraphs(pca.res,contributionPlots=F,correlationPlotter=F)#
+##############
+##########
+######
+#				Turn split-half into a test#
+######
+##########
+##############
+#
+	ortho.dists_fi <- ortho.dists_p <- matrix(NA,nrow(CAD.ABV.RATING),100)#
+		rownames(ortho.dists_fi) <- rownames(ortho.dists_p) <- rownames(CAD.ABV.RATING)#
+	sh2.cors_fi <- sh1.cors_fi <- matrix(NA,100,3)	#
+	sh2.fj_dist.cors <- sh1.fj_dist.cors <- sh2.p_dist.cors <- sh1.p_dist.cors <- vector("numeric",100)#
+iters <- 1000#
+for(i in 1:iters){#
+	pca.sh1 <- sort(sample(1:nrow(CAD.ABV.RATING),nrow(CAD.ABV.RATING)/2))#
+	pca.sh2 <- setdiff(1:nrow(CAD.ABV.RATING),pca.sh1)#
+	pca.res_sh1 <- epPCA(CAD.ABV.RATING[pca.sh1,1:3],scale=T,DESIGN= CAD.ABV.RATING$REGION[pca.sh1],graphs=F)#
+	pca.sh2.from.sh1 <- supplementaryRows(CAD.ABV.RATING[pca.sh2,1:3],pca.res_sh1)#
+	sh2.pred.p <- (pca.sh2.from.sh1$fii %*% diag(1/pca.res_sh1$ExPosition.Data$pdq$Dv))		#
+	pca.res_sh2 <- epPCA(CAD.ABV.RATING[pca.sh2,1:3],scale=T,DESIGN= CAD.ABV.RATING$REGION[pca.sh2],graphs=F)#
+	pca.sh1.from.sh2 <- supplementaryRows(CAD.ABV.RATING[pca.sh1,1:3],pca.res_sh2)#
+	sh1.pred.p <- (pca.sh1.from.sh2$fii %*% diag(1/pca.res_sh2$ExPosition.Data$pdq$Dv))#
+#
+	## similarities#
+	sh1.cors_fi[i,] <- diag(cor(pca.res_sh1$ExPosition.Data$fi,pca.sh1.from.sh2$fii)^2)#
+	sh2.cors_fi[i,] <- diag(cor(pca.res_sh2$ExPosition.Data$fi,pca.sh2.from.sh1$fii)^2)#
+	sh1.fj_dist.cors[i] <- cor(rowSums(pca.res_sh1$ExPosition.Data$fi^2),rowSums(pca.sh1.from.sh2$fii^2))#
+	sh1.p_dist.cors[i] <- cor(rowSums(pca.res_sh1$ExPosition.Data$pdq$p^2),rowSums(sh1.pred.p^2))#
+	sh2.fj_dist.cors[i] <- cor(rowSums(pca.res_sh2$ExPosition.Data$fi^2),rowSums(pca.sh2.from.sh1$fii^2))#
+	sh2.p_dist.cors[i] <- cor(rowSums(pca.res_sh2$ExPosition.Data$pdq$p^2),rowSums(sh2.pred.p^2))#
+	## prediction errors		#
+	one.minus.pred_p <- (pca.res_sh1$ExPosition.Data$pdq$p - sh1.pred.p)^2#
+	two.minus.pred_p <- (pca.res_sh2$ExPosition.Data$pdq$p - sh2.pred.p)^2#
+	preds_p <- rbind(one.minus.pred_p, two.minus.pred_p)[rownames(ortho.dists_p),]#
+	ortho.dists_p[,i] <- rowSums(preds_p)#
+	one.minus.pred_fi <- (pca.res_sh1$ExPosition.Data$fi - pca.sh1.from.sh2$fii)^2#
+	two.minus.pred_fi <- (pca.res_sh2$ExPosition.Data$fi - pca.sh2.from.sh1$fii)^2#
+	preds_fi <- rbind(one.minus.pred_fi, two.minus.pred_fi)[rownames(ortho.dists_fi),]	#
+	ortho.dists_fi[,i] <- rowSums(preds_fi)	#
+}#
+#
+PRESS_p <- colSums(ortho.dists_p)#
+PRESS_fi <- colSums(ortho.dists_fi)
+rm(list=ls())#
+gc()#
+#
+library(ExPosition)#
+# library(ez)#
+# library(psych)#
+#
+	## load data for this example#
+load('../Data/CAD.ABV.RATING.rda')#
+#
+	## split the data into a DATA variable and a DESIGN (which tells us where the beers are from)#
+DATA <- CAD.ABV.RATING[,1:3]#
+DESIGN <- CAD.ABV.RATING$REGION#
+	## Standard PCA#
+pca.res <- epPCA(DATA,scale=T,DESIGN= DESIGN,graphs=F)#
+#
+### Rule 0: Visualize your data, espeically before you do anything.#
+	### Scree plot#
+prettyScree(pca.res$ExPosition.Data$eigs)#
+	### Component scores for rows and columns#
+epGraphs(pca.res,contributionPlots=F,correlationPlotter=F)#
+##############
+##########
+######
+#				Turn split-half into a test#
+######
+##########
+##############
+iters <- 1000#
+	ortho.dists_fi <- ortho.dists_p <- matrix(NA,nrow(CAD.ABV.RATING),iters)#
+		rownames(ortho.dists_fi) <- rownames(ortho.dists_p) <- rownames(CAD.ABV.RATING)#
+	sh2.cors_fi <- sh1.cors_fi <- matrix(NA,iters,3)	#
+	sh2.fj_dist.cors <- sh1.fj_dist.cors <- sh2.p_dist.cors <- sh1.p_dist.cors <- vector("numeric",iters)
+for(i in 1:iters){#
+	pca.sh1 <- sort(sample(1:nrow(CAD.ABV.RATING),nrow(CAD.ABV.RATING)/2))#
+	pca.sh2 <- setdiff(1:nrow(CAD.ABV.RATING),pca.sh1)#
+	pca.res_sh1 <- epPCA(CAD.ABV.RATING[pca.sh1,1:3],scale=T,DESIGN= CAD.ABV.RATING$REGION[pca.sh1],graphs=F)#
+	pca.sh2.from.sh1 <- supplementaryRows(CAD.ABV.RATING[pca.sh2,1:3],pca.res_sh1)#
+	sh2.pred.p <- (pca.sh2.from.sh1$fii %*% diag(1/pca.res_sh1$ExPosition.Data$pdq$Dv))		#
+	pca.res_sh2 <- epPCA(CAD.ABV.RATING[pca.sh2,1:3],scale=T,DESIGN= CAD.ABV.RATING$REGION[pca.sh2],graphs=F)#
+	pca.sh1.from.sh2 <- supplementaryRows(CAD.ABV.RATING[pca.sh1,1:3],pca.res_sh2)#
+	sh1.pred.p <- (pca.sh1.from.sh2$fii %*% diag(1/pca.res_sh2$ExPosition.Data$pdq$Dv))#
+#
+	## similarities#
+	sh1.cors_fi[i,] <- diag(cor(pca.res_sh1$ExPosition.Data$fi,pca.sh1.from.sh2$fii)^2)#
+	sh2.cors_fi[i,] <- diag(cor(pca.res_sh2$ExPosition.Data$fi,pca.sh2.from.sh1$fii)^2)#
+	sh1.fj_dist.cors[i] <- cor(rowSums(pca.res_sh1$ExPosition.Data$fi^2),rowSums(pca.sh1.from.sh2$fii^2))#
+	sh1.p_dist.cors[i] <- cor(rowSums(pca.res_sh1$ExPosition.Data$pdq$p^2),rowSums(sh1.pred.p^2))#
+	sh2.fj_dist.cors[i] <- cor(rowSums(pca.res_sh2$ExPosition.Data$fi^2),rowSums(pca.sh2.from.sh1$fii^2))#
+	sh2.p_dist.cors[i] <- cor(rowSums(pca.res_sh2$ExPosition.Data$pdq$p^2),rowSums(sh2.pred.p^2))#
+	## prediction errors		#
+	one.minus.pred_p <- (pca.res_sh1$ExPosition.Data$pdq$p - sh1.pred.p)^2#
+	two.minus.pred_p <- (pca.res_sh2$ExPosition.Data$pdq$p - sh2.pred.p)^2#
+	preds_p <- rbind(one.minus.pred_p, two.minus.pred_p)[rownames(ortho.dists_p),]#
+	ortho.dists_p[,i] <- rowSums(preds_p)#
+	one.minus.pred_fi <- (pca.res_sh1$ExPosition.Data$fi - pca.sh1.from.sh2$fii)^2#
+	two.minus.pred_fi <- (pca.res_sh2$ExPosition.Data$fi - pca.sh2.from.sh1$fii)^2#
+	preds_fi <- rbind(one.minus.pred_fi, two.minus.pred_fi)[rownames(ortho.dists_fi),]	#
+	ortho.dists_fi[,i] <- rowSums(preds_fi)	#
+}
+sh1.fj_dist.cors
+sh1.cors_fi
+dev.new()#
+boxplot(rbind(cbind(sh1.fj_dist.cors,sh1.p_dist.cors),cbind(sh2.fj_dist.cors,sh2.p_dist.cors)),col=c("mediumorchid4","olivedrab4"),main="Correlation: S-H predictions and original values")
+dev.new()#
+boxplot(rbind(cbind(sh1.fj_dist.cors,sh1.p_dist.cors),cbind(sh2.fj_dist.cors,sh2.p_dist.cors)),col=c("mediumorchid4","olivedrab4"),main="Correlation: S-H Component Scores and Singular Vectors")
+dev.new()#
+boxplot(rbind(cbind(sh1.fj_dist.cors,sh1.p_dist.cors),cbind(sh2.fj_dist.cors,sh2.p_dist.cors)),col=c("mediumorchid4","olivedrab4"),main="Correlation: S-H Score and Mahalanobis Distances")
+dev.new()#
+boxplot(cbind(PRESS_fi,PRESS_p),col=c("mediumorchid4","olivedrab4"),main="Correlation: S-H PRESS Scores and Vectors")
+PRESS_p <- colSums(ortho.dists_p)#
+PRESS_fi <- colSums(ortho.dists_fi)
+dev.new()#
+boxplot(cbind(PRESS_fi,PRESS_p),col=c("mediumorchid4","olivedrab4"),main="Correlation: S-H PRESS Scores and Vectors")
+ortho.dists_fi
+boxplot(t(ortho.dists_fi))
+?boxplot
+boxplot(t(ortho.dists_p))#
+boxplot(t(ortho.dists_fi))
+dev.new()#
+boxplot(t(ortho.dists_p))#
+#
+dev.new()#
+boxplot(t(ortho.dists_fi))
+abbreviate(rownames(ortho.dists_fi))
+abbreviate(rownames(ortho.dists_fi),2)
+dev.new()#
+boxplot(t(ortho.dists_p),labels=abbreviate(rownames(ortho.dists_fi),2))
+rownames(ortho.dists_fi) <- rownames(ortho.dists_p) <- abbreviate(rownames(ortho.dists_fi),2)#
+dev.new()#
+boxplot(t(ortho.dists_p))#
+#
+dev.new()#
+boxplot(t(ortho.dists_fi))
+dev.new()#
+boxplot(rbind(cbind(sh1.fj_dist.cors,sh1.p_dist.cors),cbind(sh2.fj_dist.cors,sh2.p_dist.cors)),col=c("mediumorchid4","olivedrab4"),main="Correlation: S-H Score and Mahalanobis Distances")#
+#
+# dev.new()#
+# boxplot(cbind(PRESS_fi,PRESS_p),col=c("mediumorchid4","olivedrab4"),main="Correlation: S-H PRESS Scores and Vectors")#
+#
+rownames(ortho.dists_fi) <- rownames(ortho.dists_p) <- abbreviate(rownames(ortho.dists_fi),2)#
+dev.new()#
+boxplot(t(ortho.dists_p),main="S-H Orthogonal Distance: Singular Vectors")#
+#
+dev.new()#
+boxplot(t(ortho.dists_fi),main="S-H Orthogonal Distance: Component Scores")
+sh1.cors_fi
+summary(sh1.cors_fi)
+dev.new()#
+boxplot(sh1.cors_fi,main="S-H Component Scores")#
+dev.new()#
+boxplot(sh1.cors_p,main="S-H Singular Vectors")
+dev.new()#
+boxplot(sh1.cors_fi,main="S-H Component Scores")
+colnames(sh1.cors_fi) <- paste0("Comp. ",1:3)#
+dev.new()#
+boxplot(sh1.cors_fi,main="S-H Component Scores",col=c("red","green","blue"))
+rm(list=ls())#
+gc()#
+#
+library(ExPosition)#
+# library(ez)#
+# library(psych)#
+#
+	## load data for this example#
+load('../Data/CAD.ABV.RATING.rda')#
+#
+	## split the data into a DATA variable and a DESIGN (which tells us where the beers are from)#
+DATA <- CAD.ABV.RATING[,1:3]#
+DESIGN <- CAD.ABV.RATING$REGION#
+	## Standard PCA#
+pca.res <- epPCA(DATA,scale=T,DESIGN= DESIGN,graphs=F)#
+#
+### Rule 0: Visualize your data, espeically before you do anything.#
+	### Scree plot#
+prettyScree(pca.res$ExPosition.Data$eigs)#
+	### Component scores for rows and columns#
+epGraphs(pca.res,contributionPlots=F,correlationPlotter=F)#
+##############
+##########
+######
+#				Turn split-half into a test#
+######
+##########
+##############
+iters <- 1000#
+	ortho.dists_fi <- ortho.dists_p <- matrix(NA,nrow(CAD.ABV.RATING),iters)#
+		rownames(ortho.dists_fi) <- rownames(ortho.dists_p) <- rownames(CAD.ABV.RATING)#
+	sh2.cors_fi <- sh1.cors_fi <- matrix(NA,iters,3)	#
+	sh2.fj_dist.cors <- sh1.fj_dist.cors <- sh2.p_dist.cors <- sh1.p_dist.cors <- vector("numeric",iters)#
+for(i in 1:iters){#
+	pca.sh1 <- sort(sample(1:nrow(CAD.ABV.RATING),nrow(CAD.ABV.RATING)/2))#
+	pca.sh2 <- setdiff(1:nrow(CAD.ABV.RATING),pca.sh1)#
+	pca.res_sh1 <- epPCA(CAD.ABV.RATING[pca.sh1,1:3],scale=T,DESIGN= CAD.ABV.RATING$REGION[pca.sh1],graphs=F)#
+	pca.sh2.from.sh1 <- supplementaryRows(CAD.ABV.RATING[pca.sh2,1:3],pca.res_sh1)#
+	sh2.pred.p <- (pca.sh2.from.sh1$fii %*% diag(1/pca.res_sh1$ExPosition.Data$pdq$Dv))		#
+	pca.res_sh2 <- epPCA(CAD.ABV.RATING[pca.sh2,1:3],scale=T,DESIGN= CAD.ABV.RATING$REGION[pca.sh2],graphs=F)#
+	pca.sh1.from.sh2 <- supplementaryRows(CAD.ABV.RATING[pca.sh1,1:3],pca.res_sh2)#
+	sh1.pred.p <- (pca.sh1.from.sh2$fii %*% diag(1/pca.res_sh2$ExPosition.Data$pdq$Dv))#
+#
+	## similarities#
+	sh1.cors_fi[i,] <- diag(cor(pca.res_sh1$ExPosition.Data$fi,pca.sh1.from.sh2$fii)^2)#
+	sh2.cors_fi[i,] <- diag(cor(pca.res_sh2$ExPosition.Data$fi,pca.sh2.from.sh1$fii)^2)#
+	sh1.fj_dist.cors[i] <- cor(rowSums(pca.res_sh1$ExPosition.Data$fi^2),rowSums(pca.sh1.from.sh2$fii^2))#
+	sh1.p_dist.cors[i] <- cor(rowSums(pca.res_sh1$ExPosition.Data$pdq$p^2),rowSums(sh1.pred.p^2))#
+	sh2.fj_dist.cors[i] <- cor(rowSums(pca.res_sh2$ExPosition.Data$fi^2),rowSums(pca.sh2.from.sh1$fii^2))#
+	sh2.p_dist.cors[i] <- cor(rowSums(pca.res_sh2$ExPosition.Data$pdq$p^2),rowSums(sh2.pred.p^2))#
+	## prediction errors		#
+	one.minus.pred_p <- (pca.res_sh1$ExPosition.Data$pdq$p - sh1.pred.p)^2#
+	two.minus.pred_p <- (pca.res_sh2$ExPosition.Data$pdq$p - sh2.pred.p)^2#
+	preds_p <- rbind(one.minus.pred_p, two.minus.pred_p)[rownames(ortho.dists_p),]#
+	ortho.dists_p[,i] <- rowSums(preds_p)#
+	one.minus.pred_fi <- (pca.res_sh1$ExPosition.Data$fi - pca.sh1.from.sh2$fii)^2#
+	two.minus.pred_fi <- (pca.res_sh2$ExPosition.Data$fi - pca.sh2.from.sh1$fii)^2#
+	preds_fi <- rbind(one.minus.pred_fi, two.minus.pred_fi)[rownames(ortho.dists_fi),]	#
+	ortho.dists_fi[,i] <- rowSums(preds_fi)	#
+}#
+#
+PRESS_p <- colSums(ortho.dists_p)#
+PRESS_fi <- colSums(ortho.dists_fi)
+colnames(sh1.cors_fi) <- paste0("Comp. ",1:3)#
+dev.new()#
+boxplot(sh1.cors_fi,main="S-H Component Scores",col=c("red","green","blue"), ylab="Correlation values")
+colnames(sh1.cors_fi) <- paste0("Comp. ",1:3)#
+dev.new()#
+boxplot(sh1.cors_fi,main="S-H Component Scores",col=c("red","green","blue"), ylab="Correlation values",xlab="Components")
+summary(sh1.cors_fi)
+summary(ortho.dists_p)
+summary(t(ortho.dists_p))
+rm(list=ls())#
+gc()#
+#
+# library(ExPosition)#
+# library(ez)#
+# library(psych)#
+#
+	## load data for this example#
+load('../Data/LCBO.TW.CAD.rda')#
+#
+	## split the data into two separate variables for later use#
+PRICE.DATA <- LCBO.TW.CAD[,c("LCBO_CAD_serving","TW_CAD_serving")]#
+	colnames(PRICE.DATA) <- c("LCBO_CAD","TW_CAD")#
+cost.ratio <- LCBO.TW.CAD[,"LCBO.v.TW_CostRatio"]#
+#
+	## parametric approach.#
+cor.test.res <- cor.test(PRICE.DATA[,1],PRICE.DATA[,2])#
+	## we need some help from our friend the linear model (regression)#
+lm.res <- lm(TW_CAD~LCBO_CAD,data= PRICE.DATA)#
+	## equivalence#
+cor(PRICE.DATA$TW_CAD,PRICE.DATA$LCBO_CAD)#
+cor(PRICE.DATA$TW_CAD,lm.res$fitted.values)#
+cor(PRICE.DATA$TW_CAD,predict(lm.res))
+iters <- 1000#
+split.mat <- matrix(NA,iters,2)#
+	colnames(split.mat) <- c("cor","mpse")	#
+for(i in 1:iters){		#
+	PD.sh.1.indices <- sort(sample(nrow(PRICE.DATA),round(nrow(PRICE.DATA)*.5),replace=F))#
+	PD.sh.2.indices <- setdiff(1:nrow(PRICE.DATA),PD.sh.1.indices)#
+	PD.sh.1.lm <- lm(TW_CAD~LCBO_CAD,data=PRICE.DATA,subset=PD.sh.1.indices)#
+	PD.sh.2.lm <- lm(TW_CAD~LCBO_CAD,data=PRICE.DATA,subset=PD.sh.2.indices)	#
+	PD.2.from.1 <- predict(PD.sh.1.lm, PRICE.DATA[PD.sh.2.indices,])#
+	PD.1.from.2 <- predict(PD.sh.2.lm, PRICE.DATA[PD.sh.1.indices,])	#
+	sh.predicted <- c(PD.2.from.1,PD.1.from.2)[rownames(PRICE.DATA)]	#
+		## similarity#
+	split.cor <- cor(sh.predicted,PRICE.DATA$TW_CAD)#
+		## prediction error.#
+	split.mpse <- mean((PRICE.DATA$TW_CAD - sh.predicted) ^ 2)#
+	split.mat[i,1] <- split.cor#
+	split.mat[i,2] <- split.mpse	#
+}
+colMeans(split.mat)
+summary(split.mat)
+rm(list=ls())#
+gc()#
+#
+library(ExPosition)#
+# library(ez)#
+# library(psych)#
+#
+	## load data for this example#
+load('../Data/CAD.ABV.RATING.rda')#
+#
+	## split the data into a DATA variable and a DESIGN (which tells us where the beers are from)#
+DATA <- CAD.ABV.RATING[,1:3]#
+DESIGN <- CAD.ABV.RATING$REGION#
+	## Standard PCA#
+pca.res <- epPCA(DATA,scale=T,DESIGN= DESIGN,graphs=F)
+pca.res$ExPosition.Data$eigs
+pca.res$ExPosition.Data$taus
+pca.res$ExPosition.Data$t
+rm(list=ls())#
+gc()#
+#
+library(ExPosition)#
+# library(ez)#
+# library(psych)#
+#
+	## load data for this example#
+load('../Data/CAD.ABV.RATING.rda')#
+#
+	## split the data into a DATA variable and a DESIGN (which tells us where the beers are from)#
+DATA <- CAD.ABV.RATING[,1:3]#
+DESIGN <- CAD.ABV.RATING$REGION#
+	## Standard PCA#
+pca.res <- epPCA(DATA,scale=T,DESIGN= DESIGN,graphs=F)
+## Bootstrap observations and: (1) save the eigenvalues and (2) project the data and save the column component scores#
+iters <- 1000#
+boot.comps <- matrix(NA,iters,length(pca.res$ExPosition.Data$eigs))#
+boot.vars <- array(NA,dim=c(nrow(pca.res$ExPosition.Data$fj),ncol(pca.res$ExPosition.Data$fj),iters))#
+#
+for(i in 1:iters){#
+	boot.indices <- sample(nrow(DATA),nrow(DATA),replace=T)#
+	boot.pca <- DATA[boot.indices,]#
+	boot.pca.res <- epPCA(boot.pca,scale=T,graphs=F)#
+	boot.comps[i,1:length(boot.pca.res$ExPosition.Data$eigs)] <- boot.pca.res$ExPosition.Data$eigs#
+	## project and store#
+	boot.vars[,,i] <- boot.compute.fj(DATA, res = pca.res)#
+}
+library(InPosition)
+## Bootstrap observations and: (1) save the eigenvalues and (2) project the data and save the column component scores#
+iters <- 1000#
+boot.comps <- matrix(NA,iters,length(pca.res$ExPosition.Data$eigs))#
+boot.vars <- array(NA,dim=c(nrow(pca.res$ExPosition.Data$fj),ncol(pca.res$ExPosition.Data$fj),iters))#
+#
+for(i in 1:iters){#
+	boot.indices <- sample(nrow(DATA),nrow(DATA),replace=T)#
+	boot.pca <- DATA[boot.indices,]#
+	boot.pca.res <- epPCA(boot.pca,scale=T,graphs=F)#
+	boot.comps[i,1:length(boot.pca.res$ExPosition.Data$eigs)] <- boot.pca.res$ExPosition.Data$eigs#
+	## project and store#
+	boot.vars[,,i] <- boot.compute.fj(DATA, res = pca.res)#
+}
+summary(boot.comps)
+apply(boot.comps,2,function(x){sort(x)[round(c(.025*length(x),.975*length(x))]})
+sort(x)[round(c(.025*length(x),.975*length(x))]
+sort(x)[round(c(.025*length(x),.975*length(x)))]
+apply(boot.comps,2,function(x){sort(x)[sort(x)[round(c(.025*length(x),.975*length(x)))]]})
+summary(boot.comps)
+boot.comps[,1]
+sort(boot.comps[,1])
+sort(boot.comps[,1])[round(c(.025*nrow(boot.comps),.975*nrow(boot.comps)))]
+sort(boot.comps[,2])[round(c(.025*nrow(boot.comps),.975*nrow(boot.comps)))]
+sort(boot.comps[,3])[round(c(.025*nrow(boot.comps),.975*nrow(boot.comps)))]
+rm(list=ls())#
+gc()#
+#
+library(ExPosition)#
+# library(ez)#
+# library(psych)#
+#
+	## load data for this example#
+load('../Data/CAD.ABV.RATING.rda')#
+#
+	## split the data into a DATA variable and a DESIGN (which tells us where the beers are from)#
+DATA <- CAD.ABV.RATING[,1:3]#
+DESIGN <- CAD.ABV.RATING $REGION#
+	## Standard PCA#
+pca.res <- epPCA(DATA,scale=T,DESIGN= DESIGN,graphs=F)#
+#
+### Rule 0: Visualize your data, espeically before you do anything.#
+	### Scree plot#
+prettyScree(pca.res$ExPosition.Data$eigs)#
+	### Component scores for rows and columns#
+epGraphs(pca.res,contributionPlots=F,correlationPlotter=F)#
+##############
+##########
+######
+#				Turn split-half into a test#
+######
+##########
+##############
+iters <- 1000#
+	ortho.dists_fi <- ortho.dists_p <- matrix(NA,nrow(DATA),iters)#
+		rownames(ortho.dists_fi) <- rownames(ortho.dists_p) <- rownames(DATA)#
+	sh2.cors_fi <- sh1.cors_fi <- matrix(NA,iters,3)	#
+	sh2.fj_dist.cors <- sh1.fj_dist.cors <- sh2.p_dist.cors <- sh1.p_dist.cors <- vector("numeric",iters)#
+for(i in 1:iters){#
+	pca.sh1 <- sort(sample(1:nrow(DATA),nrow(DATA)/2))#
+	pca.sh2 <- setdiff(1:nrow(DATA),pca.sh1)#
+	pca.res_sh1 <- epPCA(DATA[pca.sh1,1:3],scale=T,graphs=F)#
+	pca.sh2.from.sh1 <- supplementaryRows(DATA[pca.sh2,1:3],pca.res_sh1)#
+	sh2.pred.p <- (pca.sh2.from.sh1$fii %*% diag(1/pca.res_sh1$ExPosition.Data$pdq$Dv))		#
+	pca.res_sh2 <- epPCA(DATA[pca.sh2,1:3],scale=T,graphs=F)#
+	pca.sh1.from.sh2 <- supplementaryRows(DATA[pca.sh1,1:3],pca.res_sh2)#
+	sh1.pred.p <- (pca.sh1.from.sh2$fii %*% diag(1/pca.res_sh2$ExPosition.Data$pdq$Dv))#
+#
+	## similarities#
+	sh1.cors_fi[i,] <- diag(cor(pca.res_sh1$ExPosition.Data$fi,pca.sh1.from.sh2$fii)^2)#
+	sh2.cors_fi[i,] <- diag(cor(pca.res_sh2$ExPosition.Data$fi,pca.sh2.from.sh1$fii)^2)#
+	sh1.fj_dist.cors[i] <- cor(rowSums(pca.res_sh1$ExPosition.Data$fi^2),rowSums(pca.sh1.from.sh2$fii^2))#
+	sh1.p_dist.cors[i] <- cor(rowSums(pca.res_sh1$ExPosition.Data$pdq$p^2),rowSums(sh1.pred.p^2))#
+	sh2.fj_dist.cors[i] <- cor(rowSums(pca.res_sh2$ExPosition.Data$fi^2),rowSums(pca.sh2.from.sh1$fii^2))#
+	sh2.p_dist.cors[i] <- cor(rowSums(pca.res_sh2$ExPosition.Data$pdq$p^2),rowSums(sh2.pred.p^2))#
+	## prediction errors		#
+	one.minus.pred_p <- (pca.res_sh1$ExPosition.Data$pdq$p - sh1.pred.p)^2#
+	two.minus.pred_p <- (pca.res_sh2$ExPosition.Data$pdq$p - sh2.pred.p)^2#
+	preds_p <- rbind(one.minus.pred_p, two.minus.pred_p)[rownames(ortho.dists_p),]#
+	ortho.dists_p[,i] <- rowSums(preds_p)#
+	one.minus.pred_fi <- (pca.res_sh1$ExPosition.Data$fi - pca.sh1.from.sh2$fii)^2#
+	two.minus.pred_fi <- (pca.res_sh2$ExPosition.Data$fi - pca.sh2.from.sh1$fii)^2#
+	preds_fi <- rbind(one.minus.pred_fi, two.minus.pred_fi)[rownames(ortho.dists_fi),]	#
+	ortho.dists_fi[,i] <- rowSums(preds_fi)	#
+}#
+PRESS_p <- colSums(ortho.dists_p)#
+PRESS_fi <- colSums(ortho.dists_fi)
+### Just a few visualizers for now.#
+#
+colnames(sh1.cors_fi) <- paste0("Comp. ",1:3)#
+dev.new()#
+boxplot(sh1.cors_fi,main="S-H Component Scores",col=c("red","green","blue"), ylab="Correlation values",xlab="Components")
+dev.new()#
+boxplot(rbind(cbind(sh1.fj_dist.cors,sh1.p_dist.cors),cbind(sh2.fj_dist.cors,sh2.p_dist.cors)),col=c("mediumorchid4","olivedrab4"),main="Correlation: S-H Score and Mahalanobis Distances")
+dev.new()#
+boxplot(cbind(PRESS_fi,PRESS_p),col=c("mediumorchid4","olivedrab4"),main="Correlation: S-H PRESS Scores and Vectors")
+rownames(ortho.dists_fi) <- rownames(ortho.dists_p) <- abbreviate(rownames(ortho.dists_fi),2)#
+dev.new()#
+boxplot(t(ortho.dists_p),main="S-H Orthogonal Distance: Singular Vectors")
+rownames(ortho.dists_fi) <- rownames(ortho.dists_p) <- abbreviate(rownames(ortho.dists_fi),2)#
+dev.new()#
+boxplot(t(ortho.dists_p),main="S-H Orthogonal Distance: Singular Vectors")
+dev.new()#
+boxplot(t(ortho.dists_fi),main="S-H Orthogonal Distance: Component Scores")
+rm(list=ls())#
+gc()#
+#
+library(ExPosition)#
+# library(ez)#
+# library(psych)#
+#
+	## load data for this example#
+load('../Data/CAD.ABV.RATING.rda')#
+#
+	## split the data into a DATA variable and a DESIGN (which tells us where the beers are from)#
+DATA <- CAD.ABV.RATING[,1:3]#
+DESIGN <- CAD.ABV.RATING$REGION#
+	## Standard PCA#
+pca.res <- epPCA(DATA,scale=T,DESIGN= DESIGN,graphs=F)#
+#
+### Rule 0: Visualize your data, espeically before you do anything.#
+	### Scree plot#
+prettyScree(pca.res$ExPosition.Data$eigs)#
+	### Component scores for rows and columns#
+epGraphs(pca.res,contributionPlots=F,correlationPlotter=F)#
+#
+##############
+##########
+######
+#				What does a permutation look like?#
+######
+##########
+##############
+#
+set.seed(13)		## set a seed for the random number generator so we can recreate the result exactly#
+#
+## A permutation#
+perm.pca.1 <- apply(DATA,2,sample)#
+	rownames(perm.pca.1) <- rownames(DATA)#
+perm.pca.res.1 <- epPCA(perm.pca.1,scale=T,DESIGN= DESIGN,graphs=F)#
+prettyScree(perm.pca.res.1$ExPosition.Data$eigs)#
+epGraphs(perm.pca.res.1,contributionPlots=F,correlationPlotter=F)#
+#
+## Another permutation#
+perm.pca.2 <- apply(DATA,2,sample)#
+	rownames(perm.pca.2) <- rownames(DATA)#
+perm.pca.res.2 <- epPCA(perm.pca.2,scale=T,DESIGN= DESIGN,graphs=F)#
+prettyScree(perm.pca.res.2$ExPosition.Data$eigs)#
+epGraphs(perm.pca.res.2,contributionPlots=F,correlationPlotter=F)
+##############
+##########
+######
+#				Turn permutation into a test#
+######
+##########
+##############
+#
+## Permute *each* column to break the relationship. Save the eigenvalues.#
+pca.iters <- 1000#
+perm.comps <- matrix(NA,pca.iters,length(perm.pca.res.1$ExPosition.Data$eigs))#
+#
+for(i in 1:pca.iters){#
+	perm.pca <- apply(DATA,2,sample)#
+	perm.pca.res <- epPCA(perm.pca,scale=T,DESIGN= DESIGN,graphs=F)#
+	perm.comps[i,1:length(perm.pca.res$ExPosition.Data$eigs)] <- perm.pca.res$ExPosition.Data$eigs#
+	if(i%%100==0){#
+		print(i)#
+	}#
+}
+## Visualize the distribution of permuted eigenvalues with cut-offs#
+cut.off <- sort(perm.comps[,1])[round(nrow(perm.comps)*.95)]#
+dev.new()#
+hist(perm.comps[,1],breaks=50,xlim=c(min(pca.res$ExPosition.Data$eigs,c(perm.comps)),max(pca.res$ExPosition.Data$eigs,c(perm.comps))*1.1),border="white",col="mediumorchid4",main="Permutation Comp. 1",xlab="Permuted eigenvalues")#
+abline(v= cut.off,col="firebrick3",lty=2,lwd=1.75)#
+abline(v= pca.res$ExPosition.Data$eigs[1],col="olivedrab3",lty=1,lwd=1.75)#
+#
+cut.off <- sort(perm.comps[,2])[round(nrow(perm.comps)*.95)]#
+dev.new()#
+hist(perm.comps[,2],breaks=50,xlim=c(min(pca.res$ExPosition.Data$eigs,c(perm.comps)),max(pca.res$ExPosition.Data$eigs,c(perm.comps))*1.1),border="white",col="mediumorchid4",main="Permutation Comp. 2",xlab="Permuted eigenvalues")#
+abline(v= cut.off,col="firebrick3",lty=2,lwd=1.75)#
+abline(v= pca.res$ExPosition.Data$eigs[2],col="olivedrab3",lty=1,lwd=1.75)#
+#
+cut.off <- sort(perm.comps[,3])[round(nrow(perm.comps)*.95)]#
+dev.new()#
+hist(perm.comps[,3],breaks=50,xlim=c(min(pca.res$ExPosition.Data$eigs,c(perm.comps)),max(pca.res$ExPosition.Data$eigs,c(perm.comps))*1.1),border="white",col="mediumorchid4",main="Permutation Comp. 3",xlab="Permuted eigenvalues")#
+abline(v= cut.off,col="firebrick3",lty=2,lwd=1.75)#
+abline(v= pca.res$ExPosition.Data$eigs[3],col="olivedrab3",lty=1,lwd=1.75)#
+#
+## Finally, we compute the p-values#
+pca.ps <- colSums(perm.comps > matrix(pca.res$ExPosition.Data$eigs,pca.iters,3,byrow=T)) / pca.iters#
+pca.ps.adj <- pmax(pca.ps,1/pca.iters)
+rm(list=ls())#
+gc()#
+#
+library(InPosition)#
+# library(ez)#
+# library(psych)#
+#
+	## load data for this example#
+load('../Data/CAD.ABV.RATING.rda')#
+#
+	## split the data into a DATA variable and a DESIGN (which tells us where the beers are from)#
+DATA <- CAD.ABV.RATING[,1:3]#
+DESIGN <- CAD.ABV.RATING$REGION#
+	## Standard PCA#
+pca.res <- epPCA(DATA,scale=T,DESIGN= DESIGN,graphs=F)#
+#
+### Rule 0: Visualize your data, espeically before you do anything.#
+	### Scree plot#
+prettyScree(pca.res$ExPosition.Data$eigs)#
+	### Component scores for rows and columns#
+epGraphs(pca.res,contributionPlots=F,correlationPlotter=F)#
+##############
+##########
+######
+#				What does a bootstrap look like?#
+######
+##########
+##############
+#
+set.seed(13)		## set a seed for the random number generator so we can recreate the result exactly#
+#
+## A bootstrap#
+boot.indices.1 <- sample(nrow(DATA),nrow(DATA),replace=T)#
+boot.pca.1 <- DATA[boot.indices.1,]#
+boot.pca.res.1 <- epPCA(boot.pca.1,scale=T,graphs=F)#
+prettyScree(boot.pca.res.1$ExPosition.Data$eigs)#
+epGraphs(boot.pca.res.1,contributionPlots=F,correlationPlotter=F)#
+#
+### how variables differ when projected#
+fjj1 <- boot.compute.fj(boot.pca.1, pca.res)#
+## Another bootstrap#
+boot.indices.2 <- sample(nrow(DATA),nrow(DATA),replace=T)#
+boot.pca.2 <- DATA[boot.indices.2,]#
+boot.pca.res.2 <- epPCA(boot.pca.2,scale=T,graphs=F)#
+prettyScree(boot.pca.res.2$ExPosition.Data$eigs)#
+epGraphs(boot.pca.res.2,contributionPlots=F,correlationPlotter=F)#
+#
+### how variables differ when projected#
+fjj2 <- boot.compute.fj(boot.pca.2, pca.res)#
+##############
+##########
+######
+#				Turn bootstrap into a test#
+######
+##########
+##############
+#
+## Bootstrap observations and: (1) save the eigenvalues and (2) project the data and save the column component scores#
+iters <- 1000#
+boot.comps <- matrix(NA,iters,length(pca.res$ExPosition.Data$eigs))#
+boot.vars <- array(NA,dim=c(nrow(pca.res$ExPosition.Data$fj),ncol(pca.res$ExPosition.Data$fj),iters))#
+#
+for(i in 1:iters){#
+	boot.indices <- sample(nrow(DATA),nrow(DATA),replace=T)#
+	boot.pca <- DATA[boot.indices,]#
+	boot.pca.res <- epPCA(boot.pca,scale=T,graphs=F)#
+	boot.comps[i,1:length(boot.pca.res$ExPosition.Data$eigs)] <- boot.pca.res$ExPosition.Data$eigs#
+	## project and store#
+	boot.vars[,,i] <- boot.compute.fj(DATA, res = pca.res)#
+}#
+## Boot eigen visualization#
+boxplot(boot.comps,col=c("red","green","blue"),main="Bootstrapped and observed eigenvalues")#
+abline(h=pca.res$ExPosition.Data$eigs,lty=2,col=c("red","green","blue"),lwd=2)#
+points(pca.res$ExPosition.Data$eigs,type="l",lty=1,lwd=2,col="grey80")#
+points(pca.res$ExPosition.Data$eigs,bg=c("red","green","blue"),pch=21,cex=2)#
+axis(4,at=pca.res$ExPosition.Data$eigs,labels=round(pca.res$ExPosition.Data$eigs,digits=2))#
+## Just an example of the supplementary points from bootstrap#
+prettyPlot(pca.res$ExPosition.Data$fj,cex=1,col=c("red","green","blue"),contributions=pca.res$ExPosition.Data$cj,contributionCircles=T)#
+for(i in 1:100){#
+	prettyPlot(boot.vars[,,i],col=c("red","green","blue"),dev.new=F,axes=F,new.plot=F)#
+}#
+prettyPlot(pca.res$ExPosition.Data$fj,cex=1,col=c("red","green","blue"),contributions=pca.res$ExPosition.Data$cj,contributionCircles=T,dev.new=F,axes=F,new.plot=F)#
+#
+## Peeled hulls for supplementary points from bootstrap#
+prettyPlot(pca.res$ExPosition.Data$fj,cex=1,col=c("red","green","blue"),contributions=pca.res$ExPosition.Data$cj,contributionCircles=T)#
+these.cols <- c("red","green","blue")#
+for(i in 1:3){#
+	peeledHull(t(boot.vars[i,1:2,]),col=these.cols[i],percentage=.95)#
+}#
+#
+## Get bootstrap ratios#
+boot.ratio.test(boot.vars)
+rm(list=ls())#
+gc()#
+#
+library(ExPosition)#
+library(cellWise)#
+library(robustbase)#
+#
+data(philips)#
+DATA <- philips#
+	rownames(DATA) <- paste0("O.",1:nrow(DATA))#
+#
+mcd.res <- covMcd(DATA)#
+mcd.res_center <- covMcd(scale(DATA,scale=F))#
+#
+pca.res <- epPCA(DATA,scale=F,graphs=F)#
+#
+iters <- 1000#
+ortho.dists_fi <- ortho.dists_p <- matrix(NA,nrow(DATA),iters)#
+	rownames(ortho.dists_fi) <- rownames(ortho.dists_p) <- rownames(DATA)#
+sh2.cors_fi <- sh1.cors_fi <- matrix(NA,iters,3)	#
+sh1_rv <- sh2_rv <- sh2.fj_dist.cors <- sh1.fj_dist.cors <- sh2.p_dist.cors <- sh1.p_dist.cors <- vector("numeric",iters)#
+for(i in 1:iters){#
+	pca.sh1 <- sort(sample(1:nrow(DATA),nrow(DATA)/2))#
+	pca.sh2 <- setdiff(1:nrow(DATA),pca.sh1)#
+	pca.res_sh1 <- epPCA(DATA[pca.sh1,],scale=F,graphs=F)#
+	pca.sh2.from.sh1 <- supplementaryRows(DATA[pca.sh2,],pca.res_sh1)#
+	sh2.pred.p <- (pca.sh2.from.sh1$fii %*% diag(1/pca.res_sh1$ExPosition.Data$pdq$Dv))		#
+	pca.res_sh2 <- epPCA(DATA[pca.sh2,],scale=F,graphs=F)#
+	pca.sh1.from.sh2 <- supplementaryRows(DATA[pca.sh1,],pca.res_sh2)#
+	sh1.pred.p <- (pca.sh1.from.sh2$fii %*% diag(1/pca.res_sh2$ExPosition.Data$pdq$Dv))	#
+	one.minus.pred_p <- (pca.res_sh1$ExPosition.Data$pdq$p - sh1.pred.p)^2#
+	two.minus.pred_p <- (pca.res_sh2$ExPosition.Data$pdq$p - sh2.pred.p)^2#
+	preds_p <- rbind(one.minus.pred_p, two.minus.pred_p)[rownames(ortho.dists_p),]#
+	ortho.dists_p[,i] <- rowSums(preds_p)#
+	one.minus.pred_fi <- (pca.res_sh1$ExPosition.Data$fi - pca.sh1.from.sh2$fii)^2#
+	two.minus.pred_fi <- (pca.res_sh2$ExPosition.Data$fi - pca.sh2.from.sh1$fii)^2#
+	preds_fi <- rbind(one.minus.pred_fi, two.minus.pred_fi)[rownames(ortho.dists_fi),]	#
+	ortho.dists_fi[,i] <- rowSums(preds_fi)	#
+}
+boxplot(t(ortho.dists_fi))
+boxplot(t(ortho.dists_p))
+dev.new()#
+plot(sort(apply(ortho.dists_fi,1,median)))
+goodparts <- which(apply(ortho.dists_fi,1,median) < median(apply(ortho.dists_fi,1,median)))#
+#
+intersect(mcd.res$best, goodparts)
+dev.new()#
+plot(cbind(mcd.res$mah,apply(ortho.dists_p,1,median)))
+dev.new()#
+plot(cbind(mcd.res$raw.mah,apply(ortho.dists_fi,1,median)))
+dev.new()#
+plot(cbind(mcd.res$raw.mah,rowSums(pca.res$ExPosition.Data$pdq$p^2)))
+dev.new()#
+plot(cbind(mcd.res$raw.mah,rowSums(pca.res$ExPosition.Data$pdq$p^2)))
+rowSums(pca.res$ExPosition.Data$pdq$p^2)
+mcd.res$raw.mah
+rowSums(pca.res$ExPosition.Data$pdq$p^2) / mcd.res$raw.mah
+rowSums(pca.res$ExPosition.Data$pdq$p^2) / mcd.res$mah
+mah <- mahalanobis(DATA,colMeans(DATA),cov(DATA))
+rowSums(pca.res$ExPosition.Data$pdq$p^2) / mah
+mah / mcd.res$mah
+mah / mcd.res$raw.mah
+mcd.res$best
+goodparts
+length(goodparts)
+length(mcd.res$best)
+intersect(mcd.res$best, goodparts)
+length(intersect(mcd.res$best, goodparts))
+boxplot(t(ortho.dists_fi))
+dev.new()#
+plot(cbind(apply(ortho.dists_fi,1,median),apply(ortho.dists_p,1,median)))
+dev.new()#
+plot(cbind(apply(ortho.dists_fi,1,min),apply(ortho.dists_p,1,min)))
+dev.new()#
+plot(cbind(apply(ortho.dists_fi,1,max),apply(ortho.dists_p,1,max)))
+dev.new()#
+plot(cbind(apply(ortho.dists_fi,1,min),apply(ortho.dists_p,1,min)))
+goodparts <- which(apply(ortho.dists_fi,1,min) < median(apply(ortho.dists_fi,1,min)))
+intersect(mcd.res$best, goodparts)
+goodparts2 <- which(apply(ortho.dists_p,1,min) < median(apply(ortho.dists_p,1,min)))
+intersect(mcd.res$best, goodparts2)
+length(intersect(mcd.res$best, goodparts2))
+length(intersect(mcd.res$best, goodparts))

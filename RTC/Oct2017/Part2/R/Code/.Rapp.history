@@ -1,0 +1,480 @@
+source('1_PreprocPLSInferenceVisualize.R')
+image(c1.brain@.Data)
+image(c1.brain)
+image(sub09.data)
+overlay(c1.brain,y = ifelse(c1.brain>0,"blue","red"))
+?overlay
+overlay(ifelse(c1.brain>0,c1.brain,0),ifelse(c1.brain<=0,abs(c1.brain),0))
+overlay(MNI_444,ifelse(c1.brain>0,c1.brain,0))
+pls.res$TExPosition.Data$fj[,1]
+c1.brain@.Data[sub09.mask_indices]
+pls.res$TExPosition.Data$fj[,1]
+c1.brain@.Data[sub09.mask_indices]
+image(c1.brain)
+image(c2.brain)
+c1.brain@.Data[sub09.mask_indices] <- abs(pls.res$TExPosition.Data$fj[,1])
+image(c1.brain)
+summary(abs(pls.res$TExPosition.Data$fj[,1]))
+summary(t(apply(sub09.data@.Data,4,function(x){  c(x[sub09.mask_indices])  }  )))
+summary(t(apply(sub09.data@.Data,4,function(x){  c(x[sub09.mask_indices])  }  ))[,1:10])
+pls.res$TExPosition.Data$fj[,1] * 100
+pls.res$TExPosition.Data$fj[,1]
+pls.res$TExPosition.Data$fj[,1] * 1000
+c1.brain@.Data[sub09.mask_indices] <- pls.res$TExPosition.Data$fj[,1] * 1000
+image(c1.brain)
+c1.brain@.Data[sub09.mask_indices] <- abs(pls.res$TExPosition.Data$fj[,1] * 1000)
+dev.new(); image(c1.brain)
+pls.res$TExPosition.Data$cj
+1/nrow(pls.res$TExPosition.Data$cj)
+(pls.res$TExPosition.Data$cj[,1] * sign(pls.res$TExPosition.Data$fj[,1])) * 100
+c2.brain <- c1.brain <- empty.brain#
+c1.brain@.Data[sub09.mask_indices] <- (pls.res$TExPosition.Data$cj[,1] * sign(pls.res$TExPosition.Data$fj[,1])) * 100#
+c2.brain@.Data[sub09.mask_indices] <- (pls.res$TExPosition.Data$cj[,2] * sign(pls.res$TExPosition.Data$fj[,2])) * 100
+image(c1.brain)
+image(c1.brain* 100)
+overlay(MNI_444,ifelse(c1.brain>1/ncol(sub09.matrix_detrend_deg2_rownormed_dropped),1,0))
+overlay(MNI_444,sub09.data)
+?overlay
+image(MNI_444)
+MNI_444
+empty.brain <- MNI_444 <- readNIfTI('../Data/MNI152_T1_4mm_brain.nii')#
+	empty.brain@.Data <- array(0,dim=c(dim(empty.brain@.Data)))
+c2.brain <- c1.brain <- empty.brain#
+c1.brain@.Data[sub09.mask_indices] <- (pls.res$TExPosition.Data$cj[,1] * sign(pls.res$TExPosition.Data$fj[,1])) * 100#
+c2.brain@.Data[sub09.mask_indices] <- (pls.res$TExPosition.Data$cj[,2] * sign(pls.res$TExPosition.Data$fj[,2])) * 100
+image(c1.brain)
+overlay(MNI_444,ifelse(c1.brain>(1/ncol(sub09.matrix_detrend_deg2_rownormed_dropped)),1,0))
+c2.brain <- c1.brain <- empty.brain#
+c1.brain@.Data[sub09.mask_indices] <- (pls.res$TExPosition.Data$cj[,1] * sign(pls.res$TExPosition.Data$fj[,1]))#
+c2.brain@.Data[sub09.mask_indices] <- (pls.res$TExPosition.Data$cj[,2] * sign(pls.res$TExPosition.Data$fj[,2]))
+overlay(MNI_444,ifelse(c1.brain>(1/ncol(sub09.matrix_detrend_deg2_rownormed_dropped)),1,0))
+dev.new(); overlay(MNI_444,ifelse(c1.brain<(-1/ncol(sub09.matrix_detrend_deg2_rownormed_dropped)),1,0))
+overlay(MNI_444,ifelse(c1.brain>(1/ncol(sub09.matrix_detrend_deg2_rownormed_dropped)),1,NA))
+dev.new()#
+overlay(MNI_444,ifelse(c1.brain>(1/ncol(sub09.matrix_detrend_deg2_rownormed_dropped)),1,NA))#
+dev.new()#
+overlay(MNI_444,ifelse(c1.brain<(-1/ncol(sub09.matrix_detrend_deg2_rownormed_dropped)),1,NA))
+?overlay
+dev.new()#
+overlay(MNI_444,ifelse(c1.brain>(1/ncol(sub09.matrix_detrend_deg2_rownormed_dropped)),1,NA),col.y="red")
+1/ncol(sub09.matrix_detrend_deg2_rownormed_dropped)
+2/ncol(sub09.matrix_detrend_deg2_rownormed_dropped)
+.5/ncol(sub09.matrix_detrend_deg2_rownormed_dropped)
+(1/ncol(sub09.matrix_detrend_deg2_rownormed_dropped)) * 2
+(1/ncol(sub09.matrix_detrend_deg2_rownormed_dropped)) / 2
+order(pls.res$TExPosition.Data$cj[,1])
+dev.new()#
+overlay(MNI_444,ifelse(c1.brain>(1/ncol(sub09.matrix_detrend_deg2_rownormed_dropped)),1,NA),col.y="red")#
+dev.new()#
+overlay(MNI_444,ifelse(c1.brain<(-1/ncol(sub09.matrix_detrend_deg2_rownormed_dropped)),1,NA),col.y="blue")
+max(pls.res$TExPosition.Data$cj)
+1/nrow(pls.res$TExPosition.Data$cj)
+(1/nrow(pls.res$TExPosition.Data$cj)) * 10
+(1/nrow(pls.res$TExPosition.Data$cj)) * 100
+summary(pls.res$TExPosition.Data$cj)
+summary((pls.res$TExPosition.Data$cj[,1] * sign(pls.res$TExPosition.Data$fj[,1])))
+1/1000
+1/10000
+1/5000
+dim(sub09.matrix_detrend_deg2_rownormed_dropped)
+20453 / 5
+20453 / 10
+1/(20453 / 10)
+dev.new()#
+overlay(MNI_444,ifelse(c1.brain>(1/(ncol(sub09.matrix_detrend_deg2_rownormed_dropped) / 10)),1,NA),col.y="red")
+dev.new()#
+overlay(MNI_444,ifelse(c1.brain<(1/(ncol(sub09.matrix_detrend_deg2_rownormed_dropped) / 10)),1,NA),col.y="blue")
+dev.new()#
+overlay(MNI_444,ifelse(c1.brain<(-1/(ncol(sub09.matrix_detrend_deg2_rownormed_dropped) / 10)),1,NA),col.y="blue")
+dev.new()#
+overlay(MNI_444,ifelse(c1.brain<(-1/(ncol(sub09.matrix_detrend_deg2_rownormed_dropped) / 5)),1,NA),col.y="blue")
+dev.new()#
+overlay(MNI_444,ifelse(c1.brain>(1/(ncol(sub09.matrix_detrend_deg2_rownormed_dropped) / 5)),1,NA),col.y="red")
+dev.new()#
+overlay(MNI_444,ifelse(c1.brain>(1/(ncol(sub09.matrix_detrend_deg2_rownormed_dropped) / 2)),1,NA),col.y="red")#
+dev.new()#
+overlay(MNI_444,ifelse(c1.brain<(-1/(ncol(sub09.matrix_detrend_deg2_rownormed_dropped) / 2)),1,NA),col.y="blue")
+summary((pls.res$TExPosition.Data$cj[,1] * sign(pls.res$TExPosition.Data$fj[,1])) * 1000)
+summary((pls.res$TExPosition.Data$cj[,1] * sign(pls.res$TExPosition.Data$fj[,1])) * 10000)
+summary((pls.res$TExPosition.Data$cj[,1] * sign(pls.res$TExPosition.Data$fj[,1])) * 100000)
+c1.brain@.Data[sub09.mask_indices] <- (pls.res$TExPosition.Data$cj[,1] * sign(pls.res$TExPosition.Data$fj[,1])) * 1000
+dev.new()#
+overlay(MNI_444,ifelse(c1.brain>(1/(ncol(sub09.matrix_detrend_deg2_rownormed_dropped) / 5)),c1.brain,NA),col.y="red")
+dev.new()#
+overlay(MNI_444,ifelse(c1.brain>0,c1.brain,NA))
+dev.new()#
+overlay(MNI_444,ifelse(c1.brain>1,c1.brain,NA))
+summary((pls.res$TExPosition.Data$cj[,1] * sign(pls.res$TExPosition.Data$fj[,1])) * 100000)
+c1.brain@.Data[sub09.mask_indices] <- (pls.res$TExPosition.Data$cj[,1] * sign(pls.res$TExPosition.Data$fj[,1])) * 100000
+dev.new()#
+overlay(MNI_444,ifelse(c1.brain>1,c1.brain,NA))
+c1.brain@.Data[sub09.mask_indices] <- (pls.res$TExPosition.Data$cj[,1] * sign(pls.res$TExPosition.Data$fj[,1])) * 10000
+dev.new()#
+overlay(MNI_444,ifelse(c1.brain>1,c1.brain,NA))
+c1.brain@.Data[sub09.mask_indices] <- (pls.res$TExPosition.Data$cj[,1] * sign(pls.res$TExPosition.Data$fj[,1])) * ncol(sub09.matrix_detrend_deg2_rownormed_dropped)
+dev.new()#
+overlay(MNI_444,ifelse(c1.brain>1,c1.brain,NA))
+dev.new()#
+overlay(MNI_444,ifelse(c1.brain<1,abs(c1.brain),NA))
+ifelse(c1.brain<1,abs(c1.brain),NA)
+dev.new()#
+overlay(MNI_444,ifelse(c1.brain<1,c1.brain,NA))
+summary((pls.res$TExPosition.Data$cj[,1] * sign(pls.res$TExPosition.Data$fj[,1])) * 100000)
+dev.new()#
+overlay(MNI_444,ifelse(c1.brain<(-1),abs(c1.brain),NA))
+dev.new()#
+overlay(MNI_444,ifelse(c1.brain>1,c1.brain,NA))
+dev.new()#
+overlay(MNI_444,ifelse(c1.brain>1,c1.brain,NA),col.y="red")
+dev.new()#
+overlay(MNI_444,ifelse(c1.brain>1,c1.brain,NA))
+dev.new()#
+overlay(MNI_444,ifelse(c1.brain<(-1),abs(c1.brain),NA))
+dev.new()#
+overlay(MNI_444,ifelse(c2.brain>1,c2.brain,NA),col.y="red")#
+dev.new()#
+overlay(MNI_444,ifelse(c2.brain>1,c2.brain,NA))
+## get a brain for C1 & C2.#
+c2.brain <- c1.brain <- empty.brain#
+c1.brain@.Data[sub09.mask_indices] <- (pls.res$TExPosition.Data$cj[,1] * sign(pls.res$TExPosition.Data$fj[,1])) * ncol(sub09.matrix_detrend_deg2_rownormed_dropped)#
+c2.brain@.Data[sub09.mask_indices] <- (pls.res$TExPosition.Data$cj[,2] * sign(pls.res$TExPosition.Data$fj[,2])) * ncol(sub09.matrix_detrend_deg2_rownormed_dropped)
+dev.new()#
+overlay(MNI_444,ifelse(c2.brain>1,c2.brain,NA),col.y="red")
+dev.new()#
+overlay(MNI_444,ifelse(c2.brain>1,c2.brain,NA))
+dev.new()#
+overlay(MNI_444,ifelse(c2.brain<(-1),abs(c2.brain),NA))
+## the big things we need:#
+par(mfrow=c(2,2))#
+	### scree plot#
+sp.scree(pls.res$TExPosition.Data$eigs)#
+	### bar of axis 1#
+h <- barplot(pls.res$TExPosition.Data$fi[,1],axes=F,axisnames=F,main="DESIGN: LV1",horiz=T,col=pls.res$Plotting.Data$fi.col)#
+abline(v=0)#
+	### bar of axis 2#
+h <- barplot(pls.res$TExPosition.Data$fi[,2],axes=F,axisnames=F,main="DESIGN: LV2",col=pls.res$Plotting.Data$fi.col)		#
+abline(h=0)#
+	### component plot#
+sp.component_plot(pls.res$TExPosition.Data$fi,col=pls.res$Plotting.Data$fi.col)#
+#
+	### latent variable plots#
+par(mfrow=c(1,2))#
+sp.latentvar_plot(pls.res$TExPosition.Data,col=pls.res$Plotting.Data$fii.col)#
+sp.latentvar_plot(pls.res$TExPosition.Data,axis=2,col=pls.res$Plotting.Data$fii.col)
+## the big things we need:#
+dev.new()#
+par(mfrow=c(2,2))#
+	### scree plot#
+sp.scree(pls.res$TExPosition.Data$eigs)#
+	### bar of axis 1#
+h <- barplot(pls.res$TExPosition.Data$fi[,1],axes=F,axisnames=F,main="DESIGN: LV1",horiz=T,col=pls.res$Plotting.Data$fi.col)#
+abline(v=0)#
+	### bar of axis 2#
+h <- barplot(pls.res$TExPosition.Data$fi[,2],axes=F,axisnames=F,main="DESIGN: LV2",col=pls.res$Plotting.Data$fi.col)		#
+abline(h=0)#
+	### component plot#
+sp.component_plot(pls.res$TExPosition.Data$fi,col=pls.res$Plotting.Data$fi.col)#
+#
+	### latent variable plots#
+dev.new()	#
+par(mfrow=c(1,2))#
+sp.latentvar_plot(pls.res$TExPosition.Data,col=pls.res$Plotting.Data$fii.col)#
+sp.latentvar_plot(pls.res$TExPosition.Data,axis=2,col=pls.res$Plotting.Data$fii.col)
+summary((pls.res$TExPosition.Data$cj[,1] * sign(pls.res$TExPosition.Data$fj[,1])) * ncol(sub09.matrix_detrend_deg2_rownormed_dropped))
+## these are crude visualizations; one should definitely use the BSRs and a different visualizer (e.g., Mango or Papaya)#
+dev.new()#
+overlay(MNI_444,ifelse(c1.brain>1,c1.brain,NA),col.y="red")#
+dev.new()#
+overlay(MNI_444,ifelse(c1.brain>1,c1.brain,NA))
+## the big things we need:#
+dev.new()#
+par(mfrow=c(2,2))#
+	### scree plot#
+sp.scree(pls.res$TExPosition.Data$eigs)#
+	### bar of axis 1#
+h <- barplot(pls.res$TExPosition.Data$fi[,1],axes=F,axisnames=F,main="DESIGN: LV1",horiz=T,col=pls.res$Plotting.Data$fi.col)#
+abline(v=0)#
+	### bar of axis 2#
+h <- barplot(pls.res$TExPosition.Data$fi[,2],axes=F,axisnames=F,main="DESIGN: LV2",col=pls.res$Plotting.Data$fi.col)		#
+abline(h=0)#
+	### component plot#
+sp.component_plot(pls.res$TExPosition.Data$fi,col=pls.res$Plotting.Data$fi.col)
+## part 0: illustration of (some) cleaning with PCAs and PLS.#
+library(R.matlab)#
+library(oro.nifti)#
+library(TInPosition)#
+## we will want some MARINeR functions.#
+source('https://github.com/derekbeaton/MARINeR/blob/master/MARINeR/R/degree.detrend.R?raw=true')#
+source('https://github.com/derekbeaton/MARINeR/blob/master/MARINeR/R/percent.change.R?raw=true')#
+sub09.data <- readNIfTI('../Data/sub-09_task-onebacktask_run-01_bold_MNI.nii')#
+sub09.design <- read.csv('../Data/ds107_run-01_TR_DESIGN.csv',header=F)#
+sub09.onsets <- read.table('../Data/sub-09_run-01_onsets.txt',header=F,sep=" ")#
+sub09.mask <- readNIfTI('../Data/sub09_aal_4mm.nii')#
+sub09.mask_indices <- which(sub09.mask@.Data==1)#
+#
+	## just to tell us about the data.#
+print(sub09.data)#
+#
+	## get the data into a vectorized format but masked out.#
+sub09.matrix <- t(apply(sub09.data@.Data,4,function(x){  c(x[sub09.mask_indices])  }  ))#
+	## let's unpack the above line...#
+	## sub09.data@.Data is 4 dimensionsal: 4mm x 4mm x 4mm x 3sec#
+	## we apply a function over the fourth dimension#
+		### so that in the function we have a 4mm x 4mm x 4mm array#
+		### the function we apply is a concatenation (vectorize the cube) but only for specific indices (sub09.mask_indices).#
+	## create a purple-green gradient to look at each TR.#
+color.ramp <- colorRampPalette(c("mediumorchid3","seagreen3"))#
+row.colors <- color.ramp(nrow(sub09.matrix))
+## part 0: illustration of (some) cleaning with PCAs and PLS.#
+#
+library(R.matlab)#
+library(oro.nifti)#
+library(TInPosition)#
+## we will want some MARINeR functions.#
+source('https://github.com/derekbeaton/MARINeR/blob/master/MARINeR/R/degree.detrend.R?raw=true')#
+source('https://github.com/derekbeaton/MARINeR/blob/master/MARINeR/R/percent.change.R?raw=true')#
+sub09.data <- readNIfTI('../Data/sub-09_task-onebacktask_run-01_bold_MNI.nii')#
+sub09.design <- read.csv('../Data/ds107_run-01_TR_DESIGN.csv',header=F)#
+sub09.onsets <- read.table('../Data/sub-09_run-01_onsets.txt',header=F,sep=" ")#
+sub09.mask <- readNIfTI('../Data/sub09_aal_4mm.nii')#
+sub09.mask_indices <- which(sub09.mask@.Data==1)
+## just to tell us about the data.#
+print(sub09.data)
+## get the data into a vectorized format but masked out.#
+sub09.matrix <- t(apply(sub09.data@.Data,4,function(x){  c(x[sub09.mask_indices])  }  ))#
+## let's unpack the above line...#
+	## sub09.data@.Data is 4 dimensionsal: 4mm x 4mm x 4mm x 3sec#
+	## we apply a function over the fourth dimension#
+		### so that in the function we have a 4mm x 4mm x 4mm array#
+		### the function we apply is a concatenation (vectorize the cube) but only for specific indices (sub09.mask_indices).
+## create a purple-green gradient to look at each TR.#
+color.ramp <- colorRampPalette(c("mediumorchid3","seagreen3"))#
+row.colors <- color.ramp(nrow(sub09.matrix))
+pca_asis <- epPCA(sub09.matrix,DESIGN=sub09.design,make_design_nominal=T,scale=F,graphs=F)#
+prettyPlot(pca_asis$ExPosition.Data$fi,col=pca_asis$Plotting.Data$fi.col,main="By block design")#
+prettyPlot(pca_asis$ExPosition.Data$fi,col= row.colors,main="By TR")#
+rownames(pca_asis$ExPosition.Data$fi) <- 1:nrow(pca_asis$ExPosition.Data$fi)	#
+prettyPlot(pca_asis$ExPosition.Data$fi,col= row.colors,main="By TR")#
+	## let's make this one *much* clearer#
+	points(pca_asis$ExPosition.Data$fi,type="l")
+# PCA on detrend to first degree (linear)#
+sub09.matrix_detrend_deg1 <- degree.detrend(sub09.matrix,1)#
+pca_detrend1 <- epPCA(sub09.matrix_detrend_deg1,DESIGN=sub09.design,make_design_nominal=T,scale=F,graphs=F)#
+prettyPlot(pca_detrend1$ExPosition.Data$fi,col= pca_detrend1$Plotting.Data$fi.col,main="By block design")#
+prettyPlot(pca_detrend1$ExPosition.Data$fi,col= row.colors,main="By TR")
+rownames(pca_detrend1$ExPosition.Data$fi) <- 1:nrow(pca_detrend1$ExPosition.Data$fi)	#
+prettyPlot(pca_detrend1$ExPosition.Data$fi,col= row.colors,main="By TR")#
+	## let's make this one *much* clearer#
+	points(pca_detrend1$ExPosition.Data$fi,type="l")
+# PCA on detrend to second degree (linear + quadratic)#
+sub09.matrix_detrend_deg2 <- degree.detrend(sub09.matrix,2)#
+pca_detrend2 <- epPCA(sub09.matrix_detrend_deg2,DESIGN=sub09.design,make_design_nominal=T,scale=F,graphs=F)#
+prettyPlot(pca_detrend2$ExPosition.Data$fi,col= pca_detrend2$Plotting.Data$fi.col,main="By block design")#
+prettyPlot(pca_detrend2$ExPosition.Data$fi,col= row.colors,main="By TR")
+# PCA on detrend to second degree (linear + quadratic + cubic)#
+sub09.matrix_detrend_deg3 <- degree.detrend(sub09.matrix,3)#
+pca_detrend3 <- epPCA(sub09.matrix_detrend_deg3,DESIGN=sub09.design,make_design_nominal=T,scale=F,graphs=F)#
+prettyPlot(pca_detrend3$ExPosition.Data$fi,col= pca_detrend2$Plotting.Data$fi.col,main="By block design")#
+prettyPlot(pca_detrend3$ExPosition.Data$fi,col= row.colors,main="By TR")
+# PCA on detrend to second degree (linear + quadratic) with row normalization (i.e., z-score each row; which are TRs)#
+sub09.matrix_detrend_deg2_rownormed <- rowNorms(sub09.matrix_detrend_deg2,type="z")#
+pca_normed <- epPCA(sub09.matrix_detrend_deg2_rownormed,DESIGN=sub09.design,make_design_nominal=T,scale=F,graphs=F)#
+prettyPlot(pca_normed$ExPosition.Data$fi,col= pca_normed$Plotting.Data$fi.col,main="By block design")#
+prettyPlot(pca_normed$ExPosition.Data$fi,col= row.colors,main="By TR")
+## part 1: illustration of (some) cleaning with PCAs and PLS.#
+	## this is a simple cleaning pipeline -- preprocessing can be (and often is) much more elaborate than just a detrend and row norms.#
+		### or sometimes it's much simpler with something like % change!#
+library(R.matlab)#
+library(oro.nifti)#
+library(TInPosition)#
+#
+## we will want some MARINeR & SlimPosition functions.#
+source('https://github.com/derekbeaton/MARINeR/blob/master/MARINeR/R/degree.detrend.R?raw=true')#
+source('https://github.com/derekbeaton/MARINeR/blob/master/MARINeR/R/percent.change.R?raw=true')#
+source('https://github.com/derekbeaton/ExPosition-Family/blob/master/Code/R/Development/SlimPosition/R/sp.latentvar_plot.R?raw=true')#
+source('https://github.com/derekbeaton/ExPosition-Family/blob/master/Code/R/Development/SlimPosition/R/sp.scree.R?raw=true')#
+source('https://github.com/derekbeaton/ExPosition-Family/blob/master/Code/R/Development/SlimPosition/R/sp.component_plot.R?raw=true')#
+empty.brain <- MNI_444 <- readNIfTI('../Data/MNI152_T1_4mm_brain.nii')#
+	empty.brain@.Data <- array(0,dim=c(dim(empty.brain@.Data)))#
+sub09.data <- readNIfTI('../Data/sub-09_task-onebacktask_run-01_bold_MNI.nii')#
+sub09.design <- read.csv('../Data/ds107_run-01_TR_DESIGN.csv',header=F)#
+sub09.mask <- readNIfTI('../Data/sub09_aal_4mm.nii')#
+#
+sub09.mask_indices <- which(sub09.mask@.Data==1)#
+#
+	## just to tell us about the data.#
+print(sub09.data)#
+image(sub09.data)
+## let's save memory and just do all the preprocessing we want to do in one go.#
+sub09.matrix_detrend_deg2_rownormed_dropped <- #
+			rowNorms(#
+				degree.detrend( #
+					t(apply(sub09.data@.Data,4,function(x){  c(x[sub09.mask_indices])  }  )), #
+				deg=2), #
+			type = "z")[-c(which(sub09.design=="drop")),]#
+sub09.design_dropped <- sub09.design[-c(which(sub09.design=="drop")),]
+## the big things we need:#
+dev.new()#
+par(mfrow=c(2,2))#
+	### scree plot#
+sp.scree(pls.res$TExPosition.Data$eigs)#
+	### bar of axis 1#
+h <- barplot(pls.res$TExPosition.Data$fi[,1],axes=F,axisnames=F,main="DESIGN: LV1",horiz=T,col=pls.res$Plotting.Data$fi.col)#
+abline(v=0)#
+	### bar of axis 2#
+h <- barplot(pls.res$TExPosition.Data$fi[,2],axes=F,axisnames=F,main="DESIGN: LV2",col=pls.res$Plotting.Data$fi.col)		#
+abline(h=0)#
+	### component plot#
+sp.component_plot(pls.res$TExPosition.Data$fi,col=pls.res$Plotting.Data$fi.col)#
+#
+	### latent variable plots#
+dev.new()	#
+par(mfrow=c(1,2))#
+sp.latentvar_plot(pls.res$TExPosition.Data,col=pls.res$Plotting.Data$fii.col)#
+sp.latentvar_plot(pls.res$TExPosition.Data,axis=2,col=pls.res$Plotting.Data$fii.col)
+### let's save memory and just do all the preprocessing we want to do in one go.#
+sub09.matrix_detrend_deg2_rownormed_dropped <- #
+			rowNorms(#
+				degree.detrend( #
+					t(apply(sub09.data@.Data,4,function(x){  c(x[sub09.mask_indices])  }  )), #
+				deg=2), #
+			type = "z")[-c(which(sub09.design=="drop")),]#
+sub09.design_dropped <- sub09.design[-c(which(sub09.design=="drop")),]#
+### this is just fixed effects.#
+pls.res <- tepBADA(#
+					DATA = sub09.matrix_detrend_deg2_rownormed_dropped, #
+					DESIGN = sub09.design_dropped, #
+					make_design_nominal=T, #
+					scale=F, #
+					graphs=F#
+				)
+### let's save memory and just do all the preprocessing we want to do in one go.#
+sub09.matrix_detrend_deg2_rownormed_dropped <- #
+			rowNorms(#
+				degree.detrend( #
+					t(apply(sub09.data@.Data,4,function(x){  c(x[sub09.mask_indices])  }  )), #
+				deg=2), #
+			type = "z")[-c(which(sub09.design=="drop")),]#
+sub09.design_dropped <- sub09.design[-c(which(sub09.design=="drop")),]#
+### this is just fixed effects.#
+pls.res <- tepBADA(#
+					DATA = sub09.matrix_detrend_deg2_rownormed_dropped, #
+					DESIGN = sub09.design_dropped, #
+					make_design_nominal=T, #
+					scale=F, #
+					graphs=F#
+				)
+## the big things we need:#
+dev.new()#
+par(mfrow=c(2,2))#
+	### scree plot#
+sp.scree(pls.res$TExPosition.Data$eigs)#
+	### bar of axis 1#
+h <- barplot(pls.res$TExPosition.Data$fi[,1],axes=F,axisnames=F,main="DESIGN: LV1",horiz=T,col=pls.res$Plotting.Data$fi.col)#
+abline(v=0)#
+	### bar of axis 2#
+h <- barplot(pls.res$TExPosition.Data$fi[,2],axes=F,axisnames=F,main="DESIGN: LV2",col=pls.res$Plotting.Data$fi.col)		#
+abline(h=0)#
+	### component plot#
+sp.component_plot(pls.res$TExPosition.Data$fi,col=pls.res$Plotting.Data$fi.col)#
+#
+	### latent variable plots#
+dev.new()	#
+par(mfrow=c(1,2))#
+sp.latentvar_plot(pls.res$TExPosition.Data,col=pls.res$Plotting.Data$fii.col)#
+sp.latentvar_plot(pls.res$TExPosition.Data,axis=2,col=pls.res$Plotting.Data$fii.col)
+## the big things we need:#
+dev.new()#
+par(mfrow=c(2,2))#
+	### scree plot#
+sp.scree(pls.res$TExPosition.Data$eigs)#
+	### bar of axis 1#
+h <- barplot(pls.res$TExPosition.Data$fi[,1],axes=F,axisnames=F,main="DESIGN: LV1",horiz=T,col=pls.res$Plotting.Data$fi.col)#
+abline(v=0)#
+legend("topleft",legend="test")#
+	### bar of axis 2#
+h <- barplot(pls.res$TExPosition.Data$fi[,2],axes=F,axisnames=F,main="DESIGN: LV2",col=pls.res$Plotting.Data$fi.col)	#
+abline(h=0)#
+legend("topright",legend="test")#
+	### component plot#
+sp.component_plot(pls.res$TExPosition.Data$fi,col=pls.res$Plotting.Data$fi.col)
+h <- barplot(pls.res$TExPosition.Data$fi[,1],axes=F,axisnames=F,main="DESIGN: LV1",horiz=T,col=pls.res$Plotting.Data$fi.col)#
+abline(v=0)#
+legend("topright",legend=rownames(pls.res$TExPosition.Data$fi),pch=15,col=pls.res$Plotting.Data$fi.col)
+h <- barplot(pls.res$TExPosition.Data$fi[,1],axes=F,axisnames=F,main="DESIGN: LV1",horiz=T,col=pls.res$Plotting.Data$fi.col)#
+abline(v=0)#
+legend("topright",legend=rownames(pls.res$TExPosition.Data$fi),pch=15,col=pls.res$Plotting.Data$fi.col,cex=.9,pt.cex=1)
+h <- barplot(pls.res$TExPosition.Data$fi[,1],axes=F,axisnames=F,main="DESIGN: LV1",horiz=T,col=pls.res$Plotting.Data$fi.col)#
+abline(v=0)#
+legend("topright",legend=rownames(pls.res$TExPosition.Data$fi),pch=15,col=pls.res$Plotting.Data$fi.col,cex=.9,pt.cex=1)
+## the big things we need:#
+dev.new()#
+par(mfrow=c(2,2))#
+	### scree plot#
+sp.scree(pls.res$TExPosition.Data$eigs)#
+	### bar of axis 1#
+h <- barplot(pls.res$TExPosition.Data$fi[,1],axes=F,axisnames=F,main="DESIGN: LV1",horiz=T,col=pls.res$Plotting.Data$fi.col)#
+abline(v=0)#
+legend("topright",legend=rownames(pls.res$TExPosition.Data$fi),pch=15,col=pls.res$Plotting.Data$fi.col,cex=.9,pt.cex=1)#
+	### bar of axis 2#
+h <- barplot(pls.res$TExPosition.Data$fi[,2],axes=F,axisnames=F,main="DESIGN: LV2",col=pls.res$Plotting.Data$fi.col)	#
+abline(h=0)#
+legend("topleft",legend=rownames(pls.res$TExPosition.Data$fi),pch=15,col=pls.res$Plotting.Data$fi.col,cex=.9,pt.cex=1)#
+	### component plot#
+sp.component_plot(pls.res$TExPosition.Data$fi,col=pls.res$Plotting.Data$fi.col)
+h <- barplot(pls.res$TExPosition.Data$fi[,1],axes=F,axisnames=F,main="DESIGN: LV1",horiz=T,col=pls.res$Plotting.Data$fi.col)#
+abline(v=0)#
+legend("topright",legend=rownames(pls.res$TExPosition.Data$fi),pch=15,col=pls.res$Plotting.Data$fi.col,cex=.75,pt.cex=1,box=F)
+?legend
+## the big things we need:#
+dev.new()#
+par(mfrow=c(2,2))#
+	### scree plot#
+sp.scree(pls.res$TExPosition.Data$eigs)#
+	### bar of axis 1#
+h <- barplot(pls.res$TExPosition.Data$fi[,1],axes=F,axisnames=F,main="DESIGN: LV1",horiz=T,col=pls.res$Plotting.Data$fi.col)#
+abline(v=0)#
+legend("topright",legend=rownames(pls.res$TExPosition.Data$fi),pch=15,col=pls.res$Plotting.Data$fi.col,cex=.75,pt.cex=1,bty="n")#
+	### bar of axis 2#
+h <- barplot(pls.res$TExPosition.Data$fi[,2],axes=F,axisnames=F,main="DESIGN: LV2",col=pls.res$Plotting.Data$fi.col)	#
+abline(h=0)#
+legend("topleft",legend=rownames(pls.res$TExPosition.Data$fi),pch=15,col=pls.res$Plotting.Data$fi.col,cex=.75,pt.cex=1,bty="n")#
+	### component plot#
+sp.component_plot(pls.res$TExPosition.Data$fi,col=pls.res$Plotting.Data$fi.col)
+### latent variable plots#
+dev.new()	#
+par(mfrow=c(1,2))#
+sp.latentvar_plot(pls.res$TExPosition.Data,col=pls.res$Plotting.Data$fii.col)#
+sp.latentvar_plot(pls.res$TExPosition.Data,axis=2,col=pls.res$Plotting.Data$fii.col)
+## get a brain for C1 & C2.#
+c2.brain <- c1.brain <- empty.brain#
+c1.brain@.Data[sub09.mask_indices] <- (pls.res$TExPosition.Data$cj[,1] * sign(pls.res$TExPosition.Data$fj[,1])) * ncol(sub09.matrix_detrend_deg2_rownormed_dropped)#
+c2.brain@.Data[sub09.mask_indices] <- (pls.res$TExPosition.Data$cj[,2] * sign(pls.res$TExPosition.Data$fj[,2])) * ncol(sub09.matrix_detrend_deg2_rownormed_dropped)
+## these are crude visualizations; one should definitely use the BSRs and a different visualizer (e.g., Mango or Papaya)#
+dev.new()#
+overlay(MNI_444,ifelse(c1.brain>1,c1.brain,NA),col.y="red")#
+dev.new()#
+overlay(MNI_444,ifelse(c1.brain>1,c1.brain,NA))
+dev.new()#
+overlay(MNI_444,ifelse(c1.brain<(-1),abs(c1.brain),NA))
+## Hot metal values for component 2 (positive side)#
+dev.new()#
+overlay(MNI_444,ifelse(c2.brain>1,c2.brain,NA))#
+#
+	## Hot metal values for component 2 (negative side)#
+dev.new()#
+overlay(MNI_444,ifelse(c2.brain<(-1),abs(c2.brain),NA))
+?writeNIfTI
+?image
+?image,nifti-method
+??image,nifti-method
+?nifti-method
+?image.nifti
+image(sub09.data,z=10,col=hotmetal(64))
+image(sub09.data,z=20,col=hotmetal(64))
+dev.new(); image(sub09.data,z=10,col=hotmetal(64))
+dev.new(); image(sub09.data,z=100,col=hotmetal(64))
+sub09.data
+dev.new(); image(sub09.data,w=10,col=hotmetal(64))
+dev.new(); image(sub09.data,w=20,col=hotmetal(64))
+dev.new(); image(sub09.data,w=100,col=hotmetal(64))
