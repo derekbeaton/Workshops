@@ -1,0 +1,345 @@
+\PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% Prevent slide breaks in the middle of a paragraph:
+\widowpenalties 1 10000
+\raggedbottom
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{part title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{part title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provides euro and other symbols
+\else % if luatex or xelatex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usetheme[]{Berlin}
+\usecolortheme{seagull}
+\usefonttheme{structurebold}
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={Principal Components and Multiple Correspondence Analyses},
+  pdfauthor={Derek Beaton},
+  pdfborder={0 0 0},
+  breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\newif\ifbibliography
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-2}
+
+% set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+
+\usepackage{amssymb}
+\usepackage{amsmath}
+
+\title{Principal Components and Multiple Correspondence Analyses}
+\subtitle{With resampling for stability assessment}
+\author{Derek Beaton}
+\date{2019APR29}
+\institute{RRI RTC}
+
+\begin{document}
+\frame{\titlepage}
+
+\hypertarget{introduction}{%
+\section{Introduction}\label{introduction}}
+
+\hypertarget{something}{%
+\subsection{Something}\label{something}}
+
+\begin{frame}{Hello}
+\protect\hypertarget{hello}{}
+
+This stuff
+
+\end{frame}
+
+\begin{frame}{Hell-no}
+\protect\hypertarget{hell-no}{}
+
+This stuff
+
+\end{frame}
+
+\hypertarget{something-else}{%
+\subsection{Something else}\label{something-else}}
+
+\begin{frame}{Hello}
+\protect\hypertarget{hello-1}{}
+
+This stuff
+
+\end{frame}
+
+\hypertarget{background}{%
+\subsection{Background}\label{background}}
+
+\begin{frame}{History}
+\protect\hypertarget{history}{}
+
+This stuff
+
+\end{frame}
+
+\begin{frame}{Not sure}
+\protect\hypertarget{not-sure}{}
+
+This stuff
+
+\end{frame}
+
+\hypertarget{principal-components-analysis}{%
+\section{Principal Components
+Analysis}\label{principal-components-analysis}}
+
+\hypertarget{how-it-works}{%
+\subsection{How it works}\label{how-it-works}}
+
+\begin{frame}{Hello}
+\protect\hypertarget{hello-2}{}
+
+\includegraphics{test_files/figure-beamer/unnamed-chunk-1-1.pdf}
+\includegraphics{test_files/figure-beamer/unnamed-chunk-1-2.pdf}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{test_files/figure-beamer/unnamed-chunk-2-1.pdf}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{test_files/figure-beamer/unnamed-chunk-3-1.pdf}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{test_files/figure-beamer/unnamed-chunk-4-1.pdf}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{test_files/figure-beamer/unnamed-chunk-5-1.pdf}
+
+\end{frame}
+
+\hypertarget{interpretation}{%
+\subsection{Interpretation}\label{interpretation}}
+
+\begin{frame}{Hello}
+\protect\hypertarget{hello-3}{}
+
+This stuff
+
+\end{frame}
+
+\hypertarget{eigen-magic}{%
+\subsection{Eigen-magic}\label{eigen-magic}}
+
+\begin{frame}{Hello}
+\protect\hypertarget{hello-4}{}
+
+This stuff
+
+\end{frame}
+
+\hypertarget{a-real-example}{%
+\subsection{A real example}\label{a-real-example}}
+
+\begin{frame}{Hello}
+\protect\hypertarget{hello-5}{}
+
+This stuff
+
+\end{frame}
+
+\begin{frame}{Hello}
+\protect\hypertarget{hello-6}{}
+
+This stuff
+
+\end{frame}
+
+\begin{frame}{Hello}
+\protect\hypertarget{hello-7}{}
+
+This stuff
+
+\end{frame}
+
+\begin{frame}{Hello}
+\protect\hypertarget{hello-8}{}
+
+This stuff
+
+\end{frame}
+
+\hypertarget{multiple-correspondence-analysis}{%
+\section{Multiple Correspondence
+Analysis}\label{multiple-correspondence-analysis}}
+
+\hypertarget{something-1}{%
+\subsection{Something}\label{something-1}}
+
+\begin{frame}{Hello}
+\protect\hypertarget{hello-9}{}
+
+This stuff
+
+\end{frame}
+
+\begin{frame}{Hell-no}
+\protect\hypertarget{hell-no-1}{}
+
+This stuff
+
+\end{frame}
+
+\hypertarget{something-else-1}{%
+\subsection{Something else}\label{something-else-1}}
+
+\begin{frame}{Hello}
+\protect\hypertarget{hello-10}{}
+
+This stuff
+
+\end{frame}
+
+\hypertarget{resampling}{%
+\section{Resampling}\label{resampling}}
+
+\hypertarget{something-2}{%
+\subsection{Something}\label{something-2}}
+
+\begin{frame}{Hello}
+\protect\hypertarget{hello-11}{}
+
+This stuff
+
+\end{frame}
+
+\begin{frame}{Hell-no}
+\protect\hypertarget{hell-no-2}{}
+
+This stuff
+
+\end{frame}
+
+\hypertarget{something-else-2}{%
+\subsection{Something else}\label{something-else-2}}
+
+\begin{frame}{Hello}
+\protect\hypertarget{hello-12}{}
+
+This stuff
+
+\end{frame}
+
+\hypertarget{so-much-more}{%
+\section{So much more}\label{so-much-more}}
+
+\hypertarget{something-3}{%
+\subsection{Something}\label{something-3}}
+
+\begin{frame}{Hello}
+\protect\hypertarget{hello-13}{}
+
+This stuff
+
+\end{frame}
+
+\begin{frame}{Hell-no}
+\protect\hypertarget{hell-no-3}{}
+
+This stuff
+
+\end{frame}
+
+\hypertarget{something-else-3}{%
+\subsection{Something else}\label{something-else-3}}
+
+\begin{frame}{Hello}
+\protect\hypertarget{hello-14}{}
+
+This stuff
+
+\end{frame}
+
+\end{document}

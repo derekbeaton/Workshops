@@ -1,0 +1,177 @@
+---
+title: "Principal Components and Multiple Correspondence Analyses"
+subtitle: "With resampling for stability assessment"
+author: "Derek Beaton"
+date: '`r toupper(format(Sys.Date(), "%Y%b%d"))`'
+institute: "RRI RTC"
+header-includes:
+   - \usepackage{amssymb}
+   - \usepackage{amsmath}
+output:
+  beamer_presentation:
+    theme: "Berlin"
+    colortheme: "seagull"
+    fonttheme: "structurebold"
+    incremental: true
+    slide_level: 3
+    keep_tex:  true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(TInPosition)
+library(knitr)
+library(ggplot2)
+library(tidyverse)
+library(ours)
+
+load(file=paste0(Sys.getenv("ADNI_FOLDER"),"\\","amerge_subset.rda"))
+load(file=paste0(Sys.getenv("ADNI_FOLDER"),"\\","variable_type_map.rda"))
+```
+
+# Introduction
+## Something
+### Hello
+
+This stuff
+
+### Hell-no
+
+This stuff
+
+## Something else
+### Hello
+
+This stuff
+
+## Background
+### History
+
+This stuff
+
+### Not sure
+
+This stuff
+
+
+# Principal Components Analysis
+## How it works
+### Hello
+
+```{r}
+trails.fdg.df <- data.frame(TRAILS=amerge_subset$mPACCtrailsB, FDG=amerge_subset$FDG)
+g <- ggplot(trails.fdg.df, mapping=aes(x = TRAILS, y = FDG)) + 
+  geom_point(alpha = 1/3) 
+
+g + coord_fixed()
+g
+```
+
+***
+
+```{r}
+trails.fdg.df_normed <- data.frame(TRAILS=expo.scale(as.matrix(amerge_subset$mPACCtrailsB),scale="SS1"), FDG=expo.scale(as.matrix(amerge_subset$FDG),scale="SS1"))
+g <- ggplot(trails.fdg.df_normed, mapping=aes(x = TRAILS, y = FDG)) + 
+  geom_point(alpha = 1/3) + 
+  stat_ellipse(type = "norm", alpha=0) +
+  coord_fixed() ## such a lazy hack...
+g
+```
+
+***
+
+```{r}
+trails.from.fdg <- lm(trails.fdg.df_normed$TRAILS ~ trails.fdg.df_normed$FDG)
+fdg.from.trails <- lm(trails.fdg.df_normed$FDG ~ trails.fdg.df_normed$TRAILS)
+
+g <- g + geom_segment(x = min(trails.fdg.df_normed$TRAILS), y = min(fdg.from.trails$fitted.values), xend = max(trails.fdg.df_normed$TRAILS), yend = max(fdg.from.trails$fitted.values), colour = "green")
+g
+
+```
+
+***
+
+```{r}
+g <- g + geom_segment(y = min(trails.fdg.df_normed$FDG), x = min(trails.from.fdg$fitted.values), yend = max(trails.fdg.df_normed$FDG), xend = max(trails.from.fdg$fitted.values), colour = "green")
+g 
+```
+
+*** 
+
+```{r}
+g <- g+ stat_ellipse(type = "norm")
+g
+```
+
+## Interpretation
+### Hello
+
+This stuff
+
+## Eigen-magic
+### Hello
+
+This stuff
+
+## A real example
+### Hello
+
+This stuff
+
+### Hello
+
+This stuff
+
+### Hello
+
+This stuff
+
+### Hello
+
+This stuff
+
+# Multiple Correspondence Analysis
+## Something
+### Hello
+
+This stuff
+
+### Hell-no
+
+This stuff
+
+## Something else
+### Hello
+
+This stuff
+
+# Resampling
+## Something
+### Hello
+
+This stuff
+
+### Hell-no
+
+This stuff
+
+## Something else
+### Hello
+
+This stuff
+
+# So much more
+## Something
+### Hello
+
+This stuff
+
+### Hell-no
+
+This stuff
+
+## Something else
+### Hello
+
+This stuff
+
