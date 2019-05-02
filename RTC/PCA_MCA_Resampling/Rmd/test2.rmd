@@ -1720,5 +1720,3 @@ grid.arrange(t,
 ## Bootstrap
 
 ## Split-half
-
-### FUCK
