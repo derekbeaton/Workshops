@@ -92,8 +92,12 @@ load(file=paste0(Sys.getenv("ADNI_FOLDER"),"\\","variable_type_map.rda"))
 
 ### Motivation for today
 
+* Single mixed data set
+  + In various pieces
+  + Build up
 * Not everything is a number
-* But with care, it can be turned into one
+  + We need to recognize this
+
 
 ### Overview
 
@@ -826,10 +830,11 @@ kable(illustrative_apoe_dx_disjunctive_subtable, "latex", booktabs=T) %>%
 * Sum within a variable (e.g. DX) is total number of rows
 * Sum of the table is rows $\times$ columns
 
-### A bad idea: PCA
+### A criminal idea: PCA
 
 * "coding categorical variables with the indicator matrix of dummy variables and considering them as Gaussian, for instance, is almost a crime."
   + "Jan de Leeuw and the French School of Data Analysis" (Husson, Josse, Saporta)
+* Let's commit a crime!
 
 ***
 
@@ -1603,7 +1608,6 @@ ca_columns +
                                y1=ca_results$ExPosition.Data$fj[8,2]), 
                aes(x = x0, y = y0, xend = x1, yend = y1), color="red")
 ```
-Special properties: Biploar coding passes through 0.
 
 ***
 
@@ -2089,7 +2093,8 @@ grid.arrange(t,
   + Start at the "beginning"
 * What about other data types?
   + I've actually misled you a bit
-  + Structural data
+  + Structural data (composition, count)
+  + APOE (count)
 * Rotations
   + I don't rotate
   + But I won't stop you from it
@@ -2214,5 +2219,4 @@ grid.arrange(t,
 * Escofier, B. (1979). Traitement simultané de variables qualitatives et quantitatives en analyse factorielle. Cahiers de l’Analyse Des Données, 4(2), 137–146.
 
 * Greenacre, M. (2014). Data Doubling and Fuzzy Coding. In J. Blasius & M. Greenacre (Eds.), Visualization and Verbalization of Data (pp. 239–253). Philadelphia, PA, USA: CRC Press.
-
 
