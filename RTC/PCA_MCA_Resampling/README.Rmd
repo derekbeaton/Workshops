@@ -1,5 +1,6 @@
 ---
-title: "Untitled"
+title: "Principal components analysis and multiple correspondence analysis"
+subtitle: "with resampling approaches for stability assessments."
 output: github_document
 ---
 
@@ -7,24 +8,59 @@ output: github_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## GitHub Documents
 
-This is an R Markdown format used for publishing markdown documents to GitHub. When you click the **Knit** button all R code chunks are run and a markdown file (.md) suitable for publishing to GitHub is generated.
+# Overview 
 
-## Including Code
+This was a high speed crash course on principal components analysis (PCA), simple & multiple correspondence analysis (CA, MCA), and resampling strategies (permutation, split-half, bootstrap). This is, specifically, a non-comprehensive dive into PCA, CA, MCA, and resampling. This workshop introduces the basics, the problems, some solutions, and guides on how to interpret (and not over interpret) the results. All code and Rmarkdown are available here. The data used were from the ADNI project. To run all of these anlayses you will require the `ADNIMERGE` data package. For access to ADNI, and to download the `ADNIMERGE` package visit http://adni.loni.usc.edu/data-samples/access-data/. Some additional set up is required to run all analyses and RMarkdown (see later sections).
 
-You can include R code in the document as follows:
 
-```{r cars}
-summary(cars)
-```
+The primary emphasis of the workshop is that not all things that look like numbers are numbers. And even when you have things that look like (or are) numbers, PCA isn't always a good idea: "For both [the French and Dutch data science/analysis] schools, coding categorical variables with the indicator matrix of dummy variables and considering them as Gaussian, for instance, is almost a crime."
 
-## Including Plots
 
-You can also embed plots, for example:
+This workshop, the code, slides, and examples are meant to help you avoid one or two statistical crimes. 
 
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
+# Overview of directory
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+* Rmd: Contains the RMarkdown Beamer slide deck. This requires some set up of data before hand
+* R: Contains all the scripts to run analyses in order of the presentation
+  + '0_Create_ADNI_Dataset.R' makes the data set and exports it as a .rda file to an external directory
+  + You will need to use a .Renviron file to save to, and read from, a directory outside of the view of the github repository. This helps ensure you do not commit any data to the repository (which is a big no-no)
+  + Scripts 1 through 10 run the analyses in order
+  + Script 11 is a "bonus" alternative way of analyzing mixed data
+  + Scripts 12 through 14 are resampling procedures
+* Images: Contains copies of figures needed for the slides
+  + Including figures made from scripts 12 through 14; if resampling were included in the RMarkdown slide deck, it would take between 5-10 minutes to knit. 
+* etc: A place for other pieces of code not necessarily described
+* .Renviron: A file with an environment variable (see `?Sys.getenv()`) that points to a separate directory outside of the repository. This helps keep the data files in a more secure place. 
+* PCA_MCA_Resampling.Rproj: An R project file to help keep things organized in RStudio
+
+
+# Slides
+
+Slides are available in /Rmd/. An overview of the presentation is:
+
+* Miscellaneous slides before the talk
+* Introduction
+  + History and background of PCA & CA/MCA
+  + Definitions
+  + R packages
+  + Data descriptions
+* PCA
+  + Finding a component
+  + Interpretting PCA
+  + A scaled up example
+* Correspondence analysis
+  + Small example, including the criminal act of applying PCA to categorical data
+  + MCA of multiple categorical variables
+  + Magic equivalence 1: Binomial/binary data
+  + Magic equivalence 2: Data doubling of continuous data
+  + Ordinal data coding
+  + Ordinal vs. Categorical coding of the same data
+  + MCA of continuous, categorical, and ordinal data (crime free!)
+* Resampling
+  + Permutation for size of eigenvalues per component
+  + Split-half for reproducibility estimates per component
+  + Bootstrap test of variable stability per component
+* Conclusions
+  + Non exhaustive list of related methods
+* References
