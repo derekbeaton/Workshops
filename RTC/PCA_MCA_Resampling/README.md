@@ -55,7 +55,7 @@ avoid one or two statistical crimes.
 
 # Slides
 
-Slides are available in [./Rmd/](/Rmd/PCA_MCA_Slides.pdf). An overview of the presentation is:
+Slides are available in [./Rmd/](https://github.com/derekbeaton/Workshops/blob/master/RTC/PCA_MCA_Resampling/Rmd/PCA_MCA_Slides.pdf). An overview of the presentation is:
 
   - Miscellaneous slides before the talk
   - Introduction
