@@ -26,7 +26,7 @@ mixed_data <- cbind(continuous_escofier_data,
 
 ca_results <- epCA(mixed_data, DESIGN = amerge_subset$DX, make_design_nominal = T, graphs=F)
 
-iterations <- 100
+iterations <- 1000
 permuted_eigenvalues <- matrix(NA, iterations, length(ca_results$ExPosition.Data$eigs))
 for(i in 1:iterations){
   
@@ -42,18 +42,26 @@ for(i in 1:iterations){
 }
 
 
-p_values <- pmax(colSums(t(t(permuted_eigenvalues) > ca_results$ExPosition.Data$eigs)) / iterations,1/iterations)
-
-
-hist(permuted_eigenvalues[,1], xlim=c(min(permuted_eigenvalues[,1]),max(c(permuted_eigenvalues[,1],ca_results$ExPosition.Data$eigs[1]))), xlab="", main="First Component Permutation Distribution", breaks=20)
+hist(permuted_eigenvalues[,1], xlim=c(min(permuted_eigenvalues[,1]),max(c(permuted_eigenvalues[,1],ca_results$ExPosition.Data$eigs[1]))), xlab="", main="First Component Permutation Distribution", breaks=20, border="white", col="grey60")
 abline(v=ca_results$ExPosition.Data$eigs[1], col="red", lwd=2, lty=2)
 
-hist(permuted_eigenvalues[,2], xlim=c(min(permuted_eigenvalues[,2]),max(c(permuted_eigenvalues[,2],ca_results$ExPosition.Data$eigs[2]))), xlab="", main="Second Component Permutation Distribution", breaks=20)
+hist(permuted_eigenvalues[,2], xlim=c(min(permuted_eigenvalues[,2]),max(c(permuted_eigenvalues[,2],ca_results$ExPosition.Data$eigs[2]))), xlab="", main="Second Component Permutation Distribution", breaks=20, border="white", col="grey60")
 abline(v=ca_results$ExPosition.Data$eigs[2], col="red", lwd=2, lty=2)
 
-hist(permuted_eigenvalues[,3], xlim=c(min(permuted_eigenvalues[,3]),max(c(permuted_eigenvalues[,3],ca_results$ExPosition.Data$eigs[3]))), xlab="", main="Third Component Permutation Distribution", breaks=20)
+hist(permuted_eigenvalues[,3], xlim=c(min(permuted_eigenvalues[,3]),max(c(permuted_eigenvalues[,3],ca_results$ExPosition.Data$eigs[3]))), xlab="", main="Third Component Permutation Distribution", breaks=75, border="white", col="grey60")
 abline(v=ca_results$ExPosition.Data$eigs[3], col="red", lwd=2, lty=2)
 
-hist(permuted_eigenvalues[,5], xlim=c(min(permuted_eigenvalues[,5]),max(c(permuted_eigenvalues[,5],ca_results$ExPosition.Data$eigs[5]))), xlab="", main="Fifth Component Permutation Distribution", breaks=20)
+hist(permuted_eigenvalues[,5], xlim=c(min(permuted_eigenvalues[,5]),max(c(permuted_eigenvalues[,5],ca_results$ExPosition.Data$eigs[5]))), xlab="", main="Fifth Component Permutation Distribution", breaks=75, border="white", col="grey60")
 abline(v=ca_results$ExPosition.Data$eigs[5], col="red", lwd=2, lty=2)
+
+
+
+
+p_values <- pmax(colSums(t(t(permuted_eigenvalues) > ca_results$ExPosition.Data$eigs)) / iterations,1/iterations)
+names(p_values) <- paste0("Comp.", 1:length(p_values))
+
+grid.arrange(tableGrob(t(p_values[1:7])),
+             tableGrob(t(p_values[8:14])),
+             tableGrob(t(p_values[15:21])),
+             nrow=3, top=paste0("Iterations: ",iterations))
 

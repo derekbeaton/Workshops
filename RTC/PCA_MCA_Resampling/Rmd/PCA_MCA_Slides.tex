@@ -1,0 +1,2753 @@
+\PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% Prevent slide breaks in the middle of a paragraph:
+\widowpenalties 1 10000
+\raggedbottom
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{part title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{part title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provides euro and other symbols
+\else % if luatex or xelatex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={Principal Components \& Multiple Correspondence Analyses},
+  pdfauthor={Derek Beaton},
+  pdfborder={0 0 0},
+  breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\newif\ifbibliography
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-2}
+
+% set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{animate}
+\usepackage{caption}
+\captionsetup[figure]{labelformat=empty}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\AtBeginSubsection{}
+\usepackage{textcomp}
+
+\title{Principal Components \& Multiple Correspondence Analyses}
+\subtitle{with resampling approaches for stability assessments}
+\author{Derek Beaton}
+\date{May 03, 2019}
+\institute{RRI RTC}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{Where to find everything}
+\protect\hypertarget{where-to-find-everything}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  Generally: \url{https://github.com/derekbeaton/workshops}
+\item
+  Today:
+  \url{https://github.com/derekbeaton/Workshops/tree/master/RTC/PCA_MCA_Resampling}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Some set up}
+\protect\hypertarget{some-set-up}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  Use RStudio (makes it easy)
+\item
+  You can pull from the Git repo
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Or copy individual files
+  \end{itemize}
+\item
+  Make .Renviron file
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Points to locations outside the repo
+  \end{itemize}
+\item
+  Run ``/R/0\_Create\_ADNI\_Dataset.R'' first
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Then either run this .Rmd or
+  \item
+    Run scripts in order
+  \end{itemize}
+\item
+  Use of the ADNI data
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Via the `ADNIMERGE' package
+  \end{itemize}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{An advertisement}
+\protect\hypertarget{an-advertisement}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  Lots of really cool R \& RStudio stuff
+\item
+  This presentation is 90\% reproducible
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Resampling is painful
+  \end{itemize}
+\item
+  R \& RStudio ``Magic'' BrainHackTO tutorial
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Jenny Rieck \& I
+  \item
+    May 21 or 22
+  \item
+    Possibly sold out?
+  \item
+    We'll make stuff available
+  \end{itemize}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Motivation for today}
+\protect\hypertarget{motivation-for-today}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  Not everything is a number
+\item
+  But with care, it can be turned into one
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Overview}
+\protect\hypertarget{overview}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  Introduction
+\item
+  PCA
+\item
+  CA
+\item
+  Resampling
+\item
+  Final notes
+\end{itemize}
+
+\end{frame}
+
+\hypertarget{introduction}{%
+\section{Introduction}\label{introduction}}
+
+\hypertarget{history}{%
+\subsection{History}\label{history}}
+
+\begin{frame}{Prehistory}
+\protect\hypertarget{prehistory}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  Basis:
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Hotelling (1933)
+  \item
+    Eckart \& Yong (1936)
+  \end{itemize}
+\item
+  Traces back to
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Cauchy (1829)
+  \item
+    Galton (1859)
+  \item
+    K. Pearson (1901)
+  \item
+    Spearman (1904)
+  \end{itemize}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{History}
+\protect\hypertarget{history-1}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  ``Modern form'' of PCA \& factor analyses
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Thurstone (1934)
+  \item
+    Fisher (1940)
+  \item
+    Tucker (too many to list)
+  \item
+    Many others in 1940s-1960s
+  \end{itemize}
+\item
+  CA
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Hirschfeld (1935)
+  \item
+    Guttman (1941)
+  \item
+    Burt (1950)
+  \item
+    Benzecri (1964)
+  \item
+    Escofier (1965)
+  \end{itemize}
+\item
+  See Lebart's History \& Prehistory of CA:
+  \url{http://www.dtmvic.com/doc/About_the_History_of_CA.pdf}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Now \& The Future}
+\protect\hypertarget{now-the-future}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  PCA is always cool.
+\item
+  See the final slides for related methods
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    PCA makes you familiar with all of them
+  \item
+    CA makes you an expert with all of them
+  \end{itemize}
+\end{itemize}
+
+\end{frame}
+
+\hypertarget{pca-ca}{%
+\subsection{PCA \& CA}\label{pca-ca}}
+
+\begin{frame}{PCA \& CA}
+\protect\hypertarget{pca-ca-1}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  Visualize multiple/high dimensions
+\item
+  Dimensionality reduction
+\item
+  Matrix factorization
+\item
+  Unsupervised learning
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{PCA \& CA}
+\protect\hypertarget{pca-ca-2}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  Find ``components''
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Components are new variables that are combinations of the original
+    variables
+  \end{itemize}
+\item
+  Components explain maximal variance
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Conditional to orthogonality
+  \end{itemize}
+\item
+  So what's the difference?
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{PCA vs CA}
+\protect\hypertarget{pca-vs-ca}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  PCA: For generally continuous (interval scale) data
+\item
+  CA: For (almost) everything else
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    And also for continuous data!
+  \end{itemize}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Under the hood}
+\protect\hypertarget{under-the-hood}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  The eigenvalue decomposition (EVD)
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Requires squares, symmetric, and positive semi definite
+  \item
+    Generally correlation or covariance
+  \end{itemize}
+\item
+  The singular value decomposition (SVD)
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Works with rectangular tables
+  \end{itemize}
+\item
+  A generalized SVD
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Apply constraints (weights) to rows \& columns of rectangular table
+  \item
+    Required for CA and fancier PCA-like techniques \& extensions
+  \end{itemize}
+\end{itemize}
+
+\end{frame}
+
+\hypertarget{definitions}{%
+\subsection{Definitions}\label{definitions}}
+
+\begin{frame}{Terms I will use today}
+\protect\hypertarget{terms-i-will-use-today}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  Component scores
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Values assigned to rows (PCA \& CA) or columns (CA) scaled by
+    variance
+  \end{itemize}
+\item
+  Correlation loadings (PCA)
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Correlation of original data with row component scores
+    (observations)
+  \end{itemize}
+\item
+  Explained variance
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Eigenvalues
+  \item
+    How much of the total variance per component
+  \item
+    Variance = Sums of squares
+  \end{itemize}
+\item
+  Magic
+\end{itemize}
+
+\end{frame}
+
+\hypertarget{software}{%
+\subsection{Software}\label{software}}
+
+\begin{frame}{Today}
+\protect\hypertarget{today}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  ExPosition
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Family of packages
+  \item
+    Includes resampling
+  \item
+    Lots of PCA \& CA techniques
+  \end{itemize}
+\item
+  factoextra
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Awesome ggplot2 visualizers for ExPosition
+  \item
+    \url{http://www.alboukadel.com/} \&
+    \url{http://www.sthda.com/english/}
+  \end{itemize}
+\item
+  ggplot2 \& tidyverse
+\item
+  ours
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Developed here within ONDRI
+  \item
+    New package for outliers
+  \item
+    Has some important bells-and-whistles
+  \end{itemize}
+\item
+  Making things look fancy:
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    kable, kableExtra, gridExtra, ggcorrplot
+  \end{itemize}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Some alternatives}
+\protect\hypertarget{some-alternatives}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  FactoMineR
+\item
+  ade4
+\item
+  ca
+\item
+  MASS
+\item
+  psych
+\item
+  So many others
+\end{itemize}
+
+\end{frame}
+
+\hypertarget{data}{%
+\subsection{Data}\label{data}}
+
+\begin{frame}{Typology}
+\protect\hypertarget{typology}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  SS Stevens
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Not a boat!
+  \end{itemize}
+\item
+  Levels of measurement
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Nominal (categorical)
+  \item
+    Ordinal (ranked, discrete categories)
+  \item
+    Interval (continuous, arbitrary 0)
+  \item
+    Ratio (continuous, non-arbitrary 0)
+  \end{itemize}
+\item
+  Excellent examples:
+  \url{https://en.wikipedia.org/wiki/Level_of_measurement}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Today's data}
+\protect\hypertarget{todays-data}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  Alzheimer's Disease Neuroimaging Initiative (ADNI)
+\item
+  Data set:
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    665 observations
+  \item
+    17 variables
+  \end{itemize}
+\item
+  Walk through this set to tell a whole story
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Today's data}
+\protect\hypertarget{todays-data-1}{}
+
+\includegraphics{PCA_MCA_Slides_files/figure-beamer/unnamed-chunk-1-1.pdf}
+
+\end{frame}
+
+\hypertarget{principal-components-analysis}{%
+\section{Principal Components
+Analysis}\label{principal-components-analysis}}
+
+\hypertarget{find-a-component}{%
+\subsection{Find a component}\label{find-a-component}}
+
+\begin{frame}{Let's dive in}
+\protect\hypertarget{lets-dive-in}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  We'll start with just two variables:
+\item
+  Trails
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Neuropsych test
+  \item
+    Executive function
+  \end{itemize}
+\item
+  FDG
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    PET imaging; brain function
+  \item
+    Average of several brain regions
+  \end{itemize}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{PCA_MCA_Slides_files/figure-beamer/unnamed-chunk-2-1.pdf}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{PCA_MCA_Slides_files/figure-beamer/unnamed-chunk-3-1.pdf}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{PCA_MCA_Slides_files/figure-beamer/unnamed-chunk-4-1.pdf}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{PCA_MCA_Slides_files/figure-beamer/unnamed-chunk-5-1.pdf}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{PCA_MCA_Slides_files/figure-beamer/unnamed-chunk-6-1.pdf}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{PCA_MCA_Slides_files/figure-beamer/unnamed-chunk-7-1.pdf}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{PCA_MCA_Slides_files/figure-beamer/unnamed-chunk-8-1.pdf}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{PCA_MCA_Slides_files/figure-beamer/unnamed-chunk-9-1.pdf}
+
+\end{frame}
+
+\hypertarget{interpretation}{%
+\subsection{Interpretation}\label{interpretation}}
+
+\begin{frame}
+
+\includegraphics{PCA_MCA_Slides_files/figure-beamer/unnamed-chunk-10-1.pdf}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{PCA_MCA_Slides_files/figure-beamer/unnamed-chunk-11-1.pdf}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{PCA_MCA_Slides_files/figure-beamer/unnamed-chunk-12-1.pdf}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{PCA_MCA_Slides_files/figure-beamer/unnamed-chunk-13-1.pdf}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{PCA_MCA_Slides_files/figure-beamer/unnamed-chunk-14-1.pdf}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{PCA_MCA_Slides_files/figure-beamer/unnamed-chunk-15-1.pdf}
+
+\end{frame}
+
+\hypertarget{example}{%
+\subsection{Example}\label{example}}
+
+\begin{frame}{Scaling up}
+\protect\hypertarget{scaling-up}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  Scale up: MORE DATA!
+\item
+  All of the continuous variables
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Scaling up}
+\protect\hypertarget{scaling-up-1}{}
+
+\includegraphics{PCA_MCA_Slides_files/figure-beamer/unnamed-chunk-16-1.pdf}
+
+\end{frame}
+
+\begin{frame}{A new plot}
+\protect\hypertarget{a-new-plot}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  Scree (Cattell)
+\item
+  Junk at the bottom of a slope
+\item
+  Shows us explained variance (\%) per component
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{PCA_MCA_Slides_files/figure-beamer/unnamed-chunk-17-1.pdf}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{PCA_MCA_Slides_files/figure-beamer/unnamed-chunk-18-1.pdf}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{PCA_MCA_Slides_files/figure-beamer/unnamed-chunk-19-1.pdf}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{PCA_MCA_Slides_files/figure-beamer/unnamed-chunk-20-1.pdf}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{PCA_MCA_Slides_files/figure-beamer/unnamed-chunk-21-1.pdf}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{PCA_MCA_Slides_files/figure-beamer/unnamed-chunk-22-1.pdf}
+
+\end{frame}
+
+\hypertarget{correspondence-analyses}{%
+\section{Correspondence analyses}\label{correspondence-analyses}}
+
+\begin{frame}{CA}
+\protect\hypertarget{ca}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  Like PCA in many ways
+\item
+  Slightly different interpretations
+\item
+  So much cooler
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Handles all types of data
+  \end{itemize}
+\end{itemize}
+
+\end{frame}
+
+\hypertarget{small-examples}{%
+\subsection{Small examples}\label{small-examples}}
+
+\begin{frame}{Illustrative data}
+\protect\hypertarget{illustrative-data}{}
+
+\begin{table}[H]
+\centering\begingroup\fontsize{10}{12}\selectfont
+
+\begin{tabular}{lll}
+\toprule
+  & DX & PTRACCAT\\
+\midrule
+5023 & CN & Asian\\
+5026 & MCI & White\\
+5027 & Dementia & White\\
+5028 & Dementia & White\\
+5031 & MCI & White\\
+\addlinespace
+5037 & Dementia & Black\\
+5040 & CN & Black\\
+5047 & MCI & Black\\
+5054 & Dementia & White\\
+5058 & Dementia & Asian\\
+5063 & Dementia & White\\
+\bottomrule
+\end{tabular}\endgroup{}
+\end{table}
+
+\end{frame}
+
+\begin{frame}{Disjunctive data}
+\protect\hypertarget{disjunctive-data}{}
+
+\begin{table}[H]
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}{lrrrrrrr}
+\toprule
+  & DX.MCI & DX.CN & DX.Dementia & PTRACCAT.White & PTRACCAT.Other & PTRACCAT.Black & PTRACCAT.Asian\\
+\midrule
+5023 & 0 & 1 & 0 & 0 & 0 & 0 & 1\\
+5026 & 1 & 0 & 0 & 1 & 0 & 0 & 0\\
+5027 & 0 & 0 & 1 & 1 & 0 & 0 & 0\\
+5028 & 0 & 0 & 1 & 1 & 0 & 0 & 0\\
+5031 & 1 & 0 & 0 & 1 & 0 & 0 & 0\\
+\addlinespace
+5037 & 0 & 0 & 1 & 0 & 0 & 1 & 0\\
+5040 & 0 & 1 & 0 & 0 & 0 & 1 & 0\\
+5047 & 1 & 0 & 0 & 0 & 0 & 1 & 0\\
+5054 & 0 & 0 & 1 & 1 & 0 & 0 & 0\\
+5058 & 0 & 0 & 1 & 0 & 0 & 0 & 1\\
+5063 & 0 & 0 & 1 & 1 & 0 & 0 & 0\\
+\bottomrule
+\end{tabular}}
+\end{table}
+
+\end{frame}
+
+\begin{frame}{Disjunctive data}
+\protect\hypertarget{disjunctive-data-1}{}
+
+\begin{table}[H]
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}{lrrrrrrr}
+\toprule
+  & DX.MCI & DX.CN & DX.Dementia & PTRACCAT.White & PTRACCAT.Other & PTRACCAT.Black & PTRACCAT.Asian\\
+\midrule
+5023 & 0 & 1 & 0 & 0 & 0 & 0 & 1\\
+5026 & 1 & 0 & 0 & 1 & 0 & 0 & 0\\
+5027 & 0 & 0 & 1 & 1 & 0 & 0 & 0\\
+5028 & 0 & 0 & 1 & 1 & 0 & 0 & 0\\
+5031 & 1 & 0 & 0 & 1 & 0 & 0 & 0\\
+\addlinespace
+5037 & 0 & 0 & 1 & 0 & 0 & 1 & 0\\
+5040 & 0 & 1 & 0 & 0 & 0 & 1 & 0\\
+5047 & 1 & 0 & 0 & 0 & 0 & 1 & 0\\
+5054 & 0 & 0 & 1 & 1 & 0 & 0 & 0\\
+5058 & 0 & 0 & 1 & 0 & 0 & 0 & 1\\
+5063 & 0 & 0 & 1 & 1 & 0 & 0 & 0\\
+\bottomrule
+\end{tabular}}
+\end{table}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  Row sums are total number of \emph{original} variables
+\item
+  Sum within a variable (e.g.~DX) is total number of rows
+\item
+  Sum of the table is rows \(\times\) columns
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{A bad idea: PCA}
+\protect\hypertarget{a-bad-idea-pca}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  ``coding categorical variables with the indicator matrix of dummy
+  variables and considering them as Gaussian, for instance, is almost a
+  crime.''
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    ``Jan de Leeuw and the French School of Data Analysis'' (Husson,
+    Josse, Saporta)
+  \end{itemize}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{PCA_MCA_Slides_files/figure-beamer/unnamed-chunk-26-1.pdf}
+
+\end{frame}
+
+\begin{frame}{Why is that a bad idea?}
+\protect\hypertarget{why-is-that-a-bad-idea}{}
+
+\includegraphics{PCA_MCA_Slides_files/figure-beamer/unnamed-chunk-27-1.pdf}
+
+\end{frame}
+
+\begin{frame}{A better idea}
+\protect\hypertarget{a-better-idea}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  Correspondence analysis (CA)
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Think of it as a \(\chi^2\) PCA
+  \end{itemize}
+\item
+  Designed to handle things that look like counts
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    That includes categories
+  \item
+    And some other things
+  \end{itemize}
+\item
+  Row and column component scores exist on same scale
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    CA is a \emph{bivariate} technique
+  \end{itemize}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{PCA_MCA_Slides_files/figure-beamer/unnamed-chunk-29-1.pdf}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{PCA_MCA_Slides_files/figure-beamer/unnamed-chunk-30-1.pdf}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{PCA_MCA_Slides_files/figure-beamer/unnamed-chunk-31-1.pdf}
+
+\end{frame}
+
+\begin{frame}{Multiple correspondence analysis}
+\protect\hypertarget{multiple-correspondence-analysis}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  An extension of CA
+\item
+  Accomodates multiple categorical variables (CA only does 2)
+\item
+  Corrects the dimensionality
+\item
+  Has nearly magical properties (we'll see later)
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{PCA_MCA_Slides_files/figure-beamer/unnamed-chunk-33-1.pdf}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{PCA_MCA_Slides_files/figure-beamer/unnamed-chunk-34-1.pdf}
+
+\end{frame}
+
+\begin{frame}{New interpretations}
+\protect\hypertarget{new-interpretations}{}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{PCA_MCA_Slides_files/figure-beamer/unnamed-chunk-35-1.pdf}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{PCA_MCA_Slides_files/figure-beamer/unnamed-chunk-36-1.pdf}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{PCA_MCA_Slides_files/figure-beamer/unnamed-chunk-37-1.pdf}
+
+\end{frame}
+
+\begin{frame}{Why does it look like that?}
+\protect\hypertarget{why-does-it-look-like-that}{}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{table}[H]
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}{rrrrrrr}
+\toprule
+DX.MCI & DX.CN & DX.Dementia & PTRACCAT.White & PTRACCAT.Other & PTRACCAT.Black & PTRACCAT.Asian\\
+\midrule
+1 & 0 & 0 & 1 & 0 & 0 & 0\\
+1 & 0 & 0 & 0 & 1 & 0 & 0\\
+1 & 0 & 0 & 0 & 0 & 1 & 0\\
+0 & 1 & 0 & 0 & 1 & 0 & 0\\
+1 & 0 & 0 & 0 & 0 & 0 & 1\\
+\addlinespace
+0 & 1 & 0 & 1 & 0 & 0 & 0\\
+0 & 1 & 0 & 0 & 0 & 1 & 0\\
+0 & 0 & 1 & 1 & 0 & 0 & 0\\
+0 & 1 & 0 & 0 & 0 & 0 & 1\\
+0 & 0 & 1 & 0 & 0 & 0 & 1\\
+0 & 0 & 1 & 0 & 0 & 1 & 0\\
+\bottomrule
+\end{tabular}}
+\end{table}
+
+These are \emph{all} the possible combinations from all 665
+
+\end{frame}
+
+\begin{frame}{Compare the results}
+\protect\hypertarget{compare-the-results}{}
+
+\includegraphics{PCA_MCA_Slides_files/figure-beamer/unnamed-chunk-39-1.pdf}
+
+\end{frame}
+
+\begin{frame}{Compare the results}
+\protect\hypertarget{compare-the-results-1}{}
+
+\begin{table}[H]
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}{lrrrrr}
+\toprule
+  & PCA Comp. 1 & PCA Comp. 2 & PCA Comp. 3 & PCA Comp. 4 & PCA Comp. 5\\
+\midrule
+MCA Comp. 1 & 0.17 & -0.25 & 0.92 & 0.06 & -0.26\\
+MCA Comp. 2 & -0.78 & 0.36 & 0.28 & -0.42 & 0.03\\
+\bottomrule
+\end{tabular}}
+\end{table}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  CA \& MCA produce identical results, except MCA:
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Drops components
+  \item
+    Corrects explained variance
+  \end{itemize}
+\end{itemize}
+
+\end{frame}
+
+\hypertarget{example-1}{%
+\subsection{Example}\label{example-1}}
+
+\begin{frame}{Scaling up}
+\protect\hypertarget{scaling-up-2}{}
+
+\begin{table}[H]
+\centering\begingroup\fontsize{7}{9}\selectfont
+
+\begin{tabular}{lllllrr}
+\toprule
+  & DX & PTGENDER & PTETHCAT & PTRACCAT & APOE4 & HMSCORE\\
+\midrule
+5023 & CN & Female & Not Hisp/Latino & Asian & 0 & 0\\
+5026 & MCI & Female & Not Hisp/Latino & White & 1 & 1\\
+5027 & Dementia & Male & Not Hisp/Latino & White & 0 & 1\\
+5028 & Dementia & Male & Not Hisp/Latino & White & 2 & 1\\
+5031 & MCI & Female & Hisp/Latino & White & 0 & 1\\
+\addlinespace
+5037 & Dementia & Male & Not Hisp/Latino & Black & 1 & 1\\
+5040 & CN & Female & Not Hisp/Latino & Black & 0 & 1\\
+5047 & MCI & Female & Not Hisp/Latino & Black & 2 & 1\\
+5054 & Dementia & Female & Not Hisp/Latino & White & 1 & 0\\
+5058 & Dementia & Male & Not Hisp/Latino & Asian & 0 & 0\\
+5063 & Dementia & Female & Not Hisp/Latino & White & 1 & 1\\
+\bottomrule
+\end{tabular}\endgroup{}
+\end{table}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{PCA_MCA_Slides_files/figure-beamer/unnamed-chunk-43-1.pdf}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{PCA_MCA_Slides_files/figure-beamer/unnamed-chunk-44-1.pdf}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{PCA_MCA_Slides_files/figure-beamer/unnamed-chunk-45-1.pdf}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{PCA_MCA_Slides_files/figure-beamer/unnamed-chunk-46-1.pdf}
+
+\end{frame}
+
+\hypertarget{binomial-data}{%
+\subsection{Binomial data}\label{binomial-data}}
+
+\begin{verbatim}
+## [1] "Corrections have failed. Original information must be used."
+\end{verbatim}
+
+\begin{frame}{A very important detour}
+\protect\hypertarget{a-very-important-detour}{}
+
+\begin{table}[H]
+\centering\begingroup\fontsize{7}{9}\selectfont
+
+\begin{tabular}{lll}
+\toprule
+  & PTGENDER & PTETHCAT\\
+\midrule
+5023 & Female & Not Hisp/Latino\\
+5026 & Female & Not Hisp/Latino\\
+5027 & Male & Not Hisp/Latino\\
+5028 & Male & Not Hisp/Latino\\
+5031 & Female & Hisp/Latino\\
+\addlinespace
+5037 & Male & Not Hisp/Latino\\
+5040 & Female & Not Hisp/Latino\\
+5047 & Female & Not Hisp/Latino\\
+5054 & Female & Not Hisp/Latino\\
+5058 & Male & Not Hisp/Latino\\
+5063 & Female & Not Hisp/Latino\\
+\bottomrule
+\end{tabular}\endgroup{}
+\end{table}
+
+\begin{center}Two variables with strictly two levels (i.e., binary data)\end{center}
+
+\end{frame}
+
+\begin{frame}{A very important detour}
+\protect\hypertarget{a-very-important-detour-1}{}
+
+\begin{table}[H]
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}{lrrrr}
+\toprule
+  & PTGENDER.Male & PTGENDER.Female & PTETHCAT.Not Hisp/Latino & PTETHCAT.Hisp/Latino\\
+\midrule
+5023 & 0 & 1 & 1 & 0\\
+5026 & 0 & 1 & 1 & 0\\
+5027 & 1 & 0 & 1 & 0\\
+5028 & 1 & 0 & 1 & 0\\
+5031 & 0 & 1 & 0 & 1\\
+\addlinespace
+5037 & 1 & 0 & 1 & 0\\
+5040 & 0 & 1 & 1 & 0\\
+5047 & 0 & 1 & 1 & 0\\
+5054 & 0 & 1 & 1 & 0\\
+5058 & 1 & 0 & 1 & 0\\
+5063 & 0 & 1 & 1 & 0\\
+\bottomrule
+\end{tabular}}
+\end{table}
+
+\begin{center}Disjunctive coding of two variables with strictly two levels (i.e., binary data) into four columns\end{center}
+
+\end{frame}
+
+\begin{frame}{A very important detour}
+\protect\hypertarget{a-very-important-detour-2}{}
+
+\begin{table}[H]
+\centering\begingroup\fontsize{7}{9}\selectfont
+
+\begin{tabular}{lll}
+\toprule
+  & PTGENDER & PTETHCAT\\
+\midrule
+5023 & Female & Not Hisp/Latino\\
+5026 & Female & Not Hisp/Latino\\
+5027 & Male & Not Hisp/Latino\\
+5028 & Male & Not Hisp/Latino\\
+5031 & Female & Hisp/Latino\\
+\addlinespace
+5037 & Male & Not Hisp/Latino\\
+5040 & Female & Not Hisp/Latino\\
+5047 & Female & Not Hisp/Latino\\
+5054 & Female & Not Hisp/Latino\\
+5058 & Male & Not Hisp/Latino\\
+5063 & Female & Not Hisp/Latino\\
+\bottomrule
+\end{tabular}\endgroup{}
+\end{table}
+
+\begin{center}Two variables with strictly two levels (i.e., binary data)\end{center}
+
+\end{frame}
+
+\begin{frame}{A very important detour}
+\protect\hypertarget{a-very-important-detour-3}{}
+
+\begin{table}[H]
+\centering\begingroup\fontsize{7}{9}\selectfont
+
+\begin{tabular}{lrr}
+\toprule
+  & PTGENDER & PTETHCAT\\
+\midrule
+5023 & 1 & 0\\
+5026 & 1 & 0\\
+5027 & 0 & 0\\
+5028 & 0 & 0\\
+5031 & 1 & 1\\
+\addlinespace
+5037 & 0 & 0\\
+5040 & 1 & 0\\
+5047 & 1 & 0\\
+5054 & 1 & 0\\
+5058 & 0 & 0\\
+5063 & 1 & 0\\
+\bottomrule
+\end{tabular}\endgroup{}
+\end{table}
+
+\begin{center}Binary coding of two variables with strictly two levels (i.e., binary data) in two columns\end{center}
+
+\end{frame}
+
+\begin{frame}{A very important detour}
+\protect\hypertarget{a-very-important-detour-4}{}
+
+\begin{table}[H]
+\centering\begingroup\fontsize{7}{9}\selectfont
+
+\begin{tabular}{lrr}
+\toprule
+  & PTGENDER & PTETHCAT\\
+\midrule
+5023 & 0 & 1\\
+5026 & 0 & 1\\
+5027 & 1 & 1\\
+5028 & 1 & 1\\
+5031 & 0 & 0\\
+\addlinespace
+5037 & 1 & 1\\
+5040 & 0 & 1\\
+5047 & 0 & 1\\
+5054 & 0 & 1\\
+5058 & 1 & 1\\
+5063 & 0 & 1\\
+\bottomrule
+\end{tabular}\endgroup{}
+\end{table}
+
+\begin{center}Alternate but equivalent binary coding of two variables with strictly two levels (i.e., binary data) in two columns\end{center}
+
+\end{frame}
+
+\begin{frame}{Always a bad idea?}
+\protect\hypertarget{always-a-bad-idea}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  MCA on the disjunctive coded data
+\item
+  PCA on the binary coded data
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{PCA_MCA_Slides_files/figure-beamer/unnamed-chunk-53-1.pdf}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{PCA_MCA_Slides_files/figure-beamer/unnamed-chunk-54-1.pdf}
+
+\begin{center}Oh, weird!\end{center}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{PCA_MCA_Slides_files/figure-beamer/unnamed-chunk-55-1.pdf}
+
+\begin{center}Component 2 is "flipped" \\
+We will revisit this
+\end{center}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{table}[H]
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}{lrr}
+\toprule
+  & PCA Comp. 1 & PCA Comp. 2\\
+\midrule
+MCA Comp. 1 & 1 & 0\\
+MCA Comp. 2 & 0 & -1\\
+\bottomrule
+\end{tabular}}
+\end{table}
+\begin{center}Oh, double weird!\end{center}
+
+\end{frame}
+
+\begin{frame}{Let's get weird}
+\protect\hypertarget{lets-get-weird}{}
+
+\begin{table}[H]
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}{lrr}
+\toprule
+  & PTGENDER & PTETHCAT\\
+\midrule
+PTGENDER & 1.00 & 0.06\\
+PTETHCAT & 0.06 & 1.00\\
+\bottomrule
+\end{tabular}}
+\end{table}
+
+\end{frame}
+
+\begin{frame}{Let's get weird}
+\protect\hypertarget{lets-get-weird-1}{}
+
+\begin{table}[H]
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}{lrr}
+\toprule
+  & PTGENDER & PTETHCAT\\
+\midrule
+PTGENDER & 1.00 & 0.06\\
+PTETHCAT & 0.06 & 1.00\\
+\bottomrule
+\end{tabular}}
+\end{table}
+
+\begin{itemize}[<+->]
+\item
+  \(\phi=\) 0.06
+\item
+  Deep connections between \(\chi^2\), Normal, binomial (and others)
+\item
+  We can expand the idea of ``binary'' or ``binomial''
+\end{itemize}
+
+\end{frame}
+
+\hypertarget{continuous-data}{%
+\subsection{Continuous data}\label{continuous-data}}
+
+\begin{frame}{An old friend}
+\protect\hypertarget{an-old-friend}{}
+
+\begin{table}[H]
+\centering\begingroup\fontsize{7}{9}\selectfont
+
+\begin{tabular}{lrr}
+\toprule
+  & mPACCtrailsB & FDG\\
+\midrule
+5023 & 1.12 & 0.13\\
+5026 & 0.46 & -1.31\\
+5027 & -2.77 & -1.48\\
+5028 & -1.59 & -0.97\\
+5031 & -0.92 & -0.87\\
+\addlinespace
+5037 & -1.86 & -2.00\\
+5040 & 0.94 & -0.21\\
+5047 & -0.25 & 3.05\\
+5054 & -0.80 & -1.05\\
+5058 & -1.12 & -2.13\\
+5063 & -2.31 & -2.49\\
+\bottomrule
+\end{tabular}\endgroup{}
+\end{table}
+\begin{center}We perform(ed) PCA on these data\end{center}
+
+\end{frame}
+
+\begin{frame}{Escofier's Geometric Magic}
+\protect\hypertarget{escofiers-geometric-magic}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  One of the ``fuzzy'' or ``bipolar'' coding schemes
+\item
+  Take each Z-scored continuous variable
+\item
+  Duplicate it as
+  \(\begin{bmatrix} \frac{1-Z}{2} \frac{1+Z}{2}\end{bmatrix}\)
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Escofier's Geometric Magic}
+\protect\hypertarget{escofiers-geometric-magic-1}{}
+
+\begin{table}[H]
+\centering\begingroup\fontsize{7}{9}\selectfont
+
+\begin{tabular}{lrrrr}
+\toprule
+  & mPACCtrailsB- & mPACCtrailsB+ & FDG- & FDG+\\
+\midrule
+5023 & -0.06 & 1.06 & 0.43 & 0.57\\
+5026 & 0.27 & 0.73 & 1.16 & -0.16\\
+5027 & 1.88 & -0.88 & 1.24 & -0.24\\
+5028 & 1.30 & -0.30 & 0.98 & 0.02\\
+5031 & 0.96 & 0.04 & 0.93 & 0.07\\
+\addlinespace
+5037 & 1.43 & -0.43 & 1.50 & -0.50\\
+5040 & 0.03 & 0.97 & 0.60 & 0.40\\
+5047 & 0.62 & 0.38 & -1.03 & 2.03\\
+5054 & 0.90 & 0.10 & 1.03 & -0.03\\
+5058 & 1.06 & -0.06 & 1.57 & -0.57\\
+5063 & 1.66 & -0.66 & 1.74 & -0.74\\
+\bottomrule
+\end{tabular}\endgroup{}
+\end{table}
+
+\end{frame}
+
+\begin{frame}{Escofier's Geometric Magic}
+\protect\hypertarget{escofiers-geometric-magic-2}{}
+
+\begin{table}[H]
+\centering\begingroup\fontsize{7}{9}\selectfont
+
+\begin{tabular}{lrrrr}
+\toprule
+  & mPACCtrailsB- & mPACCtrailsB+ & FDG- & FDG+\\
+\midrule
+5023 & -0.06 & 1.06 & 0.43 & 0.57\\
+5026 & 0.27 & 0.73 & 1.16 & -0.16\\
+5027 & 1.88 & -0.88 & 1.24 & -0.24\\
+5028 & 1.30 & -0.30 & 0.98 & 0.02\\
+5031 & 0.96 & 0.04 & 0.93 & 0.07\\
+\addlinespace
+5037 & 1.43 & -0.43 & 1.50 & -0.50\\
+5040 & 0.03 & 0.97 & 0.60 & 0.40\\
+5047 & 0.62 & 0.38 & -1.03 & 2.03\\
+5054 & 0.90 & 0.10 & 1.03 & -0.03\\
+5058 & 1.06 & -0.06 & 1.57 & -0.57\\
+5063 & 1.66 & -0.66 & 1.74 & -0.74\\
+\bottomrule
+\end{tabular}\endgroup{}
+\end{table}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  Row sums are total number of \emph{original} variables
+\item
+  Sum within a variable (e.g., FDG) is total number of rows
+\item
+  Sum of the table is rows \(\times\) columns
+\item
+  \emph{These behave like disjunctive data!}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{PCA_MCA_Slides_files/figure-beamer/unnamed-chunk-64-1.pdf}
+
+\begin{center}Oh, interesting!\\
+Take note: each variable has two "poles"\end{center}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{PCA_MCA_Slides_files/figure-beamer/unnamed-chunk-65-1.pdf}
+
+\begin{center}Oh, weird!\end{center}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{PCA_MCA_Slides_files/figure-beamer/unnamed-chunk-66-1.pdf}
+
+\begin{center}Oh, double weird!\end{center}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{PCA_MCA_Slides_files/figure-beamer/unnamed-chunk-67-1.pdf}
+
+\begin{center}Flips: They don't matter.\end{center}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{table}[H]
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}{lrr}
+\toprule
+  & PCA Comp. 1 & PCA Comp. 2\\
+\midrule
+CA Comp. 1 & 1 & 0\\
+CA Comp. 2 & 0 & -1\\
+\bottomrule
+\end{tabular}}
+\end{table}
+\begin{center}Flips: They don't matter.\end{center}
+
+\end{frame}
+
+\begin{frame}{Escofier's Geometric Trick}
+\protect\hypertarget{escofiers-geometric-trick}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  Apply PCA to continuous data or
+\item
+  Apply CA to ``Escofier transformed'' data
+\end{itemize}
+
+\end{frame}
+
+\hypertarget{ordinal-data}{%
+\subsection{Ordinal data}\label{ordinal-data}}
+
+\begin{frame}{Thermometer}
+\protect\hypertarget{thermometer}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  For ordinal data
+\item
+  Another ``fuzzy'' or ``bipolar'' coding
+\item
+  More Escofier Geometric Magic
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Subtract the maximum (minimum is now \(0\))
+  \item
+    \(\begin{bmatrix} \frac{\texttt{max}(x)-x}{\texttt{max}} \frac{x-\texttt{min}(x)}{\texttt{max}}\end{bmatrix}\)
+  \end{itemize}
+\item
+  Apply CA
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{More Geometric Magic}
+\protect\hypertarget{more-geometric-magic}{}
+
+\begin{table}[H]
+\centering\begingroup\fontsize{7}{9}\selectfont
+
+\begin{tabular}{lrrrr}
+\toprule
+  & PTEDUCAT & CDRSB & ADAS13 & MOCA\\
+\midrule
+5023 & 18 & 0.0 & 6 & 30\\
+5026 & 18 & 1.5 & 8 & 24\\
+5027 & 18 & 4.0 & 27 & 19\\
+5028 & 16 & 3.5 & 20 & 19\\
+5031 & 14 & 2.0 & 16 & 20\\
+\addlinespace
+5037 & 16 & 5.0 & 35 & 17\\
+5040 & 18 & 0.0 & 8 & 20\\
+5047 & 16 & 1.0 & 17 & 24\\
+5054 & 18 & 3.5 & 22 & 21\\
+5058 & 20 & 3.0 & 17 & 21\\
+5063 & 14 & 2.5 & 38 & 16\\
+\bottomrule
+\end{tabular}\endgroup{}
+\end{table}
+
+\end{frame}
+
+\begin{frame}{More Geometric Magic}
+\protect\hypertarget{more-geometric-magic-1}{}
+
+\begin{table}[H]
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}{lrrrrrrrr}
+\toprule
+  & PTEDUCAT+ & PTEDUCAT- & CDRSB+ & CDRSB- & ADAS13+ & ADAS13- & MOCA+ & MOCA-\\
+\midrule
+5023 & 0.75 & 0.25 & 0.00 & 1.00 & 0.13 & 0.87 & 1.00 & 0.00\\
+5026 & 0.75 & 0.25 & 0.27 & 0.73 & 0.17 & 0.83 & 0.57 & 0.43\\
+5027 & 0.75 & 0.25 & 0.73 & 0.27 & 0.59 & 0.41 & 0.21 & 0.79\\
+5028 & 0.50 & 0.50 & 0.64 & 0.36 & 0.43 & 0.57 & 0.21 & 0.79\\
+5031 & 0.25 & 0.75 & 0.36 & 0.64 & 0.35 & 0.65 & 0.29 & 0.71\\
+\addlinespace
+5037 & 0.50 & 0.50 & 0.91 & 0.09 & 0.76 & 0.24 & 0.07 & 0.93\\
+5040 & 0.75 & 0.25 & 0.00 & 1.00 & 0.17 & 0.83 & 0.29 & 0.71\\
+5047 & 0.50 & 0.50 & 0.18 & 0.82 & 0.37 & 0.63 & 0.57 & 0.43\\
+5054 & 0.75 & 0.25 & 0.64 & 0.36 & 0.48 & 0.52 & 0.36 & 0.64\\
+5058 & 1.00 & 0.00 & 0.55 & 0.45 & 0.37 & 0.63 & 0.36 & 0.64\\
+5063 & 0.25 & 0.75 & 0.45 & 0.55 & 0.83 & 0.17 & 0.00 & 1.00\\
+\bottomrule
+\end{tabular}}
+\end{table}
+
+\end{frame}
+
+\begin{frame}{More Geometric Magic}
+\protect\hypertarget{more-geometric-magic-2}{}
+
+\begin{table}[H]
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}{lrrrrrrrr}
+\toprule
+  & PTEDUCAT+ & PTEDUCAT- & CDRSB+ & CDRSB- & ADAS13+ & ADAS13- & MOCA+ & MOCA-\\
+\midrule
+5023 & 0.75 & 0.25 & 0.00 & 1.00 & 0.13 & 0.87 & 1.00 & 0.00\\
+5026 & 0.75 & 0.25 & 0.27 & 0.73 & 0.17 & 0.83 & 0.57 & 0.43\\
+5027 & 0.75 & 0.25 & 0.73 & 0.27 & 0.59 & 0.41 & 0.21 & 0.79\\
+5028 & 0.50 & 0.50 & 0.64 & 0.36 & 0.43 & 0.57 & 0.21 & 0.79\\
+5031 & 0.25 & 0.75 & 0.36 & 0.64 & 0.35 & 0.65 & 0.29 & 0.71\\
+\addlinespace
+5037 & 0.50 & 0.50 & 0.91 & 0.09 & 0.76 & 0.24 & 0.07 & 0.93\\
+5040 & 0.75 & 0.25 & 0.00 & 1.00 & 0.17 & 0.83 & 0.29 & 0.71\\
+5047 & 0.50 & 0.50 & 0.18 & 0.82 & 0.37 & 0.63 & 0.57 & 0.43\\
+5054 & 0.75 & 0.25 & 0.64 & 0.36 & 0.48 & 0.52 & 0.36 & 0.64\\
+5058 & 1.00 & 0.00 & 0.55 & 0.45 & 0.37 & 0.63 & 0.36 & 0.64\\
+5063 & 0.25 & 0.75 & 0.45 & 0.55 & 0.83 & 0.17 & 0.00 & 1.00\\
+\bottomrule
+\end{tabular}}
+\end{table}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  Row sums are total number of \emph{original} variables
+\item
+  Sum within a variable (e.g.~EDU) is total number of rows
+\item
+  Sum of the table is rows \(\times\) columns
+\item
+  \emph{These behave like disjunctive data!}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Let's take a look}
+\protect\hypertarget{lets-take-a-look}{}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{PCA_MCA_Slides_files/figure-beamer/unnamed-chunk-73-1.pdf}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{PCA_MCA_Slides_files/figure-beamer/unnamed-chunk-74-1.pdf}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{PCA_MCA_Slides_files/figure-beamer/unnamed-chunk-75-1.pdf}
+Special properties: Biploar coding passes through 0.
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{PCA_MCA_Slides_files/figure-beamer/unnamed-chunk-76-1.pdf}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{PCA_MCA_Slides_files/figure-beamer/unnamed-chunk-77-1.pdf}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{PCA_MCA_Slides_files/figure-beamer/unnamed-chunk-78-1.pdf}
+
+\end{frame}
+
+\hypertarget{ordinal-vs.-disjunctive}{%
+\subsection{Ordinal vs.~Disjunctive}\label{ordinal-vs.-disjunctive}}
+
+\begin{frame}{Thermometer vs.~Disjunctive}
+\protect\hypertarget{thermometer-vs.-disjunctive}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  Sometimes data could be either
+\item
+  Let's analyze it both ways
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{table}[H]
+\centering\begingroup\fontsize{7}{9}\selectfont
+
+\begin{tabular}{lrr}
+\toprule
+  & APOE4 & HMSCORE\\
+\midrule
+5023 & 0 & 0\\
+5026 & 1 & 1\\
+5027 & 0 & 1\\
+5028 & 2 & 1\\
+5031 & 0 & 1\\
+\addlinespace
+5037 & 1 & 1\\
+5040 & 0 & 1\\
+5047 & 2 & 1\\
+5054 & 1 & 0\\
+5058 & 0 & 0\\
+5063 & 1 & 1\\
+\bottomrule
+\end{tabular}\endgroup{}
+\end{table}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{PCA_MCA_Slides_files/figure-beamer/unnamed-chunk-81-1.pdf}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{PCA_MCA_Slides_files/figure-beamer/unnamed-chunk-82-1.pdf}
+
+\end{frame}
+
+\begin{frame}{Thermometer vs.~Disjunctive}
+\protect\hypertarget{thermometer-vs.-disjunctive-1}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  For a small (reasonable) number of levels: disjunctive
+\item
+  Otherwise: thermometer
+\item
+  Interpretation:
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Thermometer is ``easier''
+  \item
+    Disjunctive is more informative
+  \end{itemize}
+\end{itemize}
+
+\end{frame}
+
+\hypertarget{mixed-data}{%
+\subsection{Mixed data}\label{mixed-data}}
+
+\begin{frame}{All of the data}
+\protect\hypertarget{all-of-the-data}{}
+
+\end{frame}
+
+\begin{frame}{All of the data}
+\protect\hypertarget{all-of-the-data-1}{}
+
+\begin{table}[H]
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}{llrlrllrrrrrrrrrrr}
+\toprule
+  & DX & AGE & PTGENDER & PTEDUCAT & PTETHCAT & PTRACCAT & APOE4 & FDG & AV45 & CDRSB & ADAS13 & MOCA & WholeBrain & Hippocampus & MidTemp & mPACCtrailsB & HMSCORE\\
+\midrule
+5023 & CN & 63.9 & Female & 18 & Not Hisp/Latino & Asian & 0 & 1.29 & 1.03 & 0.0 & 6 & 30 & 1057351.0 & 7904 & 21306 & 1.81 & 0\\
+5026 & MCI & 70.5 & Female & 18 & Not Hisp/Latino & White & 1 & 1.08 & 1.44 & 1.5 & 8 & 24 & 1023057.3 & 8051 & 16501 & -1.45 & 1\\
+5027 & Dementia & 75.5 & Male & 18 & Not Hisp/Latino & White & 0 & 1.06 & 1.44 & 4.0 & 27 & 19 & 986723.7 & 6534 & 17437 & -17.27 & 1\\
+5028 & Dementia & 61.9 & Male & 16 & Not Hisp/Latino & White & 2 & 1.13 & 1.38 & 3.5 & 20 & 19 & 1182704.6 & 7481 & 20797 & -11.50 & 1\\
+5031 & MCI & 80.2 & Female & 14 & Hisp/Latino & White & 0 & 1.14 & 1.52 & 2.0 & 16 & 20 & 908133.9 & 5040 & 19032 & -8.21 & 1\\
+\addlinespace
+5037 & Dementia & 67.3 & Male & 16 & Not Hisp/Latino & Black & 1 & 0.98 & 1.21 & 5.0 & 35 & 17 & 1161499.6 & 5831 & 21428 & -12.80 & 1\\
+5040 & CN & 75.9 & Female & 18 & Not Hisp/Latino & Black & 0 & 1.24 & 1.01 & 0.0 & 8 & 20 & 943160.6 & 7994 & 16634 & 0.94 & 1\\
+5047 & MCI & 68.8 & Female & 16 & Not Hisp/Latino & Black & 2 & 1.70 & 1.48 & 1.0 & 17 & 24 & 1070406.1 & 7920 & 22043 & -4.90 & 1\\
+5054 & Dementia & 74.0 & Female & 18 & Not Hisp/Latino & White & 1 & 1.12 & 1.43 & 3.5 & 22 & 21 & 1138040.1 & 6580 & 20836 & -7.63 & 0\\
+5058 & Dementia & 61.8 & Male & 20 & Not Hisp/Latino & Asian & 0 & 0.97 & 1.54 & 3.0 & 17 & 21 & 1195549.3 & 7318 & 22757 & -9.18 & 0\\
+5063 & Dementia & 71.5 & Female & 14 & Not Hisp/Latino & White & 1 & 0.92 & 1.61 & 2.5 & 38 & 16 & 817421.2 & 5364 & 12542 & -15.03 & 1\\
+\bottomrule
+\end{tabular}}
+\end{table}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{PCA_MCA_Slides_files/figure-beamer/unnamed-chunk-85-1.pdf}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{PCA_MCA_Slides_files/figure-beamer/unnamed-chunk-86-1.pdf}
+
+\end{frame}
+
+\hypertarget{resampling}{%
+\section{Resampling}\label{resampling}}
+
+\hypertarget{overview-1}{%
+\subsection{Overview}\label{overview-1}}
+
+\begin{frame}{Background}
+\protect\hypertarget{background}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  Generally the Gifi or Benzecri principles
+\item
+  Benzecri
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    ``statistics was built a pompous discipline based on theoretical
+    assumptions that are rarely met in practice''
+  \item
+    ``the models should follow the data, not vice versa''
+  \item
+    ``use the computer implies the abandonment of all the techniques
+    designed before of computing''
+  \end{itemize}
+\item
+  Gifi
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Replication stability: new data, same techniques
+  \item
+    Selection stability: Data variations
+  \item
+    Technique stability: Different technique, same data
+  \end{itemize}
+\item
+  Pause!
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{My beliefs}
+\protect\hypertarget{my-beliefs}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  Might give you inference/generalizability
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Depending on data, design, etc\ldots{}
+  \end{itemize}
+\item
+  Practically
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Assessing stability of \emph{your} data
+  \item
+    Provides critical diagnostics
+  \end{itemize}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Definitions}
+\protect\hypertarget{definitions-1}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  Permutation: break relationships in the data
+\item
+  Split-half: mutually exclusive sets
+\item
+  Bootstrap: resample with reselection
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{figure}
+\centering
+\includegraphics{../Images/base_data.png}
+\caption{Tiny illustrative data}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{figure}
+\centering
+\includegraphics{../Images/permutation_data.png}
+\caption{Tiny permuted illustrative data}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{figure}
+\centering
+\includegraphics{../Images/split_half_data.png}
+\caption{Tiny split half illustrative data}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{figure}
+\centering
+\includegraphics{../Images/bootstrap_data.png}
+\caption{Tiny bootstrap illustrative data}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}{Uses in PCA \& CA}
+\protect\hypertarget{uses-in-pca-ca}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  Permutation: Effect size tests of components
+\item
+  Split-half: Replication of components
+\item
+  Bootstrap: Stability of variables
+\end{itemize}
+
+\end{frame}
+
+\hypertarget{permutation}{%
+\subsection{Permutation}\label{permutation}}
+
+\begin{frame}
+
+\begin{figure}
+\centering
+\includegraphics{../Images/permutation_diagram.png}
+\caption{Permutation diagram}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{figure}
+\centering
+\includegraphics{../Images/Perm1.png}
+\caption{Permutation: First component}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{figure}
+\centering
+\includegraphics{../Images/Perm2.png}
+\caption{Permutation: Second component}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{figure}
+\centering
+\includegraphics{../Images/Perm3.png}
+\caption{Permutation: Third component}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{figure}
+\centering
+\includegraphics{../Images/Perm4.png}
+\caption{Permutation: Fifth component}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{figure}
+\centering
+\includegraphics{../Images/Perm5.png}
+\caption{Permutation: p-values}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}{Another detour}
+\protect\hypertarget{another-detour}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  p-values should (inversely) follow the scree
+\item
+  Diagnostic tests:
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Large or erratic jumps
+  \item
+    First or first few \(ps \geq .5\)
+  \end{itemize}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Conclusions}
+\protect\hypertarget{conclusions}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  First few components have larger than expected effect sizes
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    More variance than null
+  \end{itemize}
+\item
+  We do not know if these generalize
+\end{itemize}
+
+\end{frame}
+
+\hypertarget{split-half}{%
+\subsection{Split-half}\label{split-half}}
+
+\begin{frame}
+
+\begin{figure}
+\centering
+\includegraphics{../Images/split_half_diagram.png}
+\caption{Split half diagram}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{figure}
+\centering
+\includegraphics{../Images/split1.png}
+\caption{Split-half correlations: First component}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{figure}
+\centering
+\includegraphics{../Images/split2.png}
+\caption{Split-half correlations: Second component}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{figure}
+\centering
+\includegraphics{../Images/split3.png}
+\caption{Split-half correlations: Third component}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{figure}
+\centering
+\includegraphics{../Images/split4.png}
+\caption{Split-half correlations: All components}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}{Conclusions}
+\protect\hypertarget{conclusions-1}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  We do \emph{sort of} know if these generalize
+\item
+  First two really do
+\item
+  Next few: Maybe
+\item
+  Key observation:
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Components \emph{flip} order!
+  \item
+    We need to question the meaning of order of components in our data
+  \end{itemize}
+\end{itemize}
+
+\end{frame}
+
+\hypertarget{bootstrap}{%
+\subsection{Bootstrap}\label{bootstrap}}
+
+\begin{frame}{Bootstrap goes last}
+\protect\hypertarget{bootstrap-goes-last}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  You need to know the number of components to interpret
+\item
+  We have 2
+\item
+  Now you can interpret variables \emph{per} component
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Find the ones that are stable
+  \end{itemize}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{figure}
+\centering
+\includegraphics{../Images/bootstrap_diagram.png}
+\caption{Bootstrap diagram}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{figure}
+\centering
+\includegraphics{../Images/boot1.png}
+\caption{Bootstrap ratios}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{figure}
+\centering
+\includegraphics{../Images/boot2.png}
+\caption{Bootstrap ratios}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{figure}
+\centering
+\includegraphics{../Images/boot3.png}
+\caption{Bootstrap ratios}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{figure}
+\centering
+\includegraphics{../Images/boot4.png}
+\caption{Bootstrap ratios}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{figure}
+\centering
+\includegraphics{../Images/boot5.png}
+\caption{Bootstrap ratios}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{figure}
+\centering
+\includegraphics{../Images/boot6.png}
+\caption{Bootstrap ratios}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}{Conclusions}
+\protect\hypertarget{conclusions-2}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  Just a snapshot (there are more variables)
+\item
+  APOE4 contributes to both
+\item
+  The others generally contribute to one or the other
+\end{itemize}
+
+\end{frame}
+
+\hypertarget{final-stretch}{%
+\section{Final stretch}\label{final-stretch}}
+
+\begin{frame}{Things not discussed}
+\protect\hypertarget{things-not-discussed}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  Corrections
+\item
+  Alternate preprocessing
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    There's a lazy way (rank)
+  \end{itemize}
+\item
+  Other resampling \& Cross-validation loops.
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Start at the ``beginning''
+  \end{itemize}
+\item
+  What about other data types?
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    I've actually misled you a bit
+  \item
+    Structural data
+  \end{itemize}
+\item
+  Rotations
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    I don't rotate
+  \item
+    But I won't stop you from it
+  \item
+    Report both
+  \end{itemize}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Rotation}
+\protect\hypertarget{rotation}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  Two compelling examples rotation
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    That weren't rotated
+  \item
+    Why?
+  \end{itemize}
+\item
+  CA of Mueller report
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    see \url{http://github.com/derekbeaton/muellerreport_ca}
+  \end{itemize}
+\item
+  CA of NeuroSynth (Alhazmi et al., 2018)
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    see \url{http://github.com/fahd09/neurosynth_semantic_map}
+  \end{itemize}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{../Images/mueller_report_CA.png}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{../Images/FA_HBM.jpg}
+
+\end{frame}
+
+\hypertarget{related-techniques}{%
+\subsection{Related techniques}\label{related-techniques}}
+
+\begin{frame}{One table}
+\protect\hypertarget{one-table}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  Independent Components Analysis
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Effectively a rotation
+  \end{itemize}
+\item
+  Factor analyses, mostly
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Different error terms + rotation
+  \end{itemize}
+\item
+  Non-negative matrix factorization
+\item
+  Non-symmetric CA
+\item
+  Hellinger CA
+\item
+  Compositional CA
+\item
+  Multidimensional scaling (MDS)
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Two tables: Part 1}
+\protect\hypertarget{two-tables-part-1}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  Partial least squares (correlation)
+\item
+  Partial least squares (regression)
+\item
+  Partial least squares (path modelling)
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Two tables: Part 2}
+\protect\hypertarget{two-tables-part-2}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  Canonical Correlation Analysis
+\item
+  Discriminant analyses
+\item
+  Reduced rank regression/redundancy analysis
+\item
+  Generalized PLS regression
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Beaton, Saporta, Abdi (2019)
+  \item
+    Mixed data, most two table techniques
+  \end{itemize}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{More than two tables}
+\protect\hypertarget{more-than-two-tables}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  STATIS
+\item
+  Multiple factor analysis
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Not as related}
+\protect\hypertarget{not-as-related}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  tSNE
+\item
+  UMAP
+\item
+  More akin to non-metric multidimensional scaling
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Not always a fair comparison
+  \end{itemize}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{For all types of data}
+\protect\hypertarget{for-all-types-of-data}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  Distances (MDS, DiSTATIS, CovSTATIS)
+\item
+  Networks (CA)
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    More magic!
+  \end{itemize}
+\end{itemize}
+
+\end{frame}
+
+\hypertarget{some-references}{%
+\section{(Some) References}\label{some-references}}
+
+\begin{frame}{See the reference sections of these}
+\protect\hypertarget{see-the-reference-sections-of-these}{}
+
+\begin{itemize}[<+->]
+\item
+  Beaton, D., Saporta, G., Abdi, H., \& Alzheimer's Disease Neuroimaging
+  Initiative. (2019). A generalization of partial least squares
+  regression and correspondence analysis for categorical and mixed data:
+  An application with the ADNI data. bioRxiv, 598888.
+\item
+  Beaton, D., Sunderland, K. M., Levine, B., Mandzia, J., Masellis, M.,
+  Swartz, R. H., \ldots{} \& Strother, S. C. (2019). Generalization of
+  the minimum covariance determinant algorithm for categorical and mixed
+  data types. bioRxiv, 333005.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{And these}
+\protect\hypertarget{and-these}{}
+
+\begin{itemize}[<+->]
+\item
+  Abdi, H., Guillemot, V., Eslami, A., \& Beaton, D. (2017). Canonical
+  correlation analysis. Encyclopedia of Social Network Analysis and
+  Mining, 1-16.
+\item
+  Beaton, D., Dunlop, J., \& Abdi, H. (2016). Partial least squares
+  correspondence analysis: A framework to simultaneously analyze
+  behavioral and genetic data. Psychological methods, 21(4), 621.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Techniques}
+\protect\hypertarget{techniques}{}
+
+\begin{itemize}[<+->]
+\item
+  Greenacre, M. (2017). Correspondence analysis in practice. CRC press.
+\item
+  Greenacre, M. J. (1984). Theory and Applications of Correspondence
+  Analysis. Retrieved from
+  \url{http://books.google.com/books?id=LsPaAAAAMAAJ}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Techniques}
+\protect\hypertarget{techniques-1}{}
+
+\begin{itemize}[<+->]
+\item
+  Greenacre, M. J. (2010). Correspondence analysis. Wiley
+  Interdisciplinary Reviews: Computational Statistics, 2(5), 613--619.
+  \url{https://doi.org/10.1002/wics.114}
+\item
+  Lebart, L., Morineau, A., \& Warwick, K. M. (1984). Multivariate
+  descriptive statistical analysis: correspondence analysis and related
+  techniques for large matrices. Wiley.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Resampling}
+\protect\hypertarget{resampling-1}{}
+
+\begin{itemize}[<+->]
+\item
+  Berry, K. J., Johnston, J. E., \& Mielke, P. W. (2011). Permutation
+  methods. Wiley Interdisciplinary Reviews: Computational Statistics, 3,
+  527--542. \url{https://doi.org/10.1002/wics.177}
+\item
+  Strother, S. C., Anderson, J., Hansen, L. K., Kjems, U., Kustra, R.,
+  Sidtis, J., \ldots{} Rottenberg, D. (2002). The Quantitative
+  Evaluation of Functional Neuroimaging Experiments: The NPAIRS Data
+  Analysis Framework. NeuroImage, 15(4), 747--771.
+  \url{https://doi.org/10.1006/nimg.2001.1034}
+\item
+  Efron, B. (1979). Bootstrap Methods: Another Look at the Jackknife.
+  The Annals of Statistics, 7(1), 1--26.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Resampling}
+\protect\hypertarget{resampling-2}{}
+
+\begin{itemize}[<+->]
+\item
+  Chernick, M. R. (2008). Bootstrap methods: A guide for practitioners
+  and researchers (Vol. 619). Wiley-Interscience.
+\item
+  Hesterberg, T. (2011). Bootstrap. Wiley Interdisciplinary Reviews:
+  Computational Statistics, 3, 497--526.
+  \url{https://doi.org/10.1002/wics.182}
+\item
+  McIntosh, A. R., \& Lobaugh, N. J. (2004). Partial least squares
+  analysis of neuroimaging data: applications and advances. Neuroimage,
+  23, S250--S263.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Data}
+\protect\hypertarget{data-1}{}
+
+\begin{itemize}[<+->]
+\item
+  Escofier, B. (1978). Analyse factorielle et distances répondant au
+  principe d'équivalence distributionnelle. Revue de Statistique
+  Appliquée, 26(4), 29--37.
+\item
+  Escofier, B. (1979). Traitement simultané de variables qualitatives et
+  quantitatives en analyse factorielle. Cahiers de l'Analyse Des
+  Données, 4(2), 137--146.
+\item
+  Greenacre, M. (2014). Data Doubling and Fuzzy Coding. In J. Blasius \&
+  M. Greenacre (Eds.), Visualization and Verbalization of Data
+  (pp.~239--253). Philadelphia, PA, USA: CRC Press.
+\end{itemize}
+
+\end{frame}
+
+\end{document}

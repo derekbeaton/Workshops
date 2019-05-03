@@ -25,7 +25,7 @@ mixed_data <- cbind(continuous_escofier_data,
                     categorical_disjunctive_data)
 
 ca_results <- epCA(mixed_data, DESIGN = amerge_subset$DX, make_design_nominal = T, graphs=F)
-iterations <- 100
+iterations <- 1000
 
 sh1_correlations <- sh2_correlations <- array(NA, dim=c(length(ca_results$ExPosition.Data$eigs),length(ca_results$ExPosition.Data$eigs), iterations) )
 
@@ -50,6 +50,10 @@ for(i in 1:iterations){
 }
 
 average_sh_cors <- (abs(sh1_correlations) + abs(sh2_correlations)) / 2
+
+hist(average_sh_cors[1,1,], xlim=c(0,1), xlab="", main="First Component Split Correlations Distribution", breaks=20, border="white", col="grey60")
+hist(average_sh_cors[2,2,], xlim=c(0,1), xlab="", main="Second Component Split Correlations Distribution", breaks=20, border="white", col="grey60")
+hist(average_sh_cors[3,3,], xlim=c(0,1), xlab="", main="Third Component Split Correlations Distribution", breaks=20, border="white", col="grey60")
 
 corrplot::corrplot(apply(average_sh_cors,c(1,2),median), cl.lim = c(0,1), method="number")
 

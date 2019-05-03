@@ -36,7 +36,7 @@ mixed_data <- cbind(continuous_escofier_data,
 
 ca_results <- epCA(mixed_data, DESIGN = amerge_subset$DX, make_design_nominal = T, graphs=F)
 
-iterations <- 100
+iterations <- 1000
 bootstrap_column_scores_cube <- array(NA, dim=c(ncol(mixed_data), length(ca_results$ExPosition.Data$eigs), iterations))
 rownames(bootstrap_column_scores_cube) <- colnames(mixed_data)
 for(i in 1:iterations){

@@ -61,58 +61,195 @@ load(file=paste0(Sys.getenv("ADNI_FOLDER"),"\\","amerge_subset.rda"))
 load(file=paste0(Sys.getenv("ADNI_FOLDER"),"\\","variable_type_map.rda"))
 ```
 
+### Where to find everything
+
+* Generally: https://github.com/derekbeaton/workshops
+* Today: https://github.com/derekbeaton/Workshops/tree/master/RTC/PCA_MCA_Resampling
+
+### Some set up
+
+* Use RStudio (makes it easy)
+* You can pull from the Git repo
+  + Or copy individual files
+* Make .Renviron file
+  + Points to locations outside the repo
+* Run "/R/0_Create_ADNI_Dataset.R" first
+  + Then either run this .Rmd or
+  + Run scripts in order
+* Use of the ADNI data
+  + Via the 'ADNIMERGE' package
+
+### An advertisement
+
+* Lots of really cool R & RStudio stuff
+* This presentation is 90% reproducible
+  + Resampling is painful
+* R & RStudio "Magic" BrainHackTO tutorial
+  + Jenny Rieck & I
+  + May 21 or 22
+  + Possibly sold out?
+  + We'll make stuff available
+
+### Motivation for today
+
+* Not everything is a number
+* But with care, it can be turned into one
+
 ### Overview
 
-* Something here
-* Where to find everything
+* Introduction
+* PCA
+* CA 
+* Resampling
+* Final notes
 
 # Introduction
 
-## Some section
-
-### Slide A
-
-Slide A
-
-
-### Slide B
-
-Slide B
-
-## Data
-
-### Taxonomy
-
-### The actual data
-
 ## History
 
-### PCA
+### Prehistory
 
-Stuff
+* Basis: 
+  + Hotelling (1933)
+  + Eckart & Yong (1936)
+* Traces back to
+  + Cauchy (1829)
+  + Galton (1859)
+  + K. Pearson (1901)
+  + Spearman (1904)
+  
+### History
+  
+* "Modern form" of PCA & factor analyses
+  + Thurstone (1934)
+  + Fisher (1940)
+  + Tucker (too many to list)
+  + Many others in 1940s-1960s
+* CA
+  + Hirschfeld (1935)
+  + Guttman (1941)
+  + Burt (1950)
+  + Benzecri (1964)
+  + Escofier (1965)
+* See Lebart's History & Prehistory of CA: http://www.dtmvic.com/doc/About_the_History_of_CA.pdf
 
-### PCA
+### Now & The Future
 
-How & When to use it
+* PCA is always cool.
+* See the final slides for related methods
+  + PCA makes you familiar with all of them
+  + CA makes you an expert with all of them
 
-### CA
+## PCA & CA
 
-Stuff
+### PCA & CA
 
-### CA
+* Visualize multiple/high dimensions
+* Dimensionality reduction
+* Matrix factorization
+* Unsupervised learning
 
-How & When to use it
+### PCA & CA
+
+* Find "components"
+  + Components are new variables that are combinations of the original variables
+* Components explain maximal variance
+  + Conditional to orthogonality
+* So what's the difference?
+
+### PCA vs CA
+
+* PCA: For generally continuous (interval scale) data
+* CA: For (almost) everything else
+  + And also for continuous data!
+
+### Under the hood
+
+* The eigenvalue decomposition (EVD)
+  + Requires squares, symmetric, and positive semi definite
+  + Generally correlation or covariance
+* The singular value decomposition (SVD)
+  + Works with rectangular tables
+* A generalized SVD
+  + Apply constraints (weights) to rows & columns of rectangular table
+  + Required for CA and fancier PCA-like techniques & extensions
+
+## Definitions
+
+### Terms I will use today
+
+* Component scores
+  + Values assigned to rows (PCA & CA) or columns (CA) scaled by variance
+* Correlation loadings (PCA)
+  + Correlation of original data with row component scores (observations)
+* Explained variance
+  + Eigenvalues
+  + How much of the total variance per component
+  + Variance = Sums of squares
+* Magic
 
 ## Software
 
 ### Today
 
+* ExPosition
+  + Family of packages
+  + Includes resampling
+  + Lots of PCA & CA techniques
+* factoextra
+  + Awesome ggplot2 visualizers for ExPosition
+  + http://www.alboukadel.com/ & http://www.sthda.com/english/
+* ggplot2 & tidyverse
+* ours
+  + Developed here within ONDRI
+  + New package for outliers
+  + Has some important bells-and-whistles
+* Making things look fancy:
+  + kable, kableExtra, gridExtra, ggcorrplot
+
 ### Some alternatives
 
+* FactoMineR
+* ade4
+* ca
+* MASS
+* psych
+* So many others
+
+## Data
+
+### Typology
+
+* SS Stevens
+  + Not a boat! 
+* Levels of measurement
+  + Nominal (categorical)
+  + Ordinal (ranked, discrete categories)
+  + Interval (continuous, arbitrary 0)
+  + Ratio (continuous, non-arbitrary 0)
+* Excellent examples: https://en.wikipedia.org/wiki/Level_of_measurement
+
+### Today's data
+
+
+* Alzheimer's Disease Neuroimaging Initiative (ADNI)
+* Data set:
+  + 665 observations
+  + 17 variables
+* Walk through this set to tell a whole story
+
+### Today's data
+
+```{r}
+variable_type_map_for_show <- variable_type_map
+variable_type_map_for_show[variable_type_map_for_show==1] <- "YES"
+variable_type_map_for_show[variable_type_map_for_show=="0"] <- ""
+grid.table(variable_type_map_for_show, theme=ttheme_default(base_size=18))
+```
 
 # Principal Components Analysis
 
-## Fit
+## Find a component
 
 ```{r setup_pca}
 amerge_subset %>%
@@ -127,6 +264,16 @@ eigen_results <- eigen(crossprod(as.matrix(trails_fdg_data_normed)))
 eigen_results$slopes[1] <- eigen_results$vectors[1,1]/eigen_results$vectors[2,1]  # calc slopes as ratios
 eigen_results$slopes[2] <- eigen_results$vectors[1,1]/eigen_results$vectors[1,2]  # calc slopes as ratios
 ```
+
+### Let's dive in
+
+* We'll start with just two variables:
+* Trails
+  + Neuropsych test
+  + Executive function
+* FDG
+  + PET imaging; brain function
+  + Average of several brain regions
 
 ***
 
@@ -230,10 +377,6 @@ g <- g + geom_abline(intercept = 0, slope = eigen_results$slopes[2], colour = "o
 g
 
 ```
-
-
-### The SVD
-
 
 ## Interpretation
 
@@ -495,8 +638,24 @@ pca_results <- epPCA(continuous_data_subset, graphs=F)
 
 ### Scaling up
 
-here: show the table and perhaps the code?
-  maybe the code per slide for easy slides?
+* Scale up: MORE DATA!
+* All of the continuous variables
+  
+### Scaling up
+
+```{r}
+grid.table(
+  round(
+    continuous_data_subset[which(amerge_subset$DX=="Dementia" & amerge_subset$PTRACCAT=="Black"):(which(amerge_subset$DX=="Dementia" & amerge_subset$PTRACCAT=="Black")+10)-5,], digits=2), 
+  theme=ttheme_default(base_size=12)
+  )
+```
+
+### A new plot
+
+* Scree (Cattell)
+* Junk at the bottom of a slope
+* Shows us explained variance (%) per component
   
 <!-- `pca_results <- epPCA(continuous_data_subset, graphs=F)` -->
 
@@ -621,9 +780,12 @@ grid.arrange(all_comps_scores, all_vars_corrs, nrow=2)
 
 # Correspondence analyses
 
-###
+### CA
 
-I don't know something.
+* Like PCA in many ways
+* Slightly different interpretations
+* So much cooler
+  + Handles all types of data
 
 ## Small examples
 
@@ -666,6 +828,8 @@ kable(illustrative_apoe_dx_disjunctive_subtable, "latex", booktabs=T) %>%
 
 ### A bad idea: PCA
 
+* "coding categorical variables with the indicator matrix of dummy variables and considering them as Gaussian, for instance, is almost a crime."
+  + "Jan de Leeuw and the French School of Data Analysis" (Husson, Josse, Saporta)
 
 ***
 
@@ -725,7 +889,9 @@ grid.arrange(
 
 * Correspondence analysis (CA)
   + Think of it as a $\chi^2$ PCA
-* Deals with categories, counts (amongst others)
+* Designed to handle things that look like counts
+  + That includes categories
+  + And some other things
 * Row and column component scores exist on same scale
   + CA is a *bivariate* technique
 
@@ -787,7 +953,8 @@ mca_results <- epMCA(apoe_dx_data, graphs=F)
 ***
 
 ```{r}
-fviz_screeplot(mca_results, addlabels=TRUE)
+mca_scree_disj <- fviz_screeplot(mca_results, addlabels=TRUE)
+mca_scree_disj
 ```
 
 ***
@@ -807,6 +974,9 @@ mca_var <- fviz_mca_var(mca_results) +
 mca_var
 
 ```
+
+### New interpretations
+
 
 ***
 
@@ -890,11 +1060,20 @@ mca_ind +
 
 ### Why does it look like that?
 
+***
+
 ```{r}
 unique_mca <- unique(apoe_dx_disjunctive_data)
 rownames(unique_mca) <- NULL
 kable(unique_mca, "latex", booktabs=T) %>%
   kable_styling(latex_options="scale_down", position = "center")
+```
+These are *all* the possible combinations from all 665
+
+### Compare the results
+
+```{r}
+grid.arrange(mca_var, pca_disj_var_cors, ncol=2)
 ```
 
 ### Compare the results
@@ -920,7 +1099,11 @@ mca_results <- epMCA(categorical_data_subset, graphs=F)
 
 ### Scaling up
 
-SHow the data here a bit
+
+```{r}
+kable(categorical_data_subset[which(amerge_subset$DX=="Dementia" & amerge_subset$PTRACCAT=="Black"):(which(amerge_subset$DX=="Dementia" & amerge_subset$PTRACCAT=="Black")+10)-5,],"latex", booktabs=T) %>%
+  kable_styling(font_size = 7, position = "center")
+```
 
 ***
 
@@ -1177,7 +1360,7 @@ trails_fdg_escofier_data <- escofier.coding(trails_fdg_data,scale=T)
 kable(trails_fdg_data_normed[which(amerge_subset$DX=="Dementia" & amerge_subset$PTRACCAT=="Black"):(which(amerge_subset$DX=="Dementia" & amerge_subset$PTRACCAT=="Black")+10)-5,],"latex", booktabs=T, digits = 2) %>%
   kable_styling(font_size = 7, position = "center")
 ```
-\begin{center}We perform PCA on these data\end{center}
+\begin{center}We perform(ed) PCA on these data\end{center}
 
 ### Escofier's Geometric Magic
 
@@ -1202,6 +1385,7 @@ kable(trails_fdg_escofier_data[which(amerge_subset$DX=="Dementia" & amerge_subse
 * Row sums are total number of *original* variables
 * Sum within a variable (e.g., FDG) is total number of rows
 * Sum of the table is rows $\times$ columns
+* *These behave like disjunctive data!*
 
 ```{r}
 pca_results <- epPCA(trails_fdg_data, graphs=F)
@@ -1367,6 +1551,9 @@ kable(strictly_ordinal_thermometer_data[which(amerge_subset$DX=="Dementia" & ame
 * Row sums are total number of *original* variables
 * Sum within a variable (e.g. EDU) is total number of rows
 * Sum of the table is rows $\times$ columns
+* *These behave like disjunctive data!*
+
+### Let's take a look
 
 ***
 
@@ -1416,8 +1603,10 @@ ca_columns +
                                y1=ca_results$ExPosition.Data$fj[8,2]), 
                aes(x = x0, y = y0, xend = x1, yend = y1), color="red")
 ```
+Special properties: Biploar coding passes through 0.
 
 ***
+
 ```{r}
 plus_minus <- ifelse(grepl("\\+",rownames(ca_results$ExPosition.Data$fj)),"+","-")
 ca_col_colors <- fviz_ca_col(ca_results, alpha.col = 0, labels=F, col.col = "white") +
@@ -1647,6 +1836,9 @@ ca_results <- epCA(mixed_data, DESIGN = amerge_subset$DX, make_design_nominal = 
 
 ### All of the data
 
+
+### All of the data
+
 ```{r}
 kable(amerge_subset[which(amerge_subset$DX=="Dementia" & amerge_subset$PTRACCAT=="Black"):(which(amerge_subset$DX=="Dementia" & amerge_subset$PTRACCAT=="Black")+10)-5,],"latex", booktabs=T, digits=2) %>%
   kable_styling(latex_options = "scale_down", position = "center")
@@ -1715,8 +1907,312 @@ grid.arrange(t,
 
 # Resampling
 
+## Overview
+
+### Background
+
+* Generally the Gifi or Benzecri principles
+* Benzecri
+  + "statistics was built a pompous discipline based on theoretical assumptions that are rarely met in practice"
+  + "the models should follow the data, not vice versa"
+  + "use the computer implies the abandonment of all the techniques designed before of computing"
+* Gifi
+  + Replication stability: new data, same techniques
+  + Selection stability: Data variations
+  + Technique stability: Different technique, same data
+* Pause!
+
+### My beliefs
+
+* Might give you inference/generalizability
+  + Depending on data, design, etc...
+* Practically
+  + Assessing stability of *your* data
+  + Provides critical diagnostics
+
+### Definitions
+
+* Permutation: break relationships in the data
+* Split-half: mutually exclusive sets
+* Bootstrap: resample with reselection
+
+***
+
+![Tiny illustrative data](../Images/base_data.png)
+
+***
+
+![Tiny permuted illustrative data](../Images/permutation_data.png)
+
+***
+
+![Tiny split half illustrative data](../Images/split_half_data.png)
+
+***
+
+![Tiny bootstrap illustrative data](../Images/bootstrap_data.png)
+
+### Uses in PCA & CA
+
+* Permutation: Effect size tests of components
+* Split-half: Replication of components
+* Bootstrap: Stability of variables
+
 ## Permutation
+
+
+***
+
+![Permutation diagram](../Images/permutation_diagram.png)
+
+***
+
+![Permutation: First component](../Images/Perm1.png)
+
+***
+
+![Permutation: Second component](../Images/Perm2.png)
+
+***
+
+![Permutation: Third component](../Images/Perm3.png)
+
+***
+
+![Permutation: Fifth component](../Images/Perm4.png)
+
+***
+
+![Permutation: p-values](../Images/Perm5.png)
+
+
+### Another detour
+
+* p-values should (inversely) follow the scree
+* Diagnostic tests:
+  + Large or erratic jumps
+  + First or first few $ps \geq .5$
+
+### Conclusions
+
+* First few components have larger than expected effect sizes
+  + More variance than null
+* We do not know if these generalize
+
+## Split-half
+
+
+***
+
+![Split half diagram](../Images/split_half_diagram.png)
+
+***
+
+![Split-half correlations: First component](../Images/split1.png)
+
+***
+
+![Split-half correlations: Second component](../Images/split2.png)
+
+***
+
+![Split-half correlations: Third component](../Images/split3.png)
+
+***
+
+![Split-half correlations: All components](../Images/split4.png)
+
+
+### Conclusions
+
+* We do *sort of* know if these generalize
+* First two really do
+* Next few: Maybe
+* Key observation:
+  + Components *flip* order!
+  + We need to question the meaning of order of components in our data
 
 ## Bootstrap
 
-## Split-half
+### Bootstrap goes last
+
+* You need to know the number of components to interpret
+* We have 2
+* Now you can interpret variables *per* component
+  + Find the ones that are stable
+
+
+***
+
+![Bootstrap diagram](../Images/bootstrap_diagram.png)
+
+***
+
+![Bootstrap ratios](../Images/boot1.png)
+
+***
+
+![Bootstrap ratios](../Images/boot2.png)
+
+
+***
+
+![Bootstrap ratios](../Images/boot3.png)
+
+***
+
+![Bootstrap ratios](../Images/boot4.png)
+
+***
+
+![Bootstrap ratios](../Images/boot5.png)
+
+***
+
+![Bootstrap ratios](../Images/boot6.png)
+
+
+### Conclusions
+
+* Just a snapshot (there are more variables)
+* APOE4 contributes to both
+* The others generally contribute to one or the other
+
+# Final stretch
+
+### Things not discussed
+
+* Corrections
+* Alternate preprocessing
+  + There's a lazy way (rank)
+* Other resampling & Cross-validation loops.
+  + Start at the "beginning"
+* What about other data types?
+  + I've actually misled you a bit
+  + Structural data
+* Rotations
+  + I don't rotate
+  + But I won't stop you from it
+  + Report both
+
+### Rotation
+
+* Two compelling examples rotation
+  + That weren't rotated
+  + Why?
+* CA of Mueller report
+  + see http://github.com/derekbeaton/muellerreport_ca
+* CA of NeuroSynth (Alhazmi et al., 2018)
+  + see http://github.com/fahd09/neurosynth_semantic_map
+
+
+*** 
+
+![](../Images/mueller_report_CA.png)
+
+
+
+*** 
+
+![](../Images/FA_HBM.jpg)
+
+
+
+## Related techniques
+
+### One table
+
+* Independent Components Analysis
+  + Effectively a rotation
+* Factor analyses, mostly
+  + Different error terms + rotation
+* Non-negative matrix factorization
+* Non-symmetric CA
+* Hellinger CA
+* Compositional CA
+* Multidimensional scaling (MDS)
+
+### Two tables: Part 1
+
+* Partial least squares (correlation)
+* Partial least squares (regression)
+* Partial least squares (path modelling)
+
+### Two tables: Part 2
+
+* Canonical Correlation Analysis
+* Discriminant analyses
+* Reduced rank regression/redundancy analysis
+* Generalized PLS regression
+  + Beaton, Saporta, Abdi (2019)
+  + Mixed data, most two table techniques
+
+### More than two tables
+
+* STATIS
+* Multiple factor analysis
+
+### Not as related 
+
+* tSNE
+* UMAP
+* More akin to non-metric multidimensional scaling
+  + Not always a fair comparison
+
+### For all types of data
+
+* Distances (MDS, DiSTATIS, CovSTATIS)
+* Networks (CA)
+  + More magic!
+
+# (Some) References
+
+### See the reference sections of these
+
+* Beaton, D., Saporta, G., Abdi, H., & Alzheimer's Disease Neuroimaging Initiative. (2019). A generalization of partial least squares regression and correspondence analysis for categorical and mixed data: An application with the ADNI data. bioRxiv, 598888.
+
+* Beaton, D., Sunderland, K. M., Levine, B., Mandzia, J., Masellis, M., Swartz, R. H., ... & Strother, S. C. (2019). Generalization of the minimum covariance determinant algorithm for categorical and mixed data types. bioRxiv, 333005.
+
+### And these
+
+* Abdi, H., Guillemot, V., Eslami, A., & Beaton, D. (2017). Canonical correlation analysis. Encyclopedia of Social Network Analysis and Mining, 1-16.
+
+* Beaton, D., Dunlop, J., & Abdi, H. (2016). Partial least squares correspondence analysis: A framework to simultaneously analyze behavioral and genetic data. Psychological methods, 21(4), 621.
+
+### Techniques
+
+* Greenacre, M. (2017). Correspondence analysis in practice. CRC press.
+
+* Greenacre, M. J. (1984). Theory and Applications of Correspondence Analysis. Retrieved from http://books.google.com/books?id=LsPaAAAAMAAJ
+
+### Techniques
+
+* Greenacre, M. J. (2010). Correspondence analysis. Wiley Interdisciplinary Reviews: Computational Statistics, 2(5), 613–619. https://doi.org/10.1002/wics.114
+
+* Lebart, L., Morineau, A., & Warwick, K. M. (1984). Multivariate descriptive statistical analysis: correspondence analysis and related techniques for large matrices. Wiley.
+
+### Resampling
+
+* Berry, K. J., Johnston, J. E., & Mielke, P. W. (2011). Permutation methods. Wiley Interdisciplinary Reviews: Computational Statistics, 3, 527–542. https://doi.org/10.1002/wics.177
+
+* Strother, S. C., Anderson, J., Hansen, L. K., Kjems, U., Kustra, R., Sidtis, J., … Rottenberg, D. (2002). The Quantitative Evaluation of Functional Neuroimaging Experiments: The NPAIRS Data Analysis Framework. NeuroImage, 15(4), 747–771. https://doi.org/10.1006/nimg.2001.1034
+
+* Efron, B. (1979). Bootstrap Methods: Another Look at the Jackknife. The Annals of Statistics, 7(1), 1–26.
+
+### Resampling
+
+* Chernick, M. R. (2008). Bootstrap methods: A guide for practitioners and researchers (Vol. 619). Wiley-Interscience.
+
+* Hesterberg, T. (2011). Bootstrap. Wiley Interdisciplinary Reviews: Computational Statistics, 3, 497–526. https://doi.org/10.1002/wics.182
+
+* McIntosh, A. R., & Lobaugh, N. J. (2004). Partial least squares analysis of neuroimaging data: applications and advances. Neuroimage, 23, S250–S263.
+
+### Data
+
+* Escofier, B. (1978). Analyse factorielle et distances répondant au principe d’équivalence distributionnelle. Revue de Statistique Appliquée, 26(4), 29–37.
+
+* Escofier, B. (1979). Traitement simultané de variables qualitatives et quantitatives en analyse factorielle. Cahiers de l’Analyse Des Données, 4(2), 137–146.
+
+* Greenacre, M. (2014). Data Doubling and Fuzzy Coding. In J. Blasius & M. Greenacre (Eds.), Visualization and Verbalization of Data (pp. 239–253). Philadelphia, PA, USA: CRC Press.
+
+
