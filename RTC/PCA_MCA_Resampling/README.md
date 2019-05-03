@@ -85,3 +85,7 @@ Slides are available in /Rmd/. An overview of the presentation is:
       - Non exhaustive list of related methods
   - Truncated reference list
     - See the references of the references for a deeper dive
+    
+# The grand finale
+
+![MCA of mixed data (categorical, continuous, ordinal)](./Rmd/PCA_MCA_Slides_files/figure-beamer/unnamed-chunk-86-1.pdf)
