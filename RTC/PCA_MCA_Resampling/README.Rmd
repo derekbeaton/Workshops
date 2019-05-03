@@ -62,5 +62,7 @@ Slides are available in /Rmd/. An overview of the presentation is:
   + Split-half for reproducibility estimates per component
   + Bootstrap test of variable stability per component
 * Conclusions
+  + Some hot takes on rotation (I don't rotate)
   + Non exhaustive list of related methods
-* References
+* Truncated reference list
+  + See the references of the references for a deeper dive
