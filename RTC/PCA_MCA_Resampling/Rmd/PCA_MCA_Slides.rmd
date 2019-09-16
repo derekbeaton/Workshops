@@ -888,6 +888,7 @@ grid.arrange(
              cross_grob,
              t,
              t, layout_matrix = layout_side_by_side)
+
 ```
 
 ### A better idea
