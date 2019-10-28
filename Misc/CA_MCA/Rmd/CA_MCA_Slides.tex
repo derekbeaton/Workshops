@@ -121,7 +121,7 @@
 \title{Simple \& Multiple Correspondence Analyses}
 \subtitle{Contingency, categorical, ordinal, continuous and mixed data}
 \author{Derek Beaton}
-\date{October 27, 2019}
+\date{October 28, 2019}
 \institute{Rotman Research Institute}
 
 \begin{document}
@@ -151,7 +151,19 @@
 
 \includegraphics[width=\textwidth,height=0.4\textheight]{../images/cont_disc.jpg}\includegraphics[width=\textwidth,height=0.4\textheight]{../images/nom_ord_bin.jpg}
 
-\href{https://twitter.com/allison_horst}{via @allison\_horst}
+\begin{itemize}[<+->]
+\tightlist
+\item
+  What do we do with all of these in a PCA like way?
+\item
+  Some are \emph{very} difficult and effectively ignored
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    We won't do that!
+  \end{itemize}
+\end{itemize}
 
 \end{frame}
 
@@ -339,7 +351,7 @@ HS+ & 39 & 9 & 77\\
 \begin{itemize}[<+->]
 \tightlist
 \item
-  Given you a table, and asked for a multivariate analysis
+  Given a table, and asked for a multivariate analysis
 \item
   We do what we know: PCA
 \end{itemize}
@@ -348,7 +360,20 @@ HS+ & 39 & 9 & 77\\
 
 \begin{frame}
 
-\includegraphics{CA_MCA_Slides_files/figure-beamer/edu_dx_pca_1-1.pdf}
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{CA_MCA_Slides_files/figure-beamer/unnamed-chunk-1-1.pdf}
+***
+
+\includegraphics{CA_MCA_Slides_files/figure-beamer/unnamed-chunk-2-1.pdf}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{CA_MCA_Slides_files/figure-beamer/unnamed-chunk-3-1.pdf}
 
 \end{frame}
 
@@ -372,6 +397,21 @@ MCI & 0.921 & 0.652 & 1.000\\
 
 \begin{frame}{What did PCA detect?}
 \protect\hypertarget{what-did-pca-detect}{}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{>{\em}lrrr>{\bfseries\em}r}
+\toprule
+  & CN & Dementia & MCI & Row sums\\
+\midrule
+ADV & 39 & 7 & 54 & 100\\
+B & 57 & 17 & 75 & 149\\
+B+ & 75 & 19 & 113 & 207\\
+HS & 25 & 13 & 46 & 84\\
+HS+ & 39 & 9 & 77 & 125\\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \end{frame}
 
@@ -424,7 +464,7 @@ HS+ & 0.963 & 0.960 & 0.984 & 0.996 & 1.000\\
 
 \begin{table}[H]
 \centering
-\begin{tabular}{>{\em}lrrrrr>{\bfseries}r}
+\begin{tabular}{>{\em}lrrrrr>{\bfseries\em}r}
 \toprule
   & ADV & B & B+ & HS & HS+ & Row sums\\
 \midrule
@@ -449,16 +489,33 @@ MCI & 54 & 75 & 113 & 46 & 77 & 365\\
 
 \end{frame}
 
-\begin{frame}[fragile]{Let's take another look}
+\begin{frame}{Let's take another look}
 \protect\hypertarget{lets-take-another-look}{}
 
-\begin{verbatim}
-## Warning in rbind(cbind(edu_dx_table, rowSums(edu_dx_table)),
-## colSums(edu_dx_table)): number of columns of result is not a multiple of
-## vector length (arg 2)
-\end{verbatim}
+\begin{table}[H]
+\centering
+\begin{tabular}{>{\em}lrrr>{\bfseries\em}r}
+\toprule
+  & CN & Dementia & MCI & Row sums\\
+\midrule
+ADV & 39 & 7 & 54 & 100\\
+B & 57 & 17 & 75 & 149\\
+B+ & 75 & 19 & 113 & 207\\
+HS & 25 & 13 & 46 & 84\\
+HS+ & 39 & 9 & 77 & 125\\
+\addlinespace
+\em{\textbf{Column sums}} & \em{\textbf{235}} & \em{\textbf{65}} & \em{\textbf{365}}\\
+\bottomrule
+\end{tabular}
+\end{table}
 
-NA
+\begin{itemize}[<+->]
+\tightlist
+\item
+  Tell me things about this matrix
+\item
+  What kind of problem does this look like?
+\end{itemize}
 
 \end{frame}
 
@@ -466,31 +523,469 @@ NA
 \section{Simple correspondence
 analysis}\label{simple-correspondence-analysis}}
 
+\begin{frame}{What is CA?}
+\protect\hypertarget{what-is-ca}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  Initially: \emph{visualize contingency tables} (\textbf{a la PCA},
+  factor analyses)
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Text (corpus) of philosphy, biblical passages, literature
+  \item
+    From Benzecri (1964) \& Escofier (1965)
+  \end{itemize}
+\item
+  Fully developed by Escofier (1969)
+\item
+  Explosion of the technique in France
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Across virtually every field (except psychology and neuroscience)
+  \end{itemize}
+\item
+  The magic of CA relies on the magic of \(\chi^2\)
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    And there's some \emph{crazy} magic here
+  \end{itemize}
+\end{itemize}
+
+\end{frame}
+
 \begin{frame}{History}
 \protect\hypertarget{history}{}
 
 \begin{itemize}[<+->]
 \tightlist
 \item
-  CA
+  Hotelling (1933) \& Thurstone (1933)
+\item
+  Hirschfeld (1935) \& Horst (1935)
+\item
+  Guttman (1941)
+\item
+  Burt (1950)
+\item
+  And then Benzecri (1964) \& Escofier (1965)
+\item
+  Many more very important characters to re-discover CA
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  See Lebart's History \& Prehistory of CA
 
   \begin{itemize}[<+->]
   \tightlist
   \item
-    Hirschfeld (1935)
-  \item
-    Guttman (1941)
-  \item
-    Burt (1950)
-  \item
-    Benzecri (1964)
-  \item
-    Escofier (1965)
+    \url{http://www.dtmvic.com/doc/About_the_History_of_CA.pdf}
   \end{itemize}
 \item
-  See Lebart's History \& Prehistory of CA:
-  \url{http://www.dtmvic.com/doc/About_the_History_of_CA.pdf}
+  And Beh \& Lombardo's series
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    A geneaology of CA:
+    \url{https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1467-842X.2012.00676.x}
+  \item
+    A geneaology of CA 2:
+    \url{http://siba-ese.unisalento.it/index.php/ejasa/article/view/19785}
+  \end{itemize}
 \end{itemize}
+
+\end{frame}
+
+\begin{frame}{We're diving in}
+\protect\hypertarget{were-diving-in}{}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{>{\em}lrrr}
+\toprule
+  & CN & Dementia & MCI\\
+\midrule
+ADV & 39 & 7 & 54\\
+B & 57 & 17 & 75\\
+B+ & 75 & 19 & 113\\
+HS & 25 & 13 & 46\\
+HS+ & 39 & 9 & 77\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{CA_MCA_Slides_files/figure-beamer/show_ca_rows_1-1.pdf}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{CA_MCA_Slides_files/figure-beamer/show_ca_cols_1-1.pdf}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{CA_MCA_Slides_files/figure-beamer/show_ca_both_1-1.pdf}
+
+\end{frame}
+
+\begin{frame}
+
+Want to see a cool trick?
+
+\end{frame}
+
+\begin{frame}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{>{\em}lrrr}
+\toprule
+  & CN & Dementia & MCI\\
+\midrule
+ADV & 39 & 7 & 54\\
+B & 57 & 17 & 75\\
+B+ & 75 & 19 & 113\\
+HS & 25 & 13 & 46\\
+HS+ & 39 & 9 & 77\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{>{\em}lrrrrr}
+\toprule
+  & ADV & B & B+ & HS & HS+\\
+\midrule
+CN & 39 & 57 & 75 & 25 & 39\\
+Dementia & 7 & 17 & 19 & 13 & 9\\
+MCI & 54 & 75 & 113 & 46 & 77\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+What if we perform CA on this?
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{CA_MCA_Slides_files/figure-beamer/ca_results_transponse-1.pdf}
+
+\end{frame}
+
+\begin{frame}{How did that happen?}
+\protect\hypertarget{how-did-that-happen}{}
+
+\begin{table}[t]
+
+\caption{\label{tab:edu_dx_chi2}Data}
+\centering
+\begin{tabular}{>{\em}lrrr}
+\toprule
+  & CN & Dementia & MCI\\
+\midrule
+ADV & 39 & 7 & 54\\
+B & 57 & 17 & 75\\
+B+ & 75 & 19 & 113\\
+HS & 25 & 13 & 46\\
+HS+ & 39 & 9 & 77\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{table}[t]
+
+\caption{\label{tab:edu_dx_chi2_o}Observed probabilites}
+\centering
+\begin{tabular}{>{\em}lrrr}
+\toprule
+  & CN & Dementia & MCI\\
+\midrule
+ADV & 0.059 & 0.011 & 0.081\\
+B & 0.086 & 0.026 & 0.113\\
+B+ & 0.113 & 0.029 & 0.170\\
+HS & 0.038 & 0.020 & 0.069\\
+HS+ & 0.059 & 0.014 & 0.116\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{table}[t]
+
+\caption{\label{tab:edu_dx_chi2_osums}Observed probabilites and margins}
+\centering
+\begin{tabular}{>{\em}lrrr>{\bfseries\em}r}
+\toprule
+  & CN & Dementia & MCI & Row sums\\
+\midrule
+ADV & 0.059 & 0.011 & 0.081 & 0.150\\
+B & 0.086 & 0.026 & 0.113 & 0.224\\
+B+ & 0.113 & 0.029 & 0.170 & 0.311\\
+HS & 0.038 & 0.020 & 0.069 & 0.126\\
+HS+ & 0.059 & 0.014 & 0.116 & 0.188\\
+\addlinespace
+\em{\textbf{Column sums}} & \em{\textbf{0.353}} & \em{\textbf{0.098}} & \em{\textbf{0.549}}\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{table}[t]
+
+\caption{\label{tab:edu_dx_chi2_e}Expected probabilites and margins}
+\centering
+\begin{tabular}{>{\em}lrrr>{\bfseries\em}r}
+\toprule
+  & CN & Dementia & MCI & Row sums\\
+\midrule
+ADV & 0.053 & 0.015 & 0.083 & 0.150\\
+B & 0.079 & 0.022 & 0.123 & 0.224\\
+B+ & 0.110 & 0.030 & 0.171 & 0.311\\
+HS & 0.045 & 0.012 & 0.069 & 0.126\\
+HS+ & 0.066 & 0.018 & 0.103 & 0.188\\
+\addlinespace
+\em{\textbf{Column sums}} & \em{\textbf{0.353}} & \em{\textbf{0.098}} & \em{\textbf{0.549}}\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{table}[t]
+
+\caption{\label{tab:edu_dx_chi2_z}Deviations: Observed - Expected}
+\centering
+\begin{tabular}{>{\em}lrrr}
+\toprule
+  & CN & Dementia & MCI\\
+\midrule
+ADV & 0.006 & -0.004 & -0.002\\
+B & 0.007 & 0.004 & -0.010\\
+B+ & 0.003 & -0.001 & -0.001\\
+HS & -0.007 & 0.008 & 0.000\\
+HS+ & -0.007 & -0.004 & 0.013\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{table}[t]
+
+\caption{\label{tab:edu_dx_chi2_rowconstraints}Row constraints (inverse row margins)}
+\centering
+\begin{tabular}{>{\em}lrrrrr}
+\toprule
+  & ADV & B & B+ & HS & HS+\\
+\midrule
+ADV & 6.65 & 0.000 & 0.000 & 0.000 & 0.00\\
+B & 0.00 & 4.463 & 0.000 & 0.000 & 0.00\\
+B+ & 0.00 & 0.000 & 3.213 & 0.000 & 0.00\\
+HS & 0.00 & 0.000 & 0.000 & 7.917 & 0.00\\
+HS+ & 0.00 & 0.000 & 0.000 & 0.000 & 5.32\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{table}[t]
+
+\caption{\label{tab:edu_dx_chi2_colconstraints}Column constraints (inverse row margins)}
+\centering
+\begin{tabular}{>{\em}lrrr}
+\toprule
+  & CN & Dementia & MCI\\
+\midrule
+CN & 2.83 & 0.000 & 0.000\\
+Dementia & 0.00 & 10.231 & 0.000\\
+MCI & 0.00 & 0.000 & 1.822\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\end{frame}
+
+\begin{frame}{The GSVD}
+\protect\hypertarget{the-gsvd}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  The generalized SVD
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Constraints (weights) for rows \& columns of rectangular table
+  \item
+    Required for CA and fancier PCA-like techniques \& extensions
+  \end{itemize}
+\item
+  For some matrix \(\mathbf{X}\) with \(I\) rows and \(J\) columns
+\item
+  SVD(\(\mathbf{X}\))
+  vs.~GSVD(\(\mathbf{W}_{I}\),\(\mathbf{X}\),\(\mathbf{W}_{J}\))
+\item
+  GSVD is
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Matrix multiplication (by constraints on data)
+  \item
+    The SVD
+  \item
+    More matrix multiplication (by constraints on vectors)
+  \end{itemize}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{The GSVD}
+\protect\hypertarget{the-gsvd-1}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  Notation
+\item
+  Visualize it in SVD form
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    That looks familiar\ldots{}
+  \end{itemize}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{What we did to the data}
+\protect\hypertarget{what-we-did-to-the-data}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  O, wi \& wj, E, Z
+\item
+  Oh look that's Chi2
+\item
+  Sum of eigenvalues * sum of table = Chi2.
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Each component is an additive orthogonal slice of Chi2. WOAH.
+  \item
+    The eigenvalues are \emph{magic}
+  \end{itemize}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{CA visualized}
+\protect\hypertarget{ca-visualized}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  Oh look it's CCA-ish
+\item
+  Oh it really really is CCA-ish!
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Rules}
+\protect\hypertarget{rules}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  It's like PCA
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Variance (singular values, eigen values)
+  \item
+    Directions \& inter-relationships
+  \item
+    Components scores
+  \end{itemize}
+\item
+  It's unlike PCA
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Relative interpretation \emph{between} sets
+  \item
+    Generalized singular vectors
+  \item
+    Bifactor
+
+    \begin{itemize}[<+->]
+    \tightlist
+    \item
+      Rows \& columns treated the same
+    \item
+      Together they help make components, as opposed to PCA
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+\end{frame}
+
+\hypertarget{multiple-correspondence-analysis}{%
+\section{Multiple correspondence
+analysis}\label{multiple-correspondence-analysis}}
+
+\begin{frame}{MAGIC!}
+\protect\hypertarget{magic}{}
 
 \end{frame}
 
@@ -511,52 +1006,6 @@ analysis}\label{simple-correspondence-analysis}}
 \href{http://www.math.wm.edu/~leemis/chart/UDR/UDR.html}{See here}
 
 \end{frame}
-
-\begin{frame}{Under the hood}
-\protect\hypertarget{under-the-hood}{}
-
-\begin{itemize}[<+->]
-\tightlist
-\item
-  The eigenvalue decomposition (EVD)
-
-  \begin{itemize}[<+->]
-  \tightlist
-  \item
-    Requires squares, symmetric, and positive semi definite
-  \item
-    Generally correlation or covariance
-  \end{itemize}
-\item
-  The singular value decomposition (SVD)
-
-  \begin{itemize}[<+->]
-  \tightlist
-  \item
-    Works with rectangular tables
-  \end{itemize}
-\item
-  The generalized SVD
-
-  \begin{itemize}[<+->]
-  \tightlist
-  \item
-    Apply constraints (weights) to rows \& columns of rectangular table
-  \item
-    Required for CA and fancier PCA-like techniques \& extensions
-  \end{itemize}
-\end{itemize}
-
-\end{frame}
-
-\begin{frame}{The GSVD}
-\protect\hypertarget{the-gsvd}{}
-
-\end{frame}
-
-\hypertarget{multiple-correspondence-analysis}{%
-\section{Multiple correspondence
-analysis}\label{multiple-correspondence-analysis}}
 
 \hypertarget{some-many-bonuses}{%
 \section{Some many bonuses!}\label{some-many-bonuses}}
@@ -708,6 +1157,19 @@ analysis}\label{multiple-correspondence-analysis}}
   Greenacre, M. (2014). Data Doubling and Fuzzy Coding. In J. Blasius \&
   M. Greenacre (Eds.), Visualization and Verbalization of Data
   (pp.~239--253). Philadelphia, PA, USA: CRC Press.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{History}
+\protect\hypertarget{history-1}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  Holmes S, Josse J. Discussion of ``50 Years of Data Science''. Journal
+  of Computational and Graphical Statistics. 2017, V26(4) 768-769.
+  \url{https://www.tandfonline.com/doi/full/10.1080/10618600.2017.1385471}
 \end{itemize}
 
 \end{frame}

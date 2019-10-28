@@ -84,8 +84,9 @@ amerge_subset$PTEDUCAT <- mapvalues(amerge_subset$PTEDUCAT,from = c(20),c("ADV")
 
 ![](../images/cont_disc.jpg){width=40%, height=40%}![](../images/nom_ord_bin.jpg){width=40%, height=40%}
 
-[via \@allison_horst](https://twitter.com/allison_horst)
-
+* What do we do with all of these in a PCA like way?
+* Some are *very* difficult and effectively ignored
+  + We won't do that!
 
 ### Motivation for today
 
@@ -156,11 +157,9 @@ amerge_subset$PTEDUCAT <- mapvalues(amerge_subset$PTEDUCAT,from = c(20),c("ADV")
 
 ### Diagnosis and education
 
-```{r edu_dx, fig.height=8, fig.width=3.2, fig.align='center'}
+```{r edu_dx}
 
 edu_dx_table <- table(amerge_subset$PTEDUCAT, amerge_subset$DX)
-# edt_grob <- tableGrob(edu_dx_table)
-# grid.arrange(edt_grob)
 
 kable(edu_dx_table, "latex", booktabs = T) %>%
   kable_styling() %>%
@@ -198,13 +197,29 @@ pca_vars <- fviz_pca_var(edu_dx_pca) +
   ylab(paste0("Component 2. Explained variance: ", round(edu_dx_pca$ExPosition.Data$t[2], digits=2),"%")) +
   ggtitle("PCA:\nVariable-Component Correlations")
 
-grid.arrange(pca_rows, pca_vars, nrow=1)
-
 ```
+
+***
+
+```{r}
+grid.arrange(pca_rows, textGrob(""), nrow=1)
+```
+***
+
+```{r}
+grid.arrange(textGrob(""), pca_vars, nrow=1)
+```
+
+***
+
+```{r}
+grid.arrange(pca_rows, pca_vars, nrow=1)
+```
+
 
 ### What did we analyze?
 
-```{r edu_dx_cor1, fig.align='center'}
+```{r edu_dx_cor1}
 
 kable(round(cor(edu_dx_table), digits=3), "latex", booktabs = T) %>%
   kable_styling()
@@ -213,7 +228,7 @@ kable(round(cor(edu_dx_table), digits=3), "latex", booktabs = T) %>%
 
 ### What did PCA detect?
 
-```{edu_dx_rowsums, fig.align='center'}
+```{r edu_dx_rowsums}
 
 edu_dx_with_sums <- cbind(edu_dx_table, rowSums(edu_dx_table))
 colnames(edu_dx_with_sums)[ncol(edu_dx_with_sums)] <- "Row sums"
@@ -221,13 +236,13 @@ colnames(edu_dx_with_sums)[ncol(edu_dx_with_sums)] <- "Row sums"
 kable(edu_dx_with_sums, "latex", booktabs = T) %>%
   kable_styling() %>%
   column_spec(column = 1, italic = T) %>%
-  column_spec(column = ncol(edu_dx_with_sums)+1, bold = T)
+  column_spec(column = ncol(edu_dx_with_sums)+1, bold = T, italic = T)
 
 ```
 
 ### Let's try something different!
 
-```{r edu_dx_different, fig.height=8, fig.width=3.2, fig.align='center'}
+```{r edu_dx_different}
 
 edu_dx_table <- t(edu_dx_table)
 
@@ -267,7 +282,7 @@ grid.arrange(pca_rows, pca_vars, nrow=1)
 
 ### What did PCA analyze?
 
-```{r edu_dx_cor2, fig.height=8, fig.width=3.2, fig.align='center'}
+```{r edu_dx_cor2}
 
 
 kable(round(cor(edu_dx_table), digits=3), "latex", booktabs = T) %>%
@@ -277,7 +292,7 @@ kable(round(cor(edu_dx_table), digits=3), "latex", booktabs = T) %>%
 
 ### What did PCA detect?
 
-```{r edu_dx_colsums, fig.height=8, fig.width=3.2, fig.align='center'}
+```{r edu_dx_colsums}
 edu_dx_with_sums <- cbind(edu_dx_table, rowSums(edu_dx_table))
 colnames(edu_dx_with_sums)[ncol(edu_dx_with_sums)] <- "Row sums"
 
@@ -285,7 +300,7 @@ colnames(edu_dx_with_sums)[ncol(edu_dx_with_sums)] <- "Row sums"
 kable(edu_dx_with_sums, "latex", booktabs = T) %>%
   kable_styling() %>%
   column_spec(column = 1, italic = T) %>%
-  column_spec(column = ncol(edu_dx_with_sums)+1, bold = T)
+  column_spec(column = ncol(edu_dx_with_sums)+1, bold = T, italic = T)
 
 ```
 
@@ -295,35 +310,365 @@ kable(edu_dx_with_sums, "latex", booktabs = T) %>%
 
 ### Let's take another look
 
-```{r edu_dx_anotherlook, fig.height=8, fig.width=3.2, fig.align='center'}
+```{r edu_dx_anotherlook, warning=FALSE}
 
 edu_dx_table <- table(amerge_subset$PTEDUCAT, amerge_subset$DX)
 edu_dx_with_sums <- rbind(cbind(edu_dx_table, rowSums(edu_dx_table)), colSums(edu_dx_table))
 
-edu_dx_with_sums[nrow(edu_dx_with_sums), ncol(edu_dx_with_sums)] <- ""
+edu_dx_with_sums[nrow(edu_dx_with_sums), ncol(edu_dx_with_sums)] <- NA
 colnames(edu_dx_with_sums)[ncol(edu_dx_with_sums)] <- "Row sums"
 rownames(edu_dx_with_sums)[nrow(edu_dx_with_sums)] <- "Column sums"
 
+options(knitr.kable.NA = '')
 kable(edu_dx_with_sums, "latex", booktabs = T) %>%
   kable_styling() %>%
   column_spec(column = 1, italic = T) %>%
-  column_spec(column = ncol(edu_dx_with_sums)+1, bold = T) %>%
-  row_spec(row = nrow(edu_dx_with_sums)+1, bold = T)
+  column_spec(column = ncol(edu_dx_with_sums)+1, bold = T, italic = T) %>%
+  row_spec(row = nrow(edu_dx_with_sums), bold = T, italic = T)
 
 ```
+
+* Tell me things about this matrix
+* What kind of problem does this look like?
 
 
 # Simple correspondence analysis
 
+
+### What is CA?
+
+* Initially: *visualize contingency tables* (**a la PCA**, factor analyses)
+  + Text (corpus) of philosphy, biblical passages, literature
+  + From Benzecri (1964) & Escofier (1965)
+* Fully developed by Escofier (1969)
+* Explosion of the technique in France
+  + Across virtually every field (except psychology and neuroscience)
+* The magic of CA relies on the magic of $\chi^2$
+  + And there's some *crazy* magic here
+
 ### History
 
-* CA
-  + Hirschfeld (1935)
-  + Guttman (1941)
-  + Burt (1950)
-  + Benzecri (1964)
-  + Escofier (1965)
-* See Lebart's History & Prehistory of CA: http://www.dtmvic.com/doc/About_the_History_of_CA.pdf
+* Hotelling (1933) & Thurstone (1933) 
+* Hirschfeld (1935) & Horst (1935)
+* Guttman (1941)
+* Burt (1950)
+* And then Benzecri (1964) & Escofier (1965)
+* Many more very important characters to re-discover CA
+
+***
+
+* See Lebart's History & Prehistory of CA 
+  + http://www.dtmvic.com/doc/About_the_History_of_CA.pdf
+* And Beh & Lombardo's series
+  + A geneaology of CA: https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1467-842X.2012.00676.x
+  + A geneaology of CA 2: http://siba-ese.unisalento.it/index.php/ejasa/article/view/19785
+
+
+### We're diving in
+
+```{r edu_dx_again}
+
+edu_dx_table <- table(amerge_subset$PTEDUCAT, amerge_subset$DX)
+
+kable(edu_dx_table, "latex", booktabs = T) %>%
+  kable_styling() %>%
+  column_spec(column = 1, italic = T)
+
+```
+
+```{r ca_results}
+
+edu_dx_ca <- epCA(edu_dx_table, graphs = F)
+
+
+ca_rows <- fviz_ca_row(edu_dx_ca) +
+  coord_cartesian(xlim=c(edu_dx_ca$Plotting.Data$constraints$minx, edu_dx_ca$Plotting.Data$constraints$maxx), ylim = c(edu_dx_ca$Plotting.Data$constraints$miny, edu_dx_ca$Plotting.Data$constraints$maxy)) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank()) +
+  xlab(paste0("Component 1. Explained variance: ", round(edu_dx_ca$ExPosition.Data$t[1], digits=2),"%")) +
+  ylab(paste0("Component 2. Explained variance: ", round(edu_dx_ca$ExPosition.Data$t[2], digits=2),"%")) +
+  ggtitle("CA:\nRow component scores")
+
+
+ca_cols <- fviz_ca_col(edu_dx_ca) +
+  coord_cartesian(xlim=c(edu_dx_ca$Plotting.Data$constraints$minx, edu_dx_ca$Plotting.Data$constraints$maxx), ylim = c(edu_dx_ca$Plotting.Data$constraints$miny, edu_dx_ca$Plotting.Data$constraints$maxy)) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank()) +
+  xlab(paste0("Component 1. Explained variance: ", round(edu_dx_ca$ExPosition.Data$t[1], digits=2),"%")) +
+  ylab(paste0("Component 2. Explained variance: ", round(edu_dx_ca$ExPosition.Data$t[2], digits=2),"%")) +
+  ggtitle("CA:\nColumn component scores")
+
+
+tgrob <- textGrob("")
+
+```
+
+*** 
+
+```{r show_ca_rows_1}
+
+grid.arrange(ca_rows, tgrob, nrow=1)
+
+```
+
+*** 
+
+```{r show_ca_cols_1}
+
+grid.arrange(tgrob, ca_cols, nrow=1)
+
+```
+
+*** 
+
+```{r show_ca_both_1}
+
+grid.arrange(ca_rows, ca_cols, nrow=1)
+
+```
+
+*** 
+
+Want to see a cool trick?
+
+*** 
+
+```{r edu_dx_againagain}
+
+edu_dx_table <- table(amerge_subset$PTEDUCAT, amerge_subset$DX)
+
+kable(edu_dx_table, "latex", booktabs = T) %>%
+  kable_styling() %>%
+  column_spec(column = 1, italic = T)
+
+```
+
+*** 
+
+```{r edu_dx_transpose}
+
+edu_dx_table <- t(edu_dx_table)
+
+kable(edu_dx_table, "latex", booktabs = T) %>%
+  kable_styling() %>%
+  column_spec(column = 1, italic = T)
+
+```
+What if we perform CA on this?
+
+***
+
+```{r ca_results_transponse}
+
+edu_dx_ca <- epCA(edu_dx_table, graphs = F)
+
+
+ca_rows <- fviz_ca_row(edu_dx_ca) +
+  coord_cartesian(xlim=c(edu_dx_ca$Plotting.Data$constraints$minx, edu_dx_ca$Plotting.Data$constraints$maxx), ylim = c(edu_dx_ca$Plotting.Data$constraints$miny, edu_dx_ca$Plotting.Data$constraints$maxy)) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank()) +
+  xlab(paste0("Component 1. Explained variance: ", round(edu_dx_ca$ExPosition.Data$t[1], digits=2),"%")) +
+  ylab(paste0("Component 2. Explained variance: ", round(edu_dx_ca$ExPosition.Data$t[2], digits=2),"%")) +
+  ggtitle("CA:\nRow component scores")
+
+
+ca_cols <- fviz_ca_col(edu_dx_ca) +
+  coord_cartesian(xlim=c(edu_dx_ca$Plotting.Data$constraints$minx, edu_dx_ca$Plotting.Data$constraints$maxx), ylim = c(edu_dx_ca$Plotting.Data$constraints$miny, edu_dx_ca$Plotting.Data$constraints$maxy)) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank()) +
+  xlab(paste0("Component 1. Explained variance: ", round(edu_dx_ca$ExPosition.Data$t[1], digits=2),"%")) +
+  ylab(paste0("Component 2. Explained variance: ", round(edu_dx_ca$ExPosition.Data$t[2], digits=2),"%")) +
+  ggtitle("CA:\nColumn component scores")
+
+
+grid.arrange(ca_rows, ca_cols, nrow=1)
+
+```
+<!--
+### Bells, whistles
+
+* Singular vectors, singular values, eigenvalues
+* Component scores
+* Generalized (weighted) singular vectors
+-->
+
+### How did that happen?
+
+
+```{r edu_dx_chi2}
+
+edu_dx_table <- table(amerge_subset$PTEDUCAT, amerge_subset$DX)
+
+kable(edu_dx_table, "latex", booktabs = T, caption = "Data") %>%
+  kable_styling() %>%
+  column_spec(column = 1, italic = T)
+
+```
+
+***
+
+```{r edu_dx_chi2_o}
+
+kable( round(edu_dx_table / sum(edu_dx_table), digits= 3), "latex", booktabs = T, caption = "Observed probabilites") %>%
+  kable_styling() %>%
+  column_spec(column = 1, italic = T)
+
+```
+
+***
+
+```{r edu_dx_chi2_osums, warning = FALSE}
+
+
+observed_probs <- edu_dx_table / sum(edu_dx_table)
+
+edu_dx_with_sums <- rbind(cbind(observed_probs, rowSums(observed_probs)), colSums(observed_probs))
+edu_dx_with_sums <- round(edu_dx_with_sums, digits = 3)
+colnames(edu_dx_with_sums)[ncol(edu_dx_with_sums)] <- "Row sums"
+rownames(edu_dx_with_sums)[nrow(edu_dx_with_sums)] <- "Column sums"
+edu_dx_with_sums[nrow(edu_dx_with_sums), ncol(edu_dx_with_sums)] <- NA
+
+options(knitr.kable.NA = '')
+kable( edu_dx_with_sums, "latex", booktabs = T, caption = "Observed probabilites and margins") %>%
+  kable_styling() %>%
+  column_spec(column = 1, italic = T) %>%
+  column_spec(column = ncol(edu_dx_with_sums)+1, bold = T, italic = T) %>%
+  row_spec(row = nrow(edu_dx_with_sums), bold = T, italic = T)
+
+```
+
+***
+
+```{r edu_dx_chi2_e, warning = FALSE}
+
+
+row_probs <- rowSums(observed_probs)
+col_probs <- colSums(observed_probs)
+expected_probabilities <- round(row_probs %o% col_probs, digits = 3)
+
+expected_probabilities_with_sums <- round(rbind(cbind(expected_probabilities, row_probs), col_probs), digits = 3)
+
+colnames(expected_probabilities_with_sums)[ncol(expected_probabilities_with_sums)] <- "Row sums"
+rownames(expected_probabilities_with_sums)[nrow(expected_probabilities_with_sums)] <- "Column sums"
+expected_probabilities_with_sums[nrow(expected_probabilities_with_sums), ncol(expected_probabilities_with_sums)] <- NA
+
+options(knitr.kable.NA = '')
+kable( expected_probabilities_with_sums, "latex", booktabs = T, caption = "Expected probabilites and margins") %>%
+  kable_styling() %>%
+  column_spec(column = 1, italic = T) %>%
+  column_spec(column = ncol(expected_probabilities_with_sums)+1, bold = T, italic = T) %>%
+  row_spec(row = nrow(expected_probabilities_with_sums), bold = T, italic = T)
+
+```
+
+***
+
+```{r edu_dx_chi2_z}
+
+kable( round(observed_probs - expected_probabilities, digits = 3), "latex", booktabs = T, caption = "Deviations: Observed - Expected") %>%
+  kable_styling() %>%
+  column_spec(column = 1, italic = T)
+
+```
+
+***
+
+```{r edu_dx_chi2_rowconstraints}
+
+row_constraints <- diag(1/rowSums(observed_probs))
+rownames(row_constraints) <- rownames(observed_probs) -> colnames(row_constraints)
+
+kable( round(row_constraints, digits = 3), "latex", booktabs = T, caption = "Row constraints (inverse row margins)") %>%
+  kable_styling() %>%
+  column_spec(column = 1, italic = T)
+
+```
+
+***
+
+```{r edu_dx_chi2_colconstraints}
+
+col_constraints <- diag(1/colSums(observed_probs))
+rownames(col_constraints) <- colnames(observed_probs) -> colnames(col_constraints)
+
+kable( round(col_constraints, digits = 3), "latex", booktabs = T, caption = "Column constraints (inverse column margins)") %>%
+  kable_styling() %>%
+  column_spec(column = 1, italic = T)
+
+```
+
+### The GSVD
+
+Simple quick magic
+Then visualize it
+Then swing back to Chi2
+Then swing to CCA
+Then expand it
+
+[[[pick up here and drop most of the stuff below]]]
+
+
+### The GSVD
+
+* The generalized SVD
+  + Constraints (weights) for rows & columns of rectangular table
+  + Required for CA and fancier PCA-like techniques & extensions
+* For some matrix $\mathbf{X}$ with $I$ rows and $J$ columns
+* SVD($\mathbf{X}$) vs. GSVD($\mathbf{W}_{I}$,$\mathbf{X}$,$\mathbf{W}_{J}$)
+* GSVD is 
+  + Matrix multiplication (by constraints on data)
+  + The SVD
+  + More matrix multiplication (by constraints on vectors)
+
+### The GSVD
+
+* Notation
+* Visualize it in SVD form
+  + That looks familiar...
+  
+### What we did to the data
+
+* O, wi & wj, E, Z
+* Oh look that's Chi2
+* Sum of eigenvalues * sum of table = Chi2.
+  + Each component is an additive orthogonal slice of Chi2. WOAH.
+  * The eigenvalues are *magic*
+
+### CA visualized
+
+* Oh look it's CCA-ish
+* Oh it really really is CCA-ish!
+
+### Rules
+
+* It's like PCA
+  + Variance (singular values, eigen values)
+  + Directions & inter-relationships
+  + Components scores
+* It's unlike PCA
+  + Relative interpretation *between* sets
+  + Generalized singular vectors
+  + Bifactor
+    + Rows & columns treated the same
+    + Together they help make components, as opposed to PCA
+
+
+# Multiple correspondence analysis
+
+
+### MAGIC! 
 
 ### Chi-squared
 
@@ -336,23 +681,6 @@ kable(edu_dx_with_sums, "latex", booktabs = T) %>%
 ![](../images/Chi2.PNG)
 
 [See here](http://www.math.wm.edu/~leemis/chart/UDR/UDR.html)
-
-### Under the hood
-
-* The eigenvalue decomposition (EVD)
-  + Requires squares, symmetric, and positive semi definite
-  + Generally correlation or covariance
-* The singular value decomposition (SVD)
-  + Works with rectangular tables
-* The generalized SVD
-  + Apply constraints (weights) to rows & columns of rectangular table
-  + Required for CA and fancier PCA-like techniques & extensions
-
-### The GSVD
-
-
-
-# Multiple correspondence analysis
 
 
 # Some many bonuses!
@@ -418,3 +746,7 @@ kable(edu_dx_with_sums, "latex", booktabs = T) %>%
 
 * Greenacre, M. (2014). Data Doubling and Fuzzy Coding. In J. Blasius & M. Greenacre (Eds.), Visualization and Verbalization of Data (pp. 239–253). Philadelphia, PA, USA: CRC Press.
 
+
+### History
+
+* Holmes S, Josse J. Discussion of “50 Years of Data Science”.  Journal of Computational and Graphical Statistics. 2017, V26(4) 768-769. https://www.tandfonline.com/doi/full/10.1080/10618600.2017.1385471
