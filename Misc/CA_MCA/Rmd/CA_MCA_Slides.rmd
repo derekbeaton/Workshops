@@ -404,16 +404,13 @@ ca_cols <- fviz_ca_col(edu_dx_ca) +
   ylab(paste0("Component 2. Explained variance: ", round(edu_dx_ca$ExPosition.Data$t[2], digits=2),"%")) +
   ggtitle("CA:\nColumn component scores")
 
-
-tgrob <- textGrob("")
-
 ```
 
 *** 
 
 ```{r show_ca_rows_1}
 
-grid.arrange(ca_rows, tgrob, nrow=1)
+grid.arrange(ca_rows, textGrob(""), nrow=1)
 
 ```
 
@@ -421,7 +418,7 @@ grid.arrange(ca_rows, tgrob, nrow=1)
 
 ```{r show_ca_cols_1}
 
-grid.arrange(tgrob, ca_cols, nrow=1)
+grid.arrange(textGrob(""), ca_cols, nrow=1)
 
 ```
 
@@ -661,7 +658,7 @@ kable( round(col_constraints, digits = 3), "latex", booktabs = T, caption = "Col
 \end{equation*}
 \endgroup
 
-### CA's first secrets
+### CA's secrets
 
 ```{r echo = TRUE, tidy=TRUE, tidy.opts=list(width.cutoff=50)}
 EDU <- amerge_subset$PTEDUCAT
@@ -675,65 +672,157 @@ sum(edu_dx_ca$ExPosition.Data$eigs) * sum(edu_dx_table)
 
 ```
 
+***
 
-### The GSVD
+![](../images/Deviations_Over_Familiar.png)
 
-Simple quick magic
-Then visualize it (as 3 matrices, then 1 over 2 which is just the probs not inverse)
-Then swing back to Chi2
-Then swing to CCA
-Then expand it & transition to MCA
+Besides $\chi^2$ this looks really familiar. What else are rectangles over squares?
 
-[[[pick up here and drop most of the stuff below]]]
+***
+
+\begingroup\Huge
+\begin{equation*}
+r = \frac{cov(\mathbf{x},\mathbf{y})}{\sigma_{\mathbf{x}} \times \sigma_{\mathbf{y}}}
+\end{equation*}
+\endgroup
+
+### More of CA's secrets
+
+* CA generalizes canonical correlation analysis (CCA)
+* CA is the CCA between two *nominal* tables
+* How do we create a contingency table?
+
+### Nominal data
+
+\begin{center}
+\includegraphics{../images/nom_copy.jpg}
+\end{center}
+
+***
+
+```{r show_nominal}
+
+EDU_nom <- makeNominalData(as.matrix(EDU))
+  colnames(EDU_nom) <- gsub("\\.","", colnames(EDU_nom))
+DX_nom <- makeNominalData(as.matrix(DX))
+  colnames(DX_nom) <- gsub("\\.","", colnames(DX_nom))
 
 
-
-
-
-### The GSVD
-
-* The generalized SVD
-  + Constraints (weights) for rows & columns of rectangular table
-  + Required for CA and fancier PCA-like techniques & extensions
-* For some matrix $\mathbf{X}$ with $I$ rows and $J$ columns
-* SVD($\mathbf{X}$) vs. GSVD($\mathbf{W}_{I}$,$\mathbf{X}$,$\mathbf{W}_{J}$)
-* GSVD is 
-  + Matrix multiplication (by constraints on data)
-  + The SVD
-  + More matrix multiplication (by constraints on vectors)
-
+grid.arrange(
+  tableGrob(edu_dx_table, theme=ttheme_default(base_size=18)),
+  tableGrob(EDU_nom[558:562,],theme=ttheme_default(base_size=18)),
+  tableGrob(DX_nom[558:562,],theme=ttheme_default(base_size=18)),
+nrow = 1)
   
-### What we did to the data
-
-* O, wi & wj, E, Z
-* Oh look that's Chi2
-* Sum of eigenvalues * sum of table = Chi2.
-  + Each component is an additive orthogonal slice of Chi2. WOAH.
-  * The eigenvalues are *magic*
-
-### CA visualized
-
-* Oh look it's CCA-ish
-* Oh it really really is CCA-ish!
-
-### Rules
-
-* It's like PCA
-  + Variance (singular values, eigen values)
-  + Directions & inter-relationships
-  + Components scores
-* It's unlike PCA
-  + Relative interpretation *between* sets
-  + Generalized singular vectors
-  + Bifactor
-    + Rows & columns treated the same
-    + Together they help make components, as opposed to PCA
-
+```
 
 # Multiple correspondence analysis
 
 
-### MAGIC! 
+### Multiple correspondence analysis
+
+* Two perspectives:
+  + PCA for nominal data
+  + Generalized CA for multi-way contingency tables
+* So much more than nominal
+
+
+### We're diving in
+
+```{r show_nom}
+
+grid.arrange(tableGrob(cbind(EDU_nom, DX_nom)[558:562,],theme=ttheme_default(base_size=18)))
+
+```
+
+This is the kind of table we're analyzing
+
+```{r mca}
+
+edu_dx_cat <- cbind(amerge_subset$DX, amerge_subset$PTEDUCAT)
+edu_dx_mca <- epMCA(edu_dx_cat, graphs = F)
+
+### such a hack!!!!
+edu_dx_mca$ExPosition.Data$fi[,2] <- edu_dx_mca$ExPosition.Data$fi[,2] * -1
+edu_dx_mca$ExPosition.Data$fj[,2] <- edu_dx_mca$ExPosition.Data$fj[,2] * -1
+
+
+mca_rows <- fviz_mca_ind(edu_dx_mca, col.ind = "grey80") +
+  coord_cartesian(xlim=c(edu_dx_mca$Plotting.Data$constraints$minx, edu_dx_mca$Plotting.Data$constraints$maxx), ylim = c(edu_dx_mca$Plotting.Data$constraints$miny, edu_dx_mca$Plotting.Data$constraints$maxy)) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank()) +
+  xlab(paste0("Component 1. Explained variance: ", round(edu_dx_mca$ExPosition.Data$t[1], digits=2),"%")) +
+  ylab(paste0("Component 2. Explained variance: ", round(edu_dx_mca$ExPosition.Data$t[2], digits=2),"%")) +
+  ggtitle("MCA:\nRow component scores")
+
+
+mca_cols <- fviz_mca_var(edu_dx_mca, col.var = "mediumorchid4") +
+  coord_cartesian(xlim=c(edu_dx_mca$Plotting.Data$constraints$minx, edu_dx_mca$Plotting.Data$constraints$maxx), ylim = c(edu_dx_mca$Plotting.Data$constraints$miny, edu_dx_mca$Plotting.Data$constraints$maxy)) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank()) +
+  xlab(paste0("Component 1. Explained variance: ", round(edu_dx_mca$ExPosition.Data$t[1], digits=2),"%")) +
+  ylab(paste0("Component 2. Explained variance: ", round(edu_dx_mca$ExPosition.Data$t[2], digits=2),"%")) +
+  ggtitle("MCA:\nColumn component scores")
+
+```
+
+***
+
+```{r}
+grid.arrange(mca_rows, textGrob(""), nrow=1)
+```
+
+***
+
+```{r}
+grid.arrange(textGrob(""), mca_cols, nrow=1)
+```
+
+***
+
+```{r}
+grid.arrange(mca_rows, mca_cols, nrow=1)
+```
+Does any of this look familiar?
+
+***
+
+```{r}
+grid.arrange(textGrob(""), mca_cols, nrow=1)
+```
+
+***
+
+```{r}
+grid.arrange(ca_rows, mca_cols, nrow=1)
+```
+
+***
+
+```{r}
+grid.arrange(ca_cols, mca_cols, nrow=1)
+```
+
+
+### CA & MCA Magic!
+
+```{r show_nom_and_contingency}
+
+grid.arrange(
+  tableGrob(edu_dx_table, theme=ttheme_default(base_size=18)),
+  textGrob(""),
+  tableGrob(cbind(EDU_nom, DX_nom)[558:562,],theme=ttheme_default(base_size=18)),
+  nrow = 1)
+
+```
+
+Same technique on two *different* tables: same result
 
 ### Chi-squared
 

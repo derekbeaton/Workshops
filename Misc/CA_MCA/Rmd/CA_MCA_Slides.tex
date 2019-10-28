@@ -968,8 +968,8 @@ MCI & 0.00 & 0.000 & 1.822\\
 
 \end{frame}
 
-\begin{frame}[fragile]{CA's first secrets}
-\protect\hypertarget{cas-first-secrets}{}
+\begin{frame}[fragile]{CA's secrets}
+\protect\hypertarget{cas-secrets}{}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1002,127 +1002,52 @@ MCI & 0.00 & 0.000 & 1.822\\
 
 \end{frame}
 
-\begin{frame}{The GSVD}
-\protect\hypertarget{the-gsvd}{}
+\begin{frame}
 
-Simple quick magic Then visualize it (as 3 matrices, then 1 over 2 which
-is just the probs not inverse) Then swing back to Chi2 Then swing to CCA
-Then expand it \& transition to MCA
+\includegraphics{../images/Deviations_Over_Familiar.png}
 
-{[}{[}{[}pick up here and drop most of the stuff below{]}{]}{]}
+Besides \(\chi^2\) this looks really familiar. What else are rectangles
+over squares?
 
 \end{frame}
 
-\begin{frame}{The GSVD}
-\protect\hypertarget{the-gsvd-1}{}
+\begin{frame}
+
+\begingroup\Huge
+
+\begin{equation*}
+r = \frac{cov(\mathbf{x},\mathbf{y})}{\sigma_{\mathbf{x}} \times \sigma_{\mathbf{y}}}
+\end{equation*} \endgroup
+
+\end{frame}
+
+\begin{frame}{More of CA's secrets}
+\protect\hypertarget{more-of-cas-secrets}{}
 
 \begin{itemize}[<+->]
 \tightlist
 \item
-  The generalized SVD
-
-  \begin{itemize}[<+->]
-  \tightlist
-  \item
-    Constraints (weights) for rows \& columns of rectangular table
-  \item
-    Required for CA and fancier PCA-like techniques \& extensions
-  \end{itemize}
+  CA generalizes canonical correlation analysis (CCA)
 \item
-  For some matrix \(\mathbf{X}\) with \(I\) rows and \(J\) columns
+  CA is the CCA between two \emph{nominal} tables
 \item
-  SVD(\(\mathbf{X}\))
-  vs.~GSVD(\(\mathbf{W}_{I}\),\(\mathbf{X}\),\(\mathbf{W}_{J}\))
-\item
-  GSVD is
-
-  \begin{itemize}[<+->]
-  \tightlist
-  \item
-    Matrix multiplication (by constraints on data)
-  \item
-    The SVD
-  \item
-    More matrix multiplication (by constraints on vectors)
-  \end{itemize}
+  How do we create a contingency table?
 \end{itemize}
 
 \end{frame}
 
-\begin{frame}{What we did to the data}
-\protect\hypertarget{what-we-did-to-the-data}{}
+\begin{frame}{Nominal data}
+\protect\hypertarget{nominal-data}{}
 
-\begin{itemize}[<+->]
-\tightlist
-\item
-  O, wi \& wj, E, Z
-\item
-  Oh look that's Chi2
-\item
-  Sum of eigenvalues * sum of table = Chi2.
-
-  \begin{itemize}[<+->]
-  \tightlist
-  \item
-    Each component is an additive orthogonal slice of Chi2. WOAH.
-  \item
-    The eigenvalues are \emph{magic}
-  \end{itemize}
-\end{itemize}
+\begin{center}
+\includegraphics{../images/nom_copy.jpg}
+\end{center}
 
 \end{frame}
 
-\begin{frame}{CA visualized}
-\protect\hypertarget{ca-visualized}{}
+\begin{frame}
 
-\begin{itemize}[<+->]
-\tightlist
-\item
-  Oh look it's CCA-ish
-\item
-  Oh it really really is CCA-ish!
-\end{itemize}
-
-\end{frame}
-
-\begin{frame}{Rules}
-\protect\hypertarget{rules}{}
-
-\begin{itemize}[<+->]
-\tightlist
-\item
-  It's like PCA
-
-  \begin{itemize}[<+->]
-  \tightlist
-  \item
-    Variance (singular values, eigen values)
-  \item
-    Directions \& inter-relationships
-  \item
-    Components scores
-  \end{itemize}
-\item
-  It's unlike PCA
-
-  \begin{itemize}[<+->]
-  \tightlist
-  \item
-    Relative interpretation \emph{between} sets
-  \item
-    Generalized singular vectors
-  \item
-    Bifactor
-
-    \begin{itemize}[<+->]
-    \tightlist
-    \item
-      Rows \& columns treated the same
-    \item
-      Together they help make components, as opposed to PCA
-    \end{itemize}
-  \end{itemize}
-\end{itemize}
+\includegraphics{CA_MCA_Slides_files/figure-beamer/show_nominal-1.pdf}
 
 \end{frame}
 
@@ -1130,8 +1055,79 @@ Then expand it \& transition to MCA
 \section{Multiple correspondence
 analysis}\label{multiple-correspondence-analysis}}
 
-\begin{frame}{MAGIC!}
-\protect\hypertarget{magic}{}
+\begin{frame}{Multiple correspondence analysis}
+\protect\hypertarget{multiple-correspondence-analysis-1}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  Two perspectives:
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    PCA for nominal data
+  \item
+    Generalized CA for multi-way contingency tables
+  \end{itemize}
+\item
+  So much more than nominal
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{We're diving in}
+\protect\hypertarget{were-diving-in-1}{}
+
+\includegraphics{CA_MCA_Slides_files/figure-beamer/show_nom-1.pdf}
+
+This is the kind of table we're analyzing
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{CA_MCA_Slides_files/figure-beamer/unnamed-chunk-5-1.pdf}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{CA_MCA_Slides_files/figure-beamer/unnamed-chunk-6-1.pdf}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{CA_MCA_Slides_files/figure-beamer/unnamed-chunk-7-1.pdf}
+Does any of this look familiar?
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{CA_MCA_Slides_files/figure-beamer/unnamed-chunk-8-1.pdf}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{CA_MCA_Slides_files/figure-beamer/unnamed-chunk-9-1.pdf}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{CA_MCA_Slides_files/figure-beamer/unnamed-chunk-10-1.pdf}
+
+\end{frame}
+
+\begin{frame}{CA \& MCA Magic!}
+\protect\hypertarget{ca-mca-magic}{}
+
+\includegraphics{CA_MCA_Slides_files/figure-beamer/show_nom_and_contingency-1.pdf}
+
+Same technique on two \emph{different} tables: same result
 
 \end{frame}
 
