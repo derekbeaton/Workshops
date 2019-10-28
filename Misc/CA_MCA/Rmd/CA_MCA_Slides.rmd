@@ -626,27 +626,54 @@ kable( round(col_constraints, digits = 3), "latex", booktabs = T, caption = "Col
 
 ### What we really decompose
 
-![](../images/Deviations_Over.png)
+![](../images/Deviations_Over_2.png)
 
+***
+
+![](../images/Deviations_Over.png)
 
 *** 
 
-$$\Huge \frac{\mathbf{Z}}{\mathbf{R}^{\frac{1}{2}}\mathbf{C}^{\frac{1}{2}}}$$
+<!-- $$\Huge \frac{\mathbf{Z}}{\mathbf{R}^{\frac{1}{2}}\mathbf{C}^{\frac{1}{2}}}$$ -->
+\begingroup\Huge
+\begin{equation*}
+\frac{\mathbf{Z}}{\mathbf{R}^{\frac{1}{2}}\mathbf{C}^{\frac{1}{2}}}
+\end{equation*}
+\endgroup
+
+
 
 ***
 
-$$\Huge \frac{(\mathbf{O} - \mathbf{E})}{\mathbf{E}^{\frac{1}{2}}}$$
+<!-- $$\Huge \frac{(\mathbf{O} - \mathbf{E})}{\mathbf{E}^{\frac{1}{2}}}$$ -->
+\begingroup\Huge
+\begin{equation*}
+\frac{(\mathbf{O} - \mathbf{E})}{\mathbf{E}^{\frac{1}{2}}}
+\end{equation*}
+\endgroup
 
 ***
 
-$$\Huge \chi^2 = \sum{\frac{(\mathbf{O} - \mathbf{E})^2}{\mathbf{E}}}$$
+<!-- $$\Huge \chi^2 = \sum{\frac{(\mathbf{O} - \mathbf{E})^2}{\mathbf{E}}}$$-->
+\begingroup\Huge
+\begin{equation*}
+\chi^2 = \sum{\frac{(\mathbf{O} - \mathbf{E})^2}{\mathbf{E}}}
+\end{equation*}
+\endgroup
 
 ### CA's first secrets
 
-* Orthogonal slices of $\chi^2$
-* Sum of the eigenvalues $\times$ sum of the table = $\chi^2$
+```{r echo = TRUE, tidy=TRUE, tidy.opts=list(width.cutoff=50)}
+EDU <- amerge_subset$PTEDUCAT
+DX <- amerge_subset$DX
+edu_dx_table <- table(EDU, DX)
 
-Maybe here is worth presenting the code and some output?
+chisq.test(edu_dx_table)
+
+edu_dx_ca <- epCA(edu_dx_table, graphs = F)
+sum(edu_dx_ca$ExPosition.Data$eigs) * sum(edu_dx_table)
+
+```
 
 
 ### The GSVD
