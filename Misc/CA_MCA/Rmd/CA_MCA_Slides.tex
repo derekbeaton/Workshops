@@ -797,11 +797,11 @@ HS+ & 0.066 & 0.018 & 0.103 & 0.188\\
 \toprule
   & CN & Dementia & MCI\\
 \midrule
-ADV & 0.006 & -0.004 & -0.002\\
+ADV & 0.006 & -0.004 & -0.001\\
 B & 0.007 & 0.004 & -0.010\\
-B+ & 0.003 & -0.001 & -0.001\\
-HS & -0.007 & 0.008 & 0.000\\
-HS+ & -0.007 & -0.004 & 0.013\\
+B+ & 0.003 & -0.002 & -0.001\\
+HS & -0.007 & 0.007 & 0.000\\
+HS+ & -0.008 & -0.005 & 0.013\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -833,7 +833,7 @@ HS+ & 0.00 & 0.000 & 0.000 & 0.000 & 5.32\\
 
 \begin{table}[t]
 
-\caption{\label{tab:edu_dx_chi2_colconstraints}Column constraints (inverse row margins)}
+\caption{\label{tab:edu_dx_chi2_colconstraints}Column constraints (inverse column margins)}
 \centering
 \begin{tabular}{>{\em}lrrr}
 \toprule
@@ -848,8 +848,98 @@ MCI & 0.00 & 0.000 & 1.822\\
 
 \end{frame}
 
+\begin{frame}{What CA needs}
+\protect\hypertarget{what-ca-needs}{}
+
+\includegraphics{../images/CA_matrices.png}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  GSVD(\(\mathbf{R}\), \(\mathbf{X}\), \(\mathbf{C}\))
+\item
+  Required for CA and fancier PCA-like techniques \& extensions
+\item
+  Uses but generalizes the SVD
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Uses row \& column weights (constraints)
+  \end{itemize}
+\item
+  Gives back
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Component (factor) scores
+  \item
+    Eigenvalues, singular values, \& singular vectors
+  \item
+    \emph{Generalized} singular vectors
+  \end{itemize}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{What we really decompose}
+\protect\hypertarget{what-we-really-decompose}{}
+
+\includegraphics{../images/Deviations_Over.png}
+
+\end{frame}
+
+\begin{frame}
+
+\[\Huge \frac{\mathbf{Z}}{\mathbf{R}^{\frac{1}{2}}\mathbf{C}^{\frac{1}{2}}}\]
+
+\end{frame}
+
+\begin{frame}
+
+\[\Huge \frac{(\mathbf{O} - \mathbf{E})}{\mathbf{E}^{\frac{1}{2}}}\]
+
+\end{frame}
+
+\begin{frame}
+
+\[\Huge \chi^2 = \sum{\frac{(\mathbf{O} - \mathbf{E})^2}{\mathbf{E}}}\]
+
+\end{frame}
+
+\begin{frame}{CA's first secrets}
+\protect\hypertarget{cas-first-secrets}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  Orthogonal slices of \(\chi^2\)
+\item
+  Sum of the eigenvalues \(\times\) sum of the table = \(\chi^2\)
+\end{itemize}
+
+Maybe here is worth presenting the code and some output?
+
+\end{frame}
+
 \begin{frame}{The GSVD}
 \protect\hypertarget{the-gsvd}{}
+
+Simple quick magic Then visualize it (as 3 matrices, then 1 over 2 which
+is just the probs not inverse) Then swing back to Chi2 Then swing to CCA
+Then expand it \& transition to MCA
+
+{[}{[}{[}pick up here and drop most of the stuff below{]}{]}{]}
+
+\end{frame}
+
+\begin{frame}{The GSVD}
+\protect\hypertarget{the-gsvd-1}{}
 
 \begin{itemize}[<+->]
 \tightlist
@@ -879,25 +969,6 @@ MCI & 0.00 & 0.000 & 1.822\\
     The SVD
   \item
     More matrix multiplication (by constraints on vectors)
-  \end{itemize}
-\end{itemize}
-
-\end{frame}
-
-\begin{frame}{The GSVD}
-\protect\hypertarget{the-gsvd-1}{}
-
-\begin{itemize}[<+->]
-\tightlist
-\item
-  Notation
-\item
-  Visualize it in SVD form
-
-  \begin{itemize}[<+->]
-  \tightlist
-  \item
-    That looks familiar\ldots{}
   \end{itemize}
 \end{itemize}
 

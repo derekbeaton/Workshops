@@ -556,7 +556,7 @@ kable( edu_dx_with_sums, "latex", booktabs = T, caption = "Observed probabilites
 
 row_probs <- rowSums(observed_probs)
 col_probs <- colSums(observed_probs)
-expected_probabilities <- round(row_probs %o% col_probs, digits = 3)
+expected_probabilities <- row_probs %o% col_probs
 
 expected_probabilities_with_sums <- round(rbind(cbind(expected_probabilities, row_probs), col_probs), digits = 3)
 
@@ -609,15 +609,58 @@ kable( round(col_constraints, digits = 3), "latex", booktabs = T, caption = "Col
 
 ```
 
+### What CA needs
+
+
+![](../images/CA_matrices.png)
+
+***
+
+* GSVD($\mathbf{R}$, $\mathbf{X}$, $\mathbf{C}$)
+* Uses but generalizes the SVD
+  + Uses row & column weights (constraints)
+* Gives back
+  + Component (factor) scores
+  + Eigenvalues, singular values, & singular vectors
+  + *Generalized* singular vectors
+
+### What we really decompose
+
+![](../images/Deviations_Over.png)
+
+
+*** 
+
+$$\Huge \frac{\mathbf{Z}}{\mathbf{R}^{\frac{1}{2}}\mathbf{C}^{\frac{1}{2}}}$$
+
+***
+
+$$\Huge \frac{(\mathbf{O} - \mathbf{E})}{\mathbf{E}^{\frac{1}{2}}}$$
+
+***
+
+$$\Huge \chi^2 = \sum{\frac{(\mathbf{O} - \mathbf{E})^2}{\mathbf{E}}}$$
+
+### CA's first secrets
+
+* Orthogonal slices of $\chi^2$
+* Sum of the eigenvalues $\times$ sum of the table = $\chi^2$
+
+Maybe here is worth presenting the code and some output?
+
+
 ### The GSVD
 
 Simple quick magic
-Then visualize it
+Then visualize it (as 3 matrices, then 1 over 2 which is just the probs not inverse)
 Then swing back to Chi2
 Then swing to CCA
-Then expand it
+Then expand it & transition to MCA
 
 [[[pick up here and drop most of the stuff below]]]
+
+
+
 
 
 ### The GSVD
@@ -632,11 +675,6 @@ Then expand it
   + The SVD
   + More matrix multiplication (by constraints on vectors)
 
-### The GSVD
-
-* Notation
-* Visualize it in SVD form
-  + That looks familiar...
   
 ### What we did to the data
 
