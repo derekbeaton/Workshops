@@ -161,7 +161,7 @@
 \title{Simple \& Multiple Correspondence Analyses}
 \subtitle{Contingency, categorical, ordinal, continuous and mixed data}
 \author{Derek Beaton}
-\date{October 28, 2019}
+\date{October 29, 2019}
 \institute{Rotman Research Institute}
 
 \begin{document}
@@ -294,7 +294,7 @@
   \begin{itemize}[<+->]
   \tightlist
   \item
-    Robustness, PLS, Networks, Software
+    Robustness, PLS, Software
   \end{itemize}
 \end{itemize}
 
@@ -323,41 +323,6 @@
     Made of bits \& pieces of original measures
   \end{itemize}
 \end{itemize}
-
-\end{frame}
-
-\begin{frame}{Eigen- and singular value decompositions}
-\protect\hypertarget{eigen--and-singular-value-decompositions}{}
-
-\includegraphics{../images/EVD_SVD_1.png}
-
-\end{frame}
-
-\begin{frame}{Eigen- and singular value decompositions}
-\protect\hypertarget{eigen--and-singular-value-decompositions-1}{}
-
-\includegraphics{../images/EVD_SVD_2.png}
-
-\end{frame}
-
-\begin{frame}{Eigen- and singular value decompositions}
-\protect\hypertarget{eigen--and-singular-value-decompositions-2}{}
-
-\includegraphics{../images/EVD_SVD_3.png}
-
-\end{frame}
-
-\begin{frame}{Eigen- and singular value decompositions}
-\protect\hypertarget{eigen--and-singular-value-decompositions-3}{}
-
-\includegraphics{../images/EVD_SVD_4.png}
-
-\end{frame}
-
-\begin{frame}{Eigen- and singular value decompositions}
-\protect\hypertarget{eigen--and-singular-value-decompositions-4}{}
-
-\includegraphics{../images/EVD_SVD_5.png}
 
 \end{frame}
 
@@ -1304,8 +1269,12 @@ Same technique on two \emph{different} tables: same result
 
 \end{frame}
 
-\begin{frame}{Chi-squared}
-\protect\hypertarget{chi-squared}{}
+\begin{frame}{How is this magic possible?!}
+\protect\hypertarget{how-is-this-magic-possible}{}
+
+\end{frame}
+
+\begin{frame}
 
 \includegraphics[width=\textwidth,height=0.75\textheight]{../images/distributions.png}
 
@@ -1313,8 +1282,7 @@ Same technique on two \emph{different} tables: same result
 
 \end{frame}
 
-\begin{frame}{Chi-squared}
-\protect\hypertarget{chi-squared-1}{}
+\begin{frame}
 
 \includegraphics{../images/Chi2.PNG}
 
@@ -1322,11 +1290,170 @@ Same technique on two \emph{different} tables: same result
 
 \end{frame}
 
+\begin{frame}{Conclusions}
+\protect\hypertarget{conclusions}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  There's so much I'm not telling you
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    I wish I could!
+  \end{itemize}
+\item
+  But that's kind of the point
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    CA is a \emph{massive} world
+  \item
+    Solves many problems we typically ignore
+  \end{itemize}
+\item
+  Learn to recognize data types
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Learn what to do with them
+  \end{itemize}
+\end{itemize}
+
+\end{frame}
+
 \hypertarget{some-many-bonuses}{%
 \section{Some many bonuses!}\label{some-many-bonuses}}
 
+\hypertarget{some-cool-stuff}{%
+\subsection{Some cool stuff}\label{some-cool-stuff}}
+
+\begin{frame}{A workshop}
+\protect\hypertarget{a-workshop}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  \url{https://github.com/derekbeaton/Workshops/tree/master/RTC/PCA_MCA_Resampling}
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Extraordinary detail on all of this
+  \end{itemize}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{The Mueller report}
+\protect\hypertarget{the-mueller-report}{}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{../images/vis_components-1.png}
+
+\href{https://github.com/derekbeaton/muellerreport_ca}{See here}
+
+\end{frame}
+
+\begin{frame}{The Marvel Cinematic Universe}
+\protect\hypertarget{the-marvel-cinematic-universe}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  Actually super cool
+\item
+  CA naturally handles networks
+\item
+  \url{https://github.com/derekbeaton/Marvel-Cinematic-Universe_Network/}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{../images/2a_CA_12__NetworkConfig.png}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{../images/3b_CA_78__NoGS_Min2_Network.png}
+
+\end{frame}
+
+\hypertarget{many-mixed-details}{%
+\subsection{Many mixed details}\label{many-mixed-details}}
+
+\begin{frame}{GMCD \& ours}
+\protect\hypertarget{gmcd-ours}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  Generalized minimum covariance determinant
+\item
+  ours (another R package)
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    New package for outliers
+  \item
+    Has some important bells-and-whistles
+  \item
+    \url{https://github.com/derekbeaton/ours}
+  \end{itemize}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{GPLS}
+\protect\hypertarget{gpls}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  First: a PLS for mixed data types
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Including those not discussed here
+  \end{itemize}
+\item
+  Second: unify the ``two-table'' techniques
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    PLS, CCA, RRR/RDA
+  \end{itemize}
+\item
+  Package \& preprint
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    \url{https://github.com/derekbeaton/gpls}
+  \item
+    Github issues where I routinely call myself a ``dummy''
+  \end{itemize}
+\end{itemize}
+
+\end{frame}
+
 \hypertarget{software}{%
 \subsection{Software}\label{software}}
+
+\begin{frame}{ExPosition}
+\protect\hypertarget{exposition}{}
 
 \begin{itemize}[<+->]
 \tightlist
@@ -1342,33 +1469,12 @@ Same technique on two \emph{different} tables: same result
   \item
     Lots of PCA \& CA techniques
   \end{itemize}
-\item
-  factoextra
-
-  \begin{itemize}[<+->]
-  \tightlist
-  \item
-    Awesome ggplot2 visualizers for ExPosition
-  \item
-    \url{http://www.alboukadel.com/} \&
-    \url{http://www.sthda.com/english/}
-  \end{itemize}
-\item
-  ours
-
-  \begin{itemize}[<+->]
-  \tightlist
-  \item
-    Developed here within ONDRI
-  \item
-    New package for outliers
-  \item
-    Has some important bells-and-whistles
-  \end{itemize}
 \end{itemize}
 
-\hypertarget{some-alternatives}{%
-\subsection{Some alternatives}\label{some-alternatives}}
+\end{frame}
+
+\begin{frame}{Some alternatives}
+\protect\hypertarget{some-alternatives}{}
 
 \begin{itemize}[<+->]
 \tightlist
@@ -1383,14 +1489,18 @@ Same technique on two \emph{different} tables: same result
 \item
   psych
 \item
+  factoextra (visualization)
+\item
   So many others
 \end{itemize}
+
+\end{frame}
 
 \hypertarget{some-references}{%
 \section{(Some) References}\label{some-references}}
 
-\begin{frame}{See the reference sections of these}
-\protect\hypertarget{see-the-reference-sections-of-these}{}
+\begin{frame}{Expansions \& data details}
+\protect\hypertarget{expansions-data-details}{}
 
 \begin{itemize}[<+->]
 \item
@@ -1412,9 +1522,9 @@ Same technique on two \emph{different} tables: same result
 
 \begin{itemize}[<+->]
 \item
-  Abdi, H., Guillemot, V., Eslami, A., \& Beaton, D. (2017). Canonical
-  correlation analysis. Encyclopedia of Social Network Analysis and
-  Mining, 1-16.
+  Beaton, D., Fatt, C. R. C., \& Abdi, H. (2014). An ExPosition of
+  multivariate analysis with the singular value decomposition in R.
+  Computational Statistics \& Data Analysis, 72, 176-189.
 \item
   Beaton, D., Dunlop, J., \& Abdi, H. (2016). Partial least squares
   correspondence analysis: A framework to simultaneously analyze
