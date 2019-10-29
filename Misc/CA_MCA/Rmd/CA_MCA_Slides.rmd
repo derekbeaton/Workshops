@@ -49,7 +49,7 @@ library(ggcorrplot)
 library(ggrepel)
 library(kableExtra)
 library(plyr)
-
+library(GPLS)
 
 load(file=paste0(Sys.getenv("ADNI_FOLDER"),"\\","amerge_subset.rda"))
 load(file=paste0(Sys.getenv("ADNI_FOLDER"),"\\","variable_type_map.rda"))
@@ -63,6 +63,11 @@ amerge_subset$PTEDUCAT <- mapvalues(amerge_subset$PTEDUCAT,from = c(16),c("B"))
 amerge_subset$PTEDUCAT <- mapvalues(amerge_subset$PTEDUCAT,from = c(17,18,19),c("B+","B+","B+"))
 amerge_subset$PTEDUCAT <- mapvalues(amerge_subset$PTEDUCAT,from = c(20),c("ADV"))
 
+
+find_cell <- function(table, row, col, name="core-fg"){
+  l <- table$layout
+  which(l$t==row & l$l==col & l$name==name)
+}
 
 ```
 
@@ -87,25 +92,23 @@ amerge_subset$PTEDUCAT <- mapvalues(amerge_subset$PTEDUCAT,from = c(20),c("ADV")
 * What do we do with all of these in a PCA like way?
 * Some are *very* difficult and effectively ignored
   + We won't do that!
+* See SS Steven's typology: https://en.wikipedia.org/wiki/Level_of_measurement
 
-### Motivation for today
+### Motivation & Objectives
 
 * Not everything is a number
-* Sometimes numbers aren't numbers!
+  + Sometimes numbers aren't numbers!
 * We need to recognize when this happens
   + And know what to do
-
-### Typology
-
-* SS Stevens (not a boat!)
-* Levels of measurement
-* Excellent examples: https://en.wikipedia.org/wiki/Level_of_measurement
-
+* Introduce CA, MCA, and tricks
+  + Leave you overwhelmed, but knowing that
+  + PCA is sometimes the most wrong approach
+  + CA & MCA are suitably less wrong
 
 ### Where to find everything
 
 * Generally: https://github.com/derekbeaton/workshops
-* Today: 
+* Today: https://github.com/derekbeaton/Workshops/tree/master/Misc/CA_MCA
 
 ### Overview
 
@@ -117,10 +120,7 @@ amerge_subset$PTEDUCAT <- mapvalues(amerge_subset$PTEDUCAT,from = c(20),c("ADV")
   + generalizes CA (amongst many other things)
   + and how to handle various data types
 * A whole bunch of bonuses
-  + Robustness
-  + PLS
-  + Networks
-  + Software
+  + Robustness, PLS, Networks, Software
 
 # Revisting PCA
 
@@ -204,6 +204,7 @@ pca_vars <- fviz_pca_var(edu_dx_pca) +
 ```{r}
 grid.arrange(pca_rows, textGrob(""), nrow=1)
 ```
+
 ***
 
 ```{r}
@@ -340,11 +341,9 @@ kable(edu_dx_with_sums, "latex", booktabs = T) %>%
 * Initially: *visualize contingency tables* (**a la PCA**, factor analyses)
   + Text (corpus) of philosphy, biblical passages, literature
   + From Benzecri (1964) & Escofier (1965)
-* Fully developed by Escofier (1969)
+  + Fully developed by Escofier (1969)
 * Explosion of the technique in France
   + Across virtually every field (except psychology and neuroscience)
-* The magic of CA relies on the magic of $\chi^2$
-  + And there's some *crazy* magic here
 
 ### History
 
@@ -699,13 +698,28 @@ r = \frac{cov(\mathbf{x},\mathbf{y})}{\sigma_{\mathbf{x}} \times \sigma_{\mathbf
 \end{center}
 
 ***
-
-```{r show_nominal}
+```{r show_nominal_1}
 
 EDU_nom <- makeNominalData(as.matrix(EDU))
   colnames(EDU_nom) <- gsub("\\.","", colnames(EDU_nom))
 DX_nom <- makeNominalData(as.matrix(DX))
   colnames(DX_nom) <- gsub("\\.","", colnames(DX_nom))
+
+cat_mat <- cbind(amerge_subset$PTEDUCAT, amerge_subset$DX)[558:562,]
+colnames(cat_mat) <- c("EDU","DX")
+  
+  grid.arrange(
+    tableGrob(cat_mat,theme=ttheme_default(base_size=18)),
+    tableGrob(EDU_nom[558:562,],theme=ttheme_default(base_size=18)),
+    tableGrob(DX_nom[558:562,],theme=ttheme_default(base_size=18)),
+nrow = 1)
+  
+
+```
+
+***
+
+```{r show_nominal_2}
 
 
 grid.arrange(
@@ -716,14 +730,69 @@ nrow = 1)
   
 ```
 
+***
+
+```{r show_nominal_3}
+
+grid.arrange(
+  textGrob(""),
+  tableGrob(EDU_nom[558:562,],theme=ttheme_default(base_size=18)),
+  tableGrob(DX_nom[558:562,],theme=ttheme_default(base_size=18)),
+nrow = 1)
+  
+```
+
+### How to analyze nominal data?
+
+* "coding categorical variables with the indicator matrix of dummy variables and considering them as Gaussian, for instance, is almost a crime." in *Jan de Leeuw and the French School of Data Analysis* (Husson, Josse, Saporta)
+* We *could* perform PCA on nominal data, but what would we get?
+
+
+***
+
+```{r crimes}
+  cor_disj_tab <- as.data.frame(round(cor(cbind(EDU_nom, DX_nom)),digits=3))
+  cross_disj_tab <- as.data.frame(crossprod(cbind(EDU_nom, DX_nom)))
+
+cor_grob <- tableGrob(cor_disj_tab, theme=ttheme_default(base_size=14))
+cross_grob <- tableGrob(cross_disj_tab, theme=ttheme_default(base_size=14))
+
+  cor_grob$grobs[find_cell(cor_grob, 8, 7, "core-bg")][[1]][["gp"]] <-
+  cor_grob$grobs[find_cell(cor_grob, 7, 3, "core-bg")][[1]][["gp"]] <-
+  cor_grob$grobs[find_cell(cor_grob, 5, 4, "core-bg")][[1]][["gp"]] <- 
+  
+  gpar(fill="darkolivegreen1", col = "darkolivegreen4", lwd=5, fontsize=15, fontface="bold") ->
+  
+  cross_grob$grobs[find_cell(cross_grob, 5, 4, "core-bg")][[1]][["gp"]] ->
+  cross_grob$grobs[find_cell(cross_grob, 7, 3, "core-bg")][[1]][["gp"]] ->
+  cross_grob$grobs[find_cell(cross_grob, 8, 7, "core-bg")][[1]][["gp"]]
+
+tGrob <- textGrob("")
+layout_side_by_side <- rbind(
+  c(2,3,3,3,3,4), 
+  c(2,3,3,3,3,4), 
+  c(5,6,6,6,6,7),
+  c(5,6,6,6,6,7),
+  c(8,8,8,8,8,8)) - 1
+
+grid.arrange(
+             tGrob,
+             cor_grob,
+             tGrob,
+             tGrob,
+             cross_grob,
+             tGrob,
+             tGrob, layout_matrix = layout_side_by_side)
+```
+
 # Multiple correspondence analysis
 
 
 ### Multiple correspondence analysis
 
 * Two perspectives:
-  + PCA for nominal data
-  + Generalized CA for multi-way contingency tables
+  + *Weighted* PCA for nominal data
+  + Generalized CA for N-way contingency tables
 * So much more than nominal
 
 
@@ -735,7 +804,7 @@ grid.arrange(tableGrob(cbind(EDU_nom, DX_nom)[558:562,],theme=ttheme_default(bas
 
 ```
 
-This is the kind of table we're analyzing
+This is the kind of table we're analyzing. It has $N = 665$.
 
 ```{r mca}
 
@@ -815,26 +884,395 @@ grid.arrange(ca_cols, mca_cols, nrow=1)
 ```{r show_nom_and_contingency}
 
 grid.arrange(
-  tableGrob(edu_dx_table, theme=ttheme_default(base_size=18)),
-  textGrob(""),
-  tableGrob(cbind(EDU_nom, DX_nom)[558:562,],theme=ttheme_default(base_size=18)),
+  tableGrob(edu_dx_table, theme=ttheme_default(base_size=15)),
+  tableGrob(cbind(EDU_nom, DX_nom)[558:562,],theme=ttheme_default(base_size=15)),
   nrow = 1)
 
 ```
 
 Same technique on two *different* tables: same result
 
-### Chi-squared
+### Scaling up
 
-![](../images/distributions.png)
+* Let's bring in ApoE
+* It has 3 levels: 0 copy, 1 copy, 2 copies
+
+***
+
+```{r new_cat_mat_0}
+cat_mat <- cbind(amerge_subset$PTEDUCAT, amerge_subset$DX, amerge_subset$APOE4)[558:562,]
+colnames(cat_mat) <- c("EDU","DX","APOE")
+
+EDU_nom <- makeNominalData(as.matrix(amerge_subset$PTEDUCAT))
+  colnames(EDU_nom) <- gsub("\\.","", colnames(EDU_nom))
+DX_nom <- makeNominalData(as.matrix(amerge_subset$DX))
+  colnames(DX_nom) <- gsub("\\.","", colnames(DX_nom))
+APOE_nom <- makeNominalData(as.matrix(amerge_subset$APOE4))
+  colnames(APOE_nom) <- gsub("\\.","", colnames(APOE_nom))  
+  
+crisp_small_table <- cbind(EDU_nom, DX_nom, APOE_nom)[558:562,]
+crisp_grob <- tableGrob(crisp_small_table,theme=ttheme_default(base_size=14))
+grid.arrange(tableGrob(cat_mat,theme=ttheme_default(base_size=14)),
+  crisp_grob,
+  nrow=1)
+
+```
+
+
+```{r mca_scaleup}
+
+edu_dx_apoe_cat <- cbind(amerge_subset$DX, amerge_subset$PTEDUCAT, amerge_subset$APOE4)
+edu_dx_apoe_mca <- epMCA(edu_dx_apoe_cat, graphs = F)
+
+mca_rows <- fviz_mca_ind(edu_dx_apoe_mca, col.ind = "grey80") +
+  coord_cartesian(xlim=c(edu_dx_apoe_mca$Plotting.Data$constraints$minx, edu_dx_apoe_mca$Plotting.Data$constraints$maxx), ylim = c(edu_dx_apoe_mca$Plotting.Data$constraints$miny, edu_dx_apoe_mca$Plotting.Data$constraints$maxy)) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank()) +
+  xlab("Component 1") +
+  ylab("Component 2") +
+  ggtitle("MCA:\nRow component scores")
+
+
+mca_cols <- fviz_mca_var(edu_dx_apoe_mca, col.var = "mediumorchid4") +
+  coord_cartesian(xlim=c(edu_dx_apoe_mca$Plotting.Data$constraints$minx, edu_dx_apoe_mca$Plotting.Data$constraints$maxx), ylim = c(edu_dx_apoe_mca$Plotting.Data$constraints$miny, edu_dx_apoe_mca$Plotting.Data$constraints$maxy)) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank()) +
+  xlab("Component 1") +
+  ylab("Component 2") +
+  ggtitle("MCA:\nColumn component scores")
+
+```
+
+***
+
+```{r}
+grid.arrange(mca_rows, textGrob(""), nrow=1)
+```
+
+***
+
+```{r}
+grid.arrange(textGrob(""), mca_cols, nrow=1)
+```
+
+***
+
+```{r}
+grid.arrange(mca_rows, mca_cols, nrow=1)
+```
+
+
+### Crisp vs. fuzzy coding
+
+```{r new_cat_mat}
+cat_mat <- cbind(amerge_subset$PTEDUCAT, amerge_subset$DX, amerge_subset$APOE4)[558:562,]
+colnames(cat_mat) <- c("EDU","DX","APOE")
+
+EDU_nom <- makeNominalData(as.matrix(amerge_subset$PTEDUCAT))
+  colnames(EDU_nom) <- gsub("\\.","", colnames(EDU_nom))
+DX_nom <- makeNominalData(as.matrix(amerge_subset$DX))
+  colnames(DX_nom) <- gsub("\\.","", colnames(DX_nom))
+APOE_nom <- makeNominalData(as.matrix(amerge_subset$APOE4))
+  colnames(APOE_nom) <- gsub("\\.","", colnames(APOE_nom))  
+  
+```
+
+
+```{r show_crisp}
+
+crisp_small_table <- cbind(EDU_nom, DX_nom, APOE_nom)[558:562,]
+crisp_grob <- tableGrob(crisp_small_table,theme=ttheme_default(base_size=14))
+
+  crisp_grob$grobs[find_cell(crisp_grob, 2, 1, "core-bg")][[1]][["gp"]] <-
+  crisp_grob$grobs[find_cell(crisp_grob, 3, 1, "core-bg")][[1]][["gp"]] <-
+  crisp_grob$grobs[find_cell(crisp_grob, 4, 2, "core-bg")][[1]][["gp"]] <-  
+  crisp_grob$grobs[find_cell(crisp_grob, 5, 5, "core-bg")][[1]][["gp"]] <-
+  crisp_grob$grobs[find_cell(crisp_grob, 6, 2, "core-bg")][[1]][["gp"]] <-
+  gpar(fill="steelblue1", col="steelblue4", lwd=5, fontsize=15, fontface="bold")
+  
+  crisp_grob$grobs[find_cell(crisp_grob, 2, 8, "core-bg")][[1]][["gp"]] <-
+  crisp_grob$grobs[find_cell(crisp_grob, 3, 6, "core-bg")][[1]][["gp"]] <-
+  crisp_grob$grobs[find_cell(crisp_grob, 4, 8, "core-bg")][[1]][["gp"]] <-  
+  crisp_grob$grobs[find_cell(crisp_grob, 5, 8, "core-bg")][[1]][["gp"]] <-
+  crisp_grob$grobs[find_cell(crisp_grob, 6, 7, "core-bg")][[1]][["gp"]] <-
+  gpar(fill="firebrick1", col="firebrick4", lwd=5, fontsize=15, fontface="bold")
+  
+  crisp_grob$grobs[find_cell(crisp_grob, 2, 11, "core-bg")][[1]][["gp"]] <-
+  crisp_grob$grobs[find_cell(crisp_grob, 3, 9, "core-bg")][[1]][["gp"]] <-
+  crisp_grob$grobs[find_cell(crisp_grob, 4, 11, "core-bg")][[1]][["gp"]] <-  
+  crisp_grob$grobs[find_cell(crisp_grob, 5, 11, "core-bg")][[1]][["gp"]] <-
+  crisp_grob$grobs[find_cell(crisp_grob, 6, 9, "core-bg")][[1]][["gp"]] <-
+  gpar(fill="yellow", col="goldenrod", lwd=5, fontsize=15, fontface="bold")  
+
+grid.arrange(tableGrob(cat_mat,theme=ttheme_default(base_size=14)),
+  crisp_grob,
+  nrow=1)
+
+```
+
+***
+
+```{r show_fuzzy}
+
+fuzzy_small_table <- crisp_small_table
+fuzzy_small_table[2,c(6,8)] <- 0.5
+fuzzy_grob <- tableGrob(fuzzy_small_table,theme=ttheme_default(base_size=14))
+  
+  fuzzy_grob$grobs[find_cell(fuzzy_grob, 2, 1, "core-bg")][[1]][["gp"]] <-
+  fuzzy_grob$grobs[find_cell(fuzzy_grob, 3, 1, "core-bg")][[1]][["gp"]] <-
+  fuzzy_grob$grobs[find_cell(fuzzy_grob, 4, 2, "core-bg")][[1]][["gp"]] <-  
+  fuzzy_grob$grobs[find_cell(fuzzy_grob, 5, 5, "core-bg")][[1]][["gp"]] <-
+  fuzzy_grob$grobs[find_cell(fuzzy_grob, 6, 2, "core-bg")][[1]][["gp"]] <-
+  gpar(fill="steelblue1", col="steelblue4", lwd=5, fontsize=15, fontface="bold")
+  
+  fuzzy_grob$grobs[find_cell(fuzzy_grob, 2, 8, "core-bg")][[1]][["gp"]] <-
+  fuzzy_grob$grobs[find_cell(fuzzy_grob, 4, 8, "core-bg")][[1]][["gp"]] <-  
+  fuzzy_grob$grobs[find_cell(fuzzy_grob, 5, 8, "core-bg")][[1]][["gp"]] <-
+  fuzzy_grob$grobs[find_cell(fuzzy_grob, 6, 7, "core-bg")][[1]][["gp"]] <-
+  gpar(fill="firebrick1", col="firebrick4", lwd=5, fontsize=15, fontface="bold")  
+  
+  fuzzy_grob$grobs[find_cell(fuzzy_grob, 3, 6, "core-bg")][[1]][["gp"]] <-
+  fuzzy_grob$grobs[find_cell(fuzzy_grob, 3, 8, "core-bg")][[1]][["gp"]] <-  
+  gpar(fill="darksalmon", col="firebrick4", lwd=5, fontsize=15, fontface="bold")  
+  
+fuzzy_grob$grobs[find_cell(fuzzy_grob, 2, 11, "core-bg")][[1]][["gp"]] <-
+  fuzzy_grob$grobs[find_cell(fuzzy_grob, 3, 9, "core-bg")][[1]][["gp"]] <-
+  fuzzy_grob$grobs[find_cell(fuzzy_grob, 4, 11, "core-bg")][[1]][["gp"]] <-  
+  fuzzy_grob$grobs[find_cell(fuzzy_grob, 5, 11, "core-bg")][[1]][["gp"]] <-
+  fuzzy_grob$grobs[find_cell(fuzzy_grob, 6, 9, "core-bg")][[1]][["gp"]] <-
+  gpar(fill="yellow", col="goldenrod", lwd=5, fontsize=15, fontface="bold")    
+  
+grid.arrange(tableGrob(cat_mat,theme=ttheme_default(base_size=14)),
+  fuzzy_grob,
+  nrow = 1)
+
+```
+
+### Our first fuzzy friend
+
+\begin{center}
+\includegraphics{../images/ord_copy.jpg}
+\end{center}
+
+***
+
+* Modified Hachinksi
+  + 0, 1, 2, 3 (in these data)
+* Specific form of fuzzy coding: "bipolar"
+
+***
+
+```{r fake_hachinksi}
+
+fake_hach <- as.matrix(c(0,3,1,2,1))
+colnames(fake_hach) <- "HACH"
+
+therm_fake_hach <- GPLS::thermometer_coding(fake_hach)
+
+grid.arrange(tableGrob(fake_hach,theme=ttheme_default(base_size=22)),
+             tableGrob(round(therm_fake_hach,digits = 3),theme=ttheme_default(base_size=22)),
+             nrow=1)
+
+```
+
+***
+
+```{r crisp_fuzzy_friends, warning=FALSE}
+
+cat_therm_mat <- cbind(amerge_subset$PTEDUCAT, amerge_subset$DX, amerge_subset$APOE4, amerge_subset$HMSCORE)[558:562,]
+colnames(cat_therm_mat) <- c("EDU","DX","APOE","HACH")
+
+EDU_nom <- makeNominalData(as.matrix(amerge_subset$PTEDUCAT))
+  colnames(EDU_nom) <- gsub("\\.","", colnames(EDU_nom))
+DX_nom <- makeNominalData(as.matrix(amerge_subset$DX))
+  colnames(DX_nom) <- gsub("\\.","", colnames(DX_nom))
+APOE_nom <- makeNominalData(as.matrix(amerge_subset$APOE4))
+  colnames(APOE_nom) <- gsub("\\.","", colnames(APOE_nom))  
+HACH_therm <- GPLS::thermometer_coding(as.matrix(amerge_subset$HMSCORE))
+  colnames(HACH_therm) <- c("HACH-","HACH+")
+
+crispy_fuzzy_table <- cbind(EDU_nom, DX_nom, APOE_nom, HACH_therm)[558:562,]
+
+tGrob <- textGrob("")
+layout_side_by_side <- rbind(
+  c(2,3,3,3,3,4), 
+  c(2,3,3,3,3,4), 
+  c(5,6,6,6,6,7),
+  c(5,6,6,6,6,7),
+  c(8,8,8,8,8,8)) - 1
+
+grid.arrange(
+             tGrob,
+             tableGrob(cat_therm_mat,theme=ttheme_default(base_size=18)),
+             tGrob,
+             tGrob,
+             tableGrob(round(crispy_fuzzy_table,digits = 3),theme=ttheme_default(base_size=18)),
+             tGrob,
+             tGrob, layout_matrix = layout_side_by_side)
+
+```
+
+
+```{r mca_mixed_1}
+
+edu_dx_apoe_hach_cat <- cbind(EDU_nom, DX_nom, APOE_nom, HACH_therm)
+edu_dx_apoe_hach_mca <- epCA(edu_dx_apoe_hach_cat, graphs = F)
+
+mca_rows <- fviz_ca_row(edu_dx_apoe_hach_mca, col.row = "grey80") +
+  coord_cartesian(xlim=c(edu_dx_apoe_hach_mca$Plotting.Data$constraints$minx, edu_dx_apoe_hach_mca$Plotting.Data$constraints$maxx), ylim = c(edu_dx_apoe_hach_mca$Plotting.Data$constraints$miny, edu_dx_apoe_hach_mca$Plotting.Data$constraints$maxy)) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank()) +
+  xlab("Component 1") +
+  ylab("Component 2") +
+  ggtitle("MCA:\nRow component scores")
+
+
+mca_cols <- fviz_ca_col(edu_dx_apoe_hach_mca, col.col = "mediumorchid4") +
+  coord_cartesian(xlim=c(edu_dx_apoe_hach_mca$Plotting.Data$constraints$minx, edu_dx_apoe_hach_mca$Plotting.Data$constraints$maxx), ylim = c(edu_dx_apoe_hach_mca$Plotting.Data$constraints$miny, edu_dx_apoe_hach_mca$Plotting.Data$constraints$maxy)) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank()) +
+  xlab("Component 1") +
+  ylab("Component 2") +
+  ggtitle("MCA:\nColumn component scores")
+
+```
+
+***
+
+```{r}
+grid.arrange(mca_rows, mca_cols, nrow=1)
+```
+
+### Our second fuzzy friend
+
+\begin{center}
+\includegraphics{../images/cont_copy.jpg}
+\end{center}
+
+
+***
+
+* Age: 55.00 - 89.60
+  + But we need to scale it (Z-score)
+* We use two columns again:
+  + $\frac{(1 - x)}{2}$ & + $\frac{(1 + x)}{2}$
+
+***
+
+```{r fake_age, warning=FALSE}
+
+age_scaled_age <- as.matrix(cbind(amerge_subset$AGE, scale(amerge_subset$AGE)))
+colnames(age_scaled_age) <- c("AGE","AGE (Z)")
+
+fuzzy_age <- GPLS::escofier_coding(as.matrix(age_scaled_age[,2]), center = F, scale = F)
+colnames(fuzzy_age) <- c("AGE-","AGE+")
+
+grid.arrange(tableGrob(round(age_scaled_age, digits=3)[558:562,],theme=ttheme_default(base_size=22)),
+             tableGrob(round(fuzzy_age[558:562,],digits = 3),theme=ttheme_default(base_size=22)),
+             nrow=1)
+
+```
+
+***
+
+```{r crisp_fuzzy_x2_friends, warning=FALSE}
+
+cat_therm_cont_mat <- cbind(amerge_subset$PTEDUCAT, amerge_subset$DX, amerge_subset$APOE4, amerge_subset$HMSCORE, amerge_subset$AGE)[558:562,]
+colnames(cat_therm_cont_mat) <- c("EDU","DX","APOE","HACH","AGE")
+
+EDU_nom <- makeNominalData(as.matrix(amerge_subset$PTEDUCAT))
+  colnames(EDU_nom) <- gsub("\\.","", colnames(EDU_nom))
+DX_nom <- makeNominalData(as.matrix(amerge_subset$DX))
+  colnames(DX_nom) <- gsub("\\.","", colnames(DX_nom))
+APOE_nom <- makeNominalData(as.matrix(amerge_subset$APOE4))
+  colnames(APOE_nom) <- gsub("\\.","", colnames(APOE_nom))  
+HACH_therm <- GPLS::thermometer_coding(as.matrix(amerge_subset$HMSCORE))
+  colnames(HACH_therm) <- c("HACH-","HACH+")
+
+crispy_fuzzy_table <- cbind(EDU_nom, DX_nom, APOE_nom, HACH_therm, fuzzy_age)[558:562,]
+
+tGrob <- textGrob("")
+layout_side_by_side <- rbind(
+  c(2,3,3,3,3,4), 
+  c(2,3,3,3,3,4), 
+  c(5,6,6,6,6,7),
+  c(5,6,6,6,6,7),
+  c(8,8,8,8,8,8)) - 1
+
+grid.arrange(
+             tGrob,
+             tableGrob(cat_therm_cont_mat,theme=ttheme_default(base_size=18)),
+             tGrob,
+             tGrob,
+             tableGrob(round(crispy_fuzzy_table,digits = 3),theme=ttheme_default(base_size=18)),
+             tGrob,
+             tGrob, layout_matrix = layout_side_by_side)
+
+```
+
+***
+
+```{r mca_mixed_2}
+
+edu_dx_apoe_hach_age_cat <- cbind(EDU_nom, DX_nom, APOE_nom, HACH_therm, fuzzy_age)
+edu_dx_apoe_hach_age_mca <- epCA(edu_dx_apoe_hach_age_cat, graphs = F)
+
+mca_rows <- fviz_ca_row(edu_dx_apoe_hach_age_mca, col.row = "grey80") +
+  coord_cartesian(xlim=c(edu_dx_apoe_hach_age_mca$Plotting.Data$constraints$minx, edu_dx_apoe_hach_age_mca$Plotting.Data$constraints$maxx), ylim = c(edu_dx_apoe_hach_age_mca$Plotting.Data$constraints$miny, edu_dx_apoe_hach_age_mca$Plotting.Data$constraints$maxy)) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank()) +
+  xlab("Component 1") +
+  ylab("Component 2") +
+  ggtitle("MCA:\nRow component scores")
+
+
+mca_cols <- fviz_ca_col(edu_dx_apoe_hach_age_mca, col.col = "mediumorchid4") +
+  coord_cartesian(xlim=c(edu_dx_apoe_hach_age_mca$Plotting.Data$constraints$minx, edu_dx_apoe_hach_age_mca$Plotting.Data$constraints$maxx), ylim = c(edu_dx_apoe_hach_age_mca$Plotting.Data$constraints$miny, edu_dx_apoe_hach_age_mca$Plotting.Data$constraints$maxy)) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank()) +
+  xlab("Component 1") +
+  ylab("Component 2") +
+  ggtitle("MCA:\nColumn component scores")
+
+
+grid.arrange(mca_rows, mca_cols, nrow=1)
+
+```
+
+### How is this magic possible?!
+
+***
+
+![](../images/distributions.png){width=75%, height=75%}
 
 [See here](http://www.math.wm.edu/~leemis/chart/UDR/UDR.html)
 
-### Chi-squared
+
+***
 
 ![](../images/Chi2.PNG)
 
 [See here](http://www.math.wm.edu/~leemis/chart/UDR/UDR.html)
+
+
 
 
 # Some many bonuses!

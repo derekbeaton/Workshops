@@ -203,19 +203,26 @@
   \item
     We won't do that!
   \end{itemize}
+\item
+  See SS Steven's typology:
+  \url{https://en.wikipedia.org/wiki/Level_of_measurement}
 \end{itemize}
 
 \end{frame}
 
-\begin{frame}{Motivation for today}
-\protect\hypertarget{motivation-for-today}{}
+\begin{frame}{Motivation \& Objectives}
+\protect\hypertarget{motivation-objectives}{}
 
 \begin{itemize}[<+->]
 \tightlist
 \item
   Not everything is a number
-\item
-  Sometimes numbers aren't numbers!
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Sometimes numbers aren't numbers!
+  \end{itemize}
 \item
   We need to recognize when this happens
 
@@ -224,22 +231,18 @@
   \item
     And know what to do
   \end{itemize}
-\end{itemize}
-
-\end{frame}
-
-\begin{frame}{Typology}
-\protect\hypertarget{typology}{}
-
-\begin{itemize}[<+->]
-\tightlist
 \item
-  SS Stevens (not a boat!)
-\item
-  Levels of measurement
-\item
-  Excellent examples:
-  \url{https://en.wikipedia.org/wiki/Level_of_measurement}
+  Introduce CA, MCA, and tricks
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Leave you overwhelmed, but knowing that
+  \item
+    PCA is sometimes the most wrong approach
+  \item
+    CA \& MCA are suitably less wrong
+  \end{itemize}
 \end{itemize}
 
 \end{frame}
@@ -253,6 +256,7 @@
   Generally: \url{https://github.com/derekbeaton/workshops}
 \item
   Today:
+  \url{https://github.com/derekbeaton/Workshops/tree/master/Misc/CA_MCA}
 \end{itemize}
 
 \end{frame}
@@ -290,13 +294,7 @@
   \begin{itemize}[<+->]
   \tightlist
   \item
-    Robustness
-  \item
-    PLS
-  \item
-    Networks
-  \item
-    Software
+    Robustness, PLS, Networks, Software
   \end{itemize}
 \end{itemize}
 
@@ -405,7 +403,10 @@ HS+ & 39 & 9 & 77\\
 \begin{frame}
 
 \includegraphics{CA_MCA_Slides_files/figure-beamer/unnamed-chunk-1-1.pdf}
-***
+
+\end{frame}
+
+\begin{frame}
 
 \includegraphics{CA_MCA_Slides_files/figure-beamer/unnamed-chunk-2-1.pdf}
 
@@ -578,9 +579,9 @@ analysis}\label{simple-correspondence-analysis}}
     Text (corpus) of philosphy, biblical passages, literature
   \item
     From Benzecri (1964) \& Escofier (1965)
+  \item
+    Fully developed by Escofier (1969)
   \end{itemize}
-\item
-  Fully developed by Escofier (1969)
 \item
   Explosion of the technique in France
 
@@ -588,14 +589,6 @@ analysis}\label{simple-correspondence-analysis}}
   \tightlist
   \item
     Across virtually every field (except psychology and neuroscience)
-  \end{itemize}
-\item
-  The magic of CA relies on the magic of \(\chi^2\)
-
-  \begin{itemize}[<+->]
-  \tightlist
-  \item
-    And there's some \emph{crazy} magic here
   \end{itemize}
 \end{itemize}
 
@@ -1047,7 +1040,41 @@ r = \frac{cov(\mathbf{x},\mathbf{y})}{\sigma_{\mathbf{x}} \times \sigma_{\mathbf
 
 \begin{frame}
 
-\includegraphics{CA_MCA_Slides_files/figure-beamer/show_nominal-1.pdf}
+\includegraphics{CA_MCA_Slides_files/figure-beamer/show_nominal_1-1.pdf}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{CA_MCA_Slides_files/figure-beamer/show_nominal_2-1.pdf}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{CA_MCA_Slides_files/figure-beamer/show_nominal_3-1.pdf}
+
+\end{frame}
+
+\begin{frame}{How to analyze nominal data?}
+\protect\hypertarget{how-to-analyze-nominal-data}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  ``coding categorical variables with the indicator matrix of dummy
+  variables and considering them as Gaussian, for instance, is almost a
+  crime.'' in \emph{Jan de Leeuw and the French School of Data Analysis}
+  (Husson, Josse, Saporta)
+\item
+  We \emph{could} perform PCA on nominal data, but what would we get?
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{CA_MCA_Slides_files/figure-beamer/crimes-1.pdf}
 
 \end{frame}
 
@@ -1066,9 +1093,9 @@ analysis}\label{multiple-correspondence-analysis}}
   \begin{itemize}[<+->]
   \tightlist
   \item
-    PCA for nominal data
+    \emph{Weighted} PCA for nominal data
   \item
-    Generalized CA for multi-way contingency tables
+    Generalized CA for N-way contingency tables
   \end{itemize}
 \item
   So much more than nominal
@@ -1081,7 +1108,7 @@ analysis}\label{multiple-correspondence-analysis}}
 
 \includegraphics{CA_MCA_Slides_files/figure-beamer/show_nom-1.pdf}
 
-This is the kind of table we're analyzing
+This is the kind of table we're analyzing. It has \(N = 665\).
 
 \end{frame}
 
@@ -1131,10 +1158,156 @@ Same technique on two \emph{different} tables: same result
 
 \end{frame}
 
+\begin{frame}{Scaling up}
+\protect\hypertarget{scaling-up}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  Let's bring in ApoE
+\item
+  It has 3 levels: 0 copy, 1 copy, 2 copies
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{CA_MCA_Slides_files/figure-beamer/new_cat_mat_0-1.pdf}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{CA_MCA_Slides_files/figure-beamer/unnamed-chunk-11-1.pdf}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{CA_MCA_Slides_files/figure-beamer/unnamed-chunk-12-1.pdf}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{CA_MCA_Slides_files/figure-beamer/unnamed-chunk-13-1.pdf}
+
+\end{frame}
+
+\begin{frame}{Crisp vs.~fuzzy coding}
+\protect\hypertarget{crisp-vs.-fuzzy-coding}{}
+
+\includegraphics{CA_MCA_Slides_files/figure-beamer/show_crisp-1.pdf}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{CA_MCA_Slides_files/figure-beamer/show_fuzzy-1.pdf}
+
+\end{frame}
+
+\begin{frame}{Our first fuzzy friend}
+\protect\hypertarget{our-first-fuzzy-friend}{}
+
+\begin{center}
+\includegraphics{../images/ord_copy.jpg}
+\end{center}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  Modified Hachinksi
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    0, 1, 2, 3 (in these data)
+  \end{itemize}
+\item
+  Specific form of fuzzy coding: ``bipolar''
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{CA_MCA_Slides_files/figure-beamer/fake_hachinksi-1.pdf}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{CA_MCA_Slides_files/figure-beamer/crisp_fuzzy_friends-1.pdf}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{CA_MCA_Slides_files/figure-beamer/unnamed-chunk-14-1.pdf}
+
+\end{frame}
+
+\begin{frame}{Our second fuzzy friend}
+\protect\hypertarget{our-second-fuzzy-friend}{}
+
+\begin{center}
+\includegraphics{../images/cont_copy.jpg}
+\end{center}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  Age: 55.00 - 89.60
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    But we need to scale it (Z-score)
+  \end{itemize}
+\item
+  We use two columns again:
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    \(\frac{(1 - x)}{2}\) \& + \(\frac{(1 + x)}{2}\)
+  \end{itemize}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{CA_MCA_Slides_files/figure-beamer/fake_age-1.pdf}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{CA_MCA_Slides_files/figure-beamer/crisp_fuzzy_x2_friends-1.pdf}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{CA_MCA_Slides_files/figure-beamer/mca_mixed_2-1.pdf}
+
+\end{frame}
+
 \begin{frame}{Chi-squared}
 \protect\hypertarget{chi-squared}{}
 
-\includegraphics{../images/distributions.png}
+\includegraphics[width=\textwidth,height=0.75\textheight]{../images/distributions.png}
 
 \href{http://www.math.wm.edu/~leemis/chart/UDR/UDR.html}{See here}
 
