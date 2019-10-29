@@ -257,6 +257,14 @@
 \item
   Today:
   \url{https://github.com/derekbeaton/Workshops/tree/master/Misc/CA_MCA}
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Built off of previous workshop
+  \item
+    Alzheimer's Disease Neuroimaging Initiative (ADNI) data
+  \end{itemize}
 \end{itemize}
 
 \end{frame}
@@ -363,10 +371,6 @@ HS+ & 39 & 9 & 77\\
 
 \begin{frame}
 
-\end{frame}
-
-\begin{frame}
-
 \includegraphics{CA_MCA_Slides_files/figure-beamer/unnamed-chunk-1-1.pdf}
 
 \end{frame}
@@ -423,6 +427,10 @@ HS+ & 39 & 9 & 77 & 125\\
 
 \begin{frame}{Let's try something different!}
 \protect\hypertarget{lets-try-something-different}{}
+
+\end{frame}
+
+\begin{frame}
 
 \begin{table}[H]
 \centering
@@ -611,6 +619,10 @@ analysis}\label{simple-correspondence-analysis}}
 \begin{frame}{We're diving in}
 \protect\hypertarget{were-diving-in}{}
 
+\end{frame}
+
+\begin{frame}
+
 \begin{table}[H]
 \centering
 \begin{tabular}{>{\em}lrrr}
@@ -685,8 +697,6 @@ MCI & 54 & 75 & 113 & 46 & 77\\
 \bottomrule
 \end{tabular}
 \end{table}
-
-What if we perform CA on this?
 
 \end{frame}
 
@@ -890,7 +900,8 @@ MCI & 0.00 & 0.000 & 1.822\\
 
 \end{frame}
 
-\begin{frame}
+\begin{frame}{What we really decompose}
+\protect\hypertarget{what-we-really-decompose-1}{}
 
 \includegraphics{../images/Deviations_Over.png}
 
@@ -1018,6 +1029,7 @@ r = \frac{cov(\mathbf{x},\mathbf{y})}{\sigma_{\mathbf{x}} \times \sigma_{\mathbf
 \begin{frame}
 
 \includegraphics{CA_MCA_Slides_files/figure-beamer/show_nominal_3-1.pdf}
+How to analyze this \emph{on its own}?
 
 \end{frame}
 
@@ -1092,7 +1104,6 @@ This is the kind of table we're analyzing. It has \(N = 665\).
 \begin{frame}
 
 \includegraphics{CA_MCA_Slides_files/figure-beamer/unnamed-chunk-7-1.pdf}
-Does any of this look familiar?
 
 \end{frame}
 
@@ -1167,7 +1178,8 @@ Same technique on two \emph{different} tables: same result
 
 \end{frame}
 
-\begin{frame}
+\begin{frame}{Crisp vs.~fuzzy coding}
+\protect\hypertarget{crisp-vs.-fuzzy-coding-1}{}
 
 \includegraphics{CA_MCA_Slides_files/figure-beamer/show_fuzzy-1.pdf}
 
@@ -1245,7 +1257,7 @@ Same technique on two \emph{different} tables: same result
   \begin{itemize}[<+->]
   \tightlist
   \item
-    \(\frac{(1 - x)}{2}\) \& + \(\frac{(1 + x)}{2}\)
+    \(\frac{(1 - x)}{2}\) \& \(\frac{(1 + x)}{2}\)
   \end{itemize}
 \end{itemize}
 
@@ -1312,6 +1324,8 @@ Same technique on two \emph{different} tables: same result
     CA is a \emph{massive} world
   \item
     Solves many problems we typically ignore
+  \item
+    And the \emph{G}SVD needs to be your other new best friend
   \end{itemize}
 \item
   Learn to recognize data types
@@ -1320,8 +1334,61 @@ Same technique on two \emph{different} tables: same result
   \tightlist
   \item
     Learn what to do with them
+  \item
+    But
   \end{itemize}
 \end{itemize}
+
+\end{frame}
+
+\begin{frame}{Conclusions}
+\protect\hypertarget{conclusions-1}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  Ordinal---and ordinal like---are very difficult
+\item
+  Practical advice
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Small number of levels? Treat them as categorical
+  \item
+    HUGE number of levels? Inspect thoroughly
+  \item
+    In between? Probably ordinal
+  \end{itemize}
+\item
+  Are they \emph{really} ordinal?
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Ranked, ordered? No inherent value?
+  \item
+    Or are these counts, discrete, imprecise continuous?
+  \end{itemize}
+\item
+  What about:
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    0, 1, 2, 3, 4?
+  \item
+    Never, Rarely, Sometimes, Frequently, Always?
+  \item
+    Use a mixture
+  \end{itemize}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{../images/Fuzzy_Crisp_Mix.PNG}
 
 \end{frame}
 

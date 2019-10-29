@@ -109,6 +109,8 @@ find_cell <- function(table, row, col, name="core-fg"){
 
 * Generally: https://github.com/derekbeaton/workshops
 * Today: https://github.com/derekbeaton/Workshops/tree/master/Misc/CA_MCA
+  + Built off of previous workshop
+  + Alzheimer's Disease Neuroimaging Initiative (ADNI) data
 
 ### Overview
 
@@ -179,8 +181,6 @@ pca_vars <- fviz_pca_var(edu_dx_pca) +
 
 ```
 
-***
-
 ```{r}
 grid.arrange(pca_rows, textGrob(""), nrow=1)
 ```
@@ -222,6 +222,8 @@ kable(edu_dx_with_sums, "latex", booktabs = T) %>%
 ```
 
 ### Let's try something different!
+
+***
 
 ```{r edu_dx_different}
 
@@ -345,6 +347,8 @@ kable(edu_dx_with_sums, "latex", booktabs = T) %>%
 
 ### We're diving in
 
+***
+
 ```{r edu_dx_again}
 
 edu_dx_table <- table(amerge_subset$PTEDUCAT, amerge_subset$DX)
@@ -436,7 +440,7 @@ kable(edu_dx_table, "latex", booktabs = T) %>%
   column_spec(column = 1, italic = T)
 
 ```
-What if we perform CA on this?
+
 
 ***
 
@@ -604,7 +608,7 @@ kable( round(col_constraints, digits = 3), "latex", booktabs = T, caption = "Col
 
 ![](../images/Deviations_Over_2.png)
 
-***
+### What we really decompose
 
 ![](../images/Deviations_Over.png)
 
@@ -721,6 +725,7 @@ grid.arrange(
 nrow = 1)
   
 ```
+How to analyze this *on its own*?
 
 ### How to analyze nominal data?
 
@@ -757,10 +762,10 @@ layout_side_by_side <- rbind(
 
 grid.arrange(
              tGrob,
-             cor_grob,
-             tGrob,
-             tGrob,
              cross_grob,
+             tGrob,
+             tGrob,
+             cor_grob,
              tGrob,
              tGrob, layout_matrix = layout_side_by_side)
 ```
@@ -838,7 +843,7 @@ grid.arrange(textGrob(""), mca_cols, nrow=1)
 ```{r}
 grid.arrange(mca_rows, mca_cols, nrow=1)
 ```
-Does any of this look familiar?
+
 
 ***
 
@@ -996,7 +1001,7 @@ grid.arrange(tableGrob(cat_mat,theme=ttheme_default(base_size=14)),
 
 ```
 
-***
+### Crisp vs. fuzzy coding
 
 ```{r show_fuzzy}
 
@@ -1147,7 +1152,7 @@ grid.arrange(mca_rows, mca_cols, nrow=1)
 * Age: 55.00 - 89.60
   + But we need to scale it (Z-score)
 * We use two columns again:
-  + $\frac{(1 - x)}{2}$ & + $\frac{(1 + x)}{2}$
+  + $\frac{(1 - x)}{2}$ & $\frac{(1 + x)}{2}$
 
 ***
 
@@ -1260,8 +1265,29 @@ grid.arrange(mca_rows, mca_cols, nrow=1)
 * But that's kind of the point
   + CA is a *massive* world
   + Solves many problems we typically ignore
+  + And the *G*SVD needs to be your other new best friend
 * Learn to recognize data types
   + Learn what to do with them
+  + But
+
+### Conclusions
+
+* Ordinal---and ordinal like---are very difficult
+* Practical advice
+  + Small number of levels? Treat them as categorical
+  + HUGE number of levels? Inspect thoroughly
+  + In between? Probably ordinal
+* Are they *really* ordinal?
+  + Ranked, ordered? No inherent value?
+  + Or are these counts, discrete, imprecise continuous?
+* What about:
+  + 0, 1, 2, 3, 4?
+  + Never, Rarely, Sometimes, Frequently, Always?
+  + Use a mixture
+  
+***
+
+![](../images/Fuzzy_Crisp_Mix.PNG)
 
 # Some many bonuses!
 
