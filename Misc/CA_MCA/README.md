@@ -3,9 +3,9 @@ Simple & Multiple Correspondence Analyses
 
 # Overview
 
-A guest lecture on CA and MCA, to help illustrate (1) relying on PCA can
+A guest lecture on CA and MCA for PSY2002: MULTIVARIATE STATISTICAL INFERENCE. Helps illustrate (1) relying on PCA can
 be a crime and (2) to illustrate many of the data coding/transform
-strategies and overall awesomeness of multiple correspondence analysis.
+strategies and overall awesomeness of simple and multiple correspondence analysis.
 
 “For both \[the French and Dutch data science/analysis\] schools, coding
 categorical variables with the indicator matrix of dummy variables and
