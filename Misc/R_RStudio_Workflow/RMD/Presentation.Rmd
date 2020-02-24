@@ -1,0 +1,169 @@
+---
+title: "Some Essentials for Data Science with R"
+author: "Derek Beaton"
+date: "`r toupper(format(Sys.time(), '%Y %b %d'))`"
+header-includes:
+  - \usepackage{booktabs}
+output:
+  beamer_presentation:
+    incremental: true
+    slide_level: 3
+    keep_tex: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+### Outline
+
+* Part 0: Project set up
+* Part 1: RStudio, R, RMarkdown, Git
+* Part 2: Working with data
+
+
+# Project set up
+
+
+![](../external/images/setup_4_markdown_project.PNG)
+
+https://emilyriederer.netlify.com/post/rmarkdown-driven-development/
+
+***
+
+![](../external/images/this_project.PNG)
+
+
+### Organize your project folders and markdown
+
+* What works for you?
+* What works for your organization or team?
+* Maximize utility, minimize complexity
+
+
+# Part 1
+
+# Part 2: RStudio & Project setup
+
+### RStudio
+
+* IDE: Integrated development environment
+* RStudio: Does so much
+  * We scratch the surface here
+* Quick walk through
+  * Followed by specific set up 
+  * Generally, but
+  * Also for this workshop
+
+### RStudio Setup
+
+* Download R and Rstudio
+  * Strongly recommend Microsoft R (https://mran.microsoft.com/open)
+  * Comes with Intel MKL
+* Plain R is fine (https://cran.r-project.org/)
+  * Can relink to faster libraries 
+* Download RStudio (https://www.rstudio.com/)  
+
+### RStudio Environment
+![](../external/images/rstudio_terminal_0.PNG)
+
+***
+
+![](../external/images/rstudio_terminal_1_CONSOLE.png)
+
+***
+
+![](../external/images/rstudio_terminal_2_FILES.png)
+
+***
+
+![](../external/images/rstudio_terminal_3_ENV.png)
+
+***
+
+![](../external/images/rstudio_terminal_4_CODE.png)
+
+***
+
+![](../external/images/rstudio_terminal_5_DATA.png)
+
+### Benefits of RStudio
+
+* Built-in integration with version control (git or SVN)
+* R Markdown
+  * Save and execute code
+  * Generate high quality reports that can be shared
+  * Create presentations (like this one!)
+  * Even write papers
+  * This workshop
+    * See https://github.com/derekbeaton/Workshops/tree/master/Misc/R_RStudio_Workflow
+* Python, D3 (JavaScript), SQL, Shiny, LaTeX, Git/SVN, HTML/CSS, and so much more.
+
+
+### RStudio is more
+
+* Not just an IDE (integrated development environment)
+* A company
+* A community
+* A conference
+* A centralized resource
+
+
+### RStudio Resources
+
+![](../external/images/rstudio_dot_com_1_main.PNG)
+
+
+***
+
+![](../external/images/rstudio_dot_com_2_learning.PNG)
+
+***
+
+![](../external/images/rstudio_dot_com_3_cheats.PNG)
+
+
+## Project and Environment Setup
+
+
+### RStudio Setup
+
+* See https://jennybc.github.io/2014-05-12-ubc/r-setup.html for a detailed guide
+
+### For safety & collaboration 
+
+* RStudio projects
+  * "RStudio projects make it straightforward to divide your work into multiple contexts, each with their own working directory, workspace, history, and source documents."
+  * Allows for return to key states
+* .Rproj files
+  * Basically a text file with some parameters for start up
+  ![](../external/images/Rproj_inside.PNG){width=50%} 
+
+### Projects
+
+Create a new one for:
+
+* a folder
+* packages
+* (and from) git repos:
+![](../external/images/setup_2_rstudio_project.PNG){width=75%}
+
+### What is Git?
+
+SOMETHING
+
+### Git & Projects
+
+* Git
+* Download git and link executable within RStudio 
+![](../external/images/setup_1_rstudio_git.PNG){width=60%} 
+
+
+### Format .gitignore
+
+* File types to ignore via version control
+* `**` before each extentions will match directories anywhere in the repo
+
+![](../external/images/gitignore.PNG){width=75%}
+
+

@@ -1,0 +1,13 @@
+---
+title: "Hello"
+output: github_document
+date: "`r toupper(format(Sys.time(), '%Y %b %d'))`"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# A header
+
+A place where some text will go
