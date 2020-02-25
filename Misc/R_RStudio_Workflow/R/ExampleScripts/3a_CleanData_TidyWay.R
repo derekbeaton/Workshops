@@ -53,6 +53,8 @@ ttc_streetcar_delays_Jan2019 %>%
   filter(Gap != 0) %>%
   filter(Delay != 0)
 
+official_routes <- c("501","503","504","505","506","508","509","510","511","512",
+                     "301","304","306","310")
 
 ## Let's start to refine this data set
   ### drop_na will drop any rows with NAs present
@@ -61,4 +63,5 @@ ttc_streetcar_delays_Jan2019 %<>%
   filter(Delay != 600) %>%
   filter(Gap != 0) %>%
   filter(Delay != 0) %>%
-  drop_na()
+  drop_na() %>%
+  filter(Route %in% official_routes)

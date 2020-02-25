@@ -15,6 +15,13 @@ output:
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
+### Where to find this
+
+* https://github.com/derekbeaton/Workshops/tree/master/Misc/R_RStudio_Workflow
+* Follow along if you can or want
+* Or don't, and get the materials from the repo
+
+
 ### Outline
 
 * Part 0: Project set up
@@ -432,5 +439,14 @@ Generate reports:
 # Part 2: Working with data
 
 We'll move to R scripts and another RMarkdown document
+
+### Before we do
+
+* Today's data come from https://sharlagelfand.github.io/opendatatoronto/index.html
+* Today's workshop is a subset of https://github.com/jennyrieck/workshops/tree/master/2019_Rstudio_Magic
+* See "say hello to your Data": https://djnavarro.github.io/robust-tools/hello/#1
+* Feedback form for today: https://forms.gle/R9AB1Wkzhb23KHGU9
+
+
 
 

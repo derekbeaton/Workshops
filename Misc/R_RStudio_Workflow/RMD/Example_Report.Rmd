@@ -1,0 +1,106 @@
+---
+title: "Example Report"
+subtitle: "TTC street car delays: Jan 2019"
+author: "Derek Beaton"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+
+##### So we can get data
+library(opendatatoronto)
+library(ckanr)
+
+##### So we can work some magic
+library(dplyr)
+# or just:
+library(tidyverse)
+## we also need some help from another tidy package
+library(magrittr)
+
+##### So we can inspect and analyze
+library(inspectdf)
+library(DataExplorer)
+library(summarytools)
+library(ExPosition) ## disclosure: this one is mine
+
+##### So we can make things look extra awesome
+library(ggplot2)
+library(factoextra)
+library(gridExtra) ## we may not need this for today, but it's good to have around
+library(kableExtra)
+
+
+## additional utilities & settings
+library(knitr)
+knitr::opts_chunk$set(echo = TRUE)
+library(here)
+```
+
+```{r get_clean_data, echo=FALSE, warning=FALSE}
+
+source(here::here("R","ForRMD","1_Get_and_Clean_Data.R"))
+
+```
+
+# Introduction
+
+This RMarkdown document "knits" to HTML. It has been set up in a relatively modularized way to load libraries, call off to necessary scripts elsewhere (see `R` folder in this project's directory), and then present specific visualizations and information. 
+
+
+# Results
+
+
+## Delay and Gap time
+
+First we present a simple table---through the use of the `kable` and `kableExtra` packages---for delay and gap times.
+
+```{r delays_gaps, echo = FALSE, warning = FALSE}
+summarytools::descr(ttc_streetcar_delays_Jan2019[,c("Delay","Gap")],
+      stats = c("mean", "sd", "min", "med", "max")) %>%
+  kable(., digits = 2) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))
+
+```
+
+## Frequencies: Route, Day, and Incident
+
+Next we visualize frequencies of delays per route, day, and incident type.
+
+```{r delays_freqs, echo=FALSE, warning=FALSE, fig.align="center"}
+DataExplorer::plot_bar(ttc_streetcar_delays_Jan2019)
+```
+
+## Delay times
+
+Then we show the amount of time for the delays, where: 
+
+* Delay is shown on the horizontal axis
+* Route is shown on the vertical axis
+* Each delay is colored by day of the week, and
+* Delays are "faceted" by incident type
+
+
+```{r delay_time_faceted, echo=FALSE, warning=FALSE, fig.align="center"}
+ttc_streetcar_delays_Jan2019 %>%
+  ggplot(aes(x = Delay, y = Route, color = Day)) +
+  geom_point() + 
+  facet_wrap(~Incident)
+```
+
+## Routes by Delays
+
+Finally, we use a multivariate analysis to show us the relationship between routes and delays. In the following graph, the closer points are to one another, the more related to each other they are. When points are far away, they are oppositely related. When they are at approximately right angles (~90 degrees) they are relatively unrelated.
+
+```{r probability_delays_by_routes, echo=FALSE, warning=FALSE, fig.align="center", fig.cap="A 'biplot' of the results from Correspondence Analysis. This shows the rows (routes) and columns (days) of the data matrix. Each cell in that matrix contains the number of delays on that route for that day. The 506 had a rough schedule on Thursdays in January 2019."}
+
+route_by_day_counts <- 
+  table(ttc_streetcar_delays_Jan2019$Route,ttc_streetcar_delays_Jan2019$Day)
+
+  ## we won't use ExPosition's graphing utility
+expo_ca_results <- ExPosition::epCA(route_by_day_counts, graphs = F)
+  ## instead we'll use factoextra
+factoextra::fviz_ca_biplot(expo_ca_results)
+
+```

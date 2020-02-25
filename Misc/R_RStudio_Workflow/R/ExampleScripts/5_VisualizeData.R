@@ -5,7 +5,7 @@
 
 ## simple scatter plot
 plot(ttc_streetcar_delays_Jan2019$Delay, ttc_streetcar_delays_Jan2019$Gap)
-  ## oooof, that correlation makes no sense.
+  ### this makes much more sense than just a correlation
 
 ## ggplot of gap vs. delay
 ttc_streetcar_delays_Jan2019 %>%
@@ -15,7 +15,6 @@ ttc_streetcar_delays_Jan2019 %>%
 ttc_streetcar_delays_Jan2019 %>%
   ggplot(aes(x = Delay, y = Gap, color = Day)) +
   geom_point()
-
 
 ttc_streetcar_delays_Jan2019 %>%
   ggplot(aes(x = Delay, y = Gap, color = Day)) +
@@ -45,13 +44,13 @@ ttc_streetcar_delays_Jan2019 %>%
   facet_wrap(~Incident)
 
 
-## CA of route x day
-
+## Correspondence Analysis of route x day
 route_by_day_counts <- 
   table(ttc_streetcar_delays_Jan2019$Route,ttc_streetcar_delays_Jan2019$Day)
 
+  ## we won't use ExPosition's graphing utility
 expo_ca_results <- ExPosition::epCA(route_by_day_counts, graphs = F)
-
+  ## instead we'll use factoextra
 factoextra::fviz_ca_biplot(expo_ca_results)
   ## don't ride the 506 on Thursdays, nor the 512 on Fridays
   ## Tuesdays: a mess.

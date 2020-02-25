@@ -21,6 +21,8 @@ summary(ttc_streetcar_delays_Jan2019[,c("Delay","Gap")])
 plot_intro(ttc_streetcar_delays_Jan2019)
 plot_missing(ttc_streetcar_delays_Jan2019)
 
+official_routes <- c("501","503","504","505","506","508","509","510","511","512",
+                     "301","304","306","310")
 
 ### let's unpack this a bit.
 my_conditional <- which(
@@ -28,7 +30,8 @@ my_conditional <- which(
   ttc_streetcar_delays_Jan2019$Gap < 500 &
   ttc_streetcar_delays_Jan2019$Delay > 0 &
   ttc_streetcar_delays_Jan2019$Gap > 0 &
-  rowSums(is.na(ttc_streetcar_delays_Jan2019))==0
+  rowSums(is.na(ttc_streetcar_delays_Jan2019))==0 & 
+  ttc_streetcar_delays_Jan2019$Route %in% official_routes
 )
 
 
