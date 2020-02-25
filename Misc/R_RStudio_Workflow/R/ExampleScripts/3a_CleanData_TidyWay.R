@@ -42,13 +42,23 @@ ttc_streetcar_delays_Jan2019 %>%
             gap_min = min(Gap, na.rm = T ),
             gap_max = max(Gap, na.rm = T ))
 
-## possible anomalies?
+## some possible anomalies and not of interest?
 ttc_streetcar_delays_Jan2019 %>%
-  filter(Gap == "500" | Delay == "600")
+  filter(Gap == 500 | Delay == 600 | Gap == 0 | Delay == 0)
+
+
+ttc_streetcar_delays_Jan2019 %>%
+  filter(Gap != 500) %>%
+  filter(Delay != 600) %>%
+  filter(Gap != 0) %>%
+  filter(Delay != 0)
 
 
 ## Let's start to refine this data set
   ### drop_na will drop any rows with NAs present
 ttc_streetcar_delays_Jan2019 %<>%
-  filter(Gap != "500" | Delay != "600") %>%
+  filter(Gap != 500) %>%
+  filter(Delay != 600) %>%
+  filter(Gap != 0) %>%
+  filter(Delay != 0) %>%
   drop_na()

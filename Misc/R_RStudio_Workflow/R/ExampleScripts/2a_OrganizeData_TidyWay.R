@@ -16,7 +16,7 @@ ttc_streetcar_delays_Jan2019 %<>%
 ttc_streetcar_delays_Jan2019
 
 ttc_streetcar_delays_Jan2019 %<>%
-  rename(`Min Gap` = Gap, `Min Delay` = Delay)
+  dplyr::rename("Gap" = `Min Gap`, "Delay" = `Min Delay`)
 
 ### a final look
 ttc_streetcar_delays_Jan2019

@@ -24,9 +24,11 @@ plot_missing(ttc_streetcar_delays_Jan2019)
 
 ### let's unpack this a bit.
 my_conditional <- which(
-  ttc_streetcar_delays_Jan2019$Delay < 600 |
-  ttc_streetcar_delays_Jan2019$Gap < 500 |
-    rowSums(is.na(ttc_streetcar_delays_Jan2019))==0
+  ttc_streetcar_delays_Jan2019$Delay < 600 &
+  ttc_streetcar_delays_Jan2019$Gap < 500 &
+  ttc_streetcar_delays_Jan2019$Delay > 0 &
+  ttc_streetcar_delays_Jan2019$Gap > 0 &
+  rowSums(is.na(ttc_streetcar_delays_Jan2019))==0
 )
 
 
