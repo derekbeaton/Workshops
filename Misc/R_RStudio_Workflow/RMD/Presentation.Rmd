@@ -184,14 +184,13 @@ Download git and link executable within RStudio
 <!-- ![](../external/images/gitignore.PNG){width=75%} -->
 <!-- </center> -->
 
+### Git basics
+
+* Pull or Fetch: get atest from a repository
+* Commit: make a history of your local chanes
+* Push: send your commits to a repository 
 
 ## R
-
-<!-- ### R Background -->
-
-<!-- * Created in 1992 by Gentleman & Ihaka -->
-
-<!-- _[we] considered the problem of obtaining decent statistical software for our undergraduate Macintosh lab. After considering the options, we decided that the most satisfactory alternative was to write our own. […] Finally we added some syntactic sugar to make it look somewhat like S. We call the result “R”._ -->
 
 
 ### What is R?
@@ -313,7 +312,7 @@ See https://rstudio-education.github.io/hopr/r-objects.html
 * factor
   * factors are usually not your friends
   * with `read.csv()`: `stringsAsFactors = F` or convert these
-    * To be phased out; `stringsAsFactors = F` as default in R 4.0.0
+    * `stringsAsFactors = F` as default in R 4.0.0
   * or use `tibble`s in the tidyverse
 
 
@@ -338,6 +337,7 @@ a_numeric_vector <- c(3, 0, 1, -2, 2, 5, 5, 2, 1)
 a_numeric_vector <- c(3, 0, 1, -2, 2, 5, 5, 2, 1)
 (a_numeric2factor_vector <- as.factor(a_numeric_vector))
 (as.numeric(a_numeric2factor_vector))
+(as.numeric(a_numeric2factor_vector) + 1)
 ```
 
 ***
@@ -372,26 +372,39 @@ a_numeric_vector <- c(3, 0, 1, -2, 2, 5, 5, 2, 1)
 
 ## RMarkdown
 
+### RMarkdown
 
+* A simple markdown language
+* Create documents (or slides, websites, books, notebooks, etc...)
+  * https://bookdown.org/yihui/rmarkdown/
+  * See also: https://ryanpeek.github.io/2020-02-20-10-tips-to-souping-up-rmarkdown/
+* "Literate programming"
+  * Text, headers, sections
+  * Figures, tables
+    * Code to generate those
 
 ### RMarkdown
 
-What it is & why to use it
-https://bookdown.org/yihui/rmarkdown/
+Generate reports:
+
+* HTML
+* Word
+* PDF
+  * With `LateX`
 
 ### RMarkdown
 
-Examples
+![](../external/images/min_markdown.PNG)
 
-### RMarkdown
+<!-- ### RMarkdown -->
 
-* Fancy helpers:
-  * `kable` & `kableExtra`
-  * `grid` & `gridExtra`
-* Deviations for:
-  * `LaTeX`
-  * `Python`
-* Tying it all together through here
+<!-- * Fancy helpers: -->
+<!--   * `kable` & `kableExtra` -->
+<!--   * `grid` & `gridExtra` -->
+<!-- * Deviations for: -->
+<!--   * `LaTeX` -->
+<!--   * `Python` -->
+<!-- * Tying it all together through here -->
 
 ### RMarkdown Don'ts
 
@@ -401,20 +414,23 @@ Examples
 * Don't do complicated or expensive stuff 
   * Database queries
   * Resampling
-* avoid `eval=FALSE`
-  * except to help illustrate code
+  
 
-<!-- 
 ## All together
 
-### Benefits of RStudio
+### Within RStudio
 
-* Built-in integration with version control (git or SVN)
+* Integration with version control (git or SVN)
 * R Markdown
   * Save and execute code
   * Generate high quality reports that can be shared
-  * Python, D3 (JavaScript), SQL, Shiny, LaTeX, HTML/CSS
   * Create presentations (like this one!)
     * See https://github.com/derekbeaton/Workshops/tree/master/Misc/R_RStudio_Workflow
+* Python, D3 (JavaScript), SQL, Shiny, LaTeX, HTML/CSS
 * And so much more
--->
+
+# Part 2: Working with data
+
+We'll move to R scripts and another RMarkdown document
+
+

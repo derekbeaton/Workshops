@@ -448,45 +448,36 @@ Compartmentalize \& collaborate:
 \begin{frame}{Git \& R Projects}
 \protect\hypertarget{git-r-projects}{}
 
+The premeire Git \& R resource: \url{https://happygitwithr.com/}
+
+\end{frame}
+
+\begin{frame}{Git \& R Projects}
+\protect\hypertarget{git-r-projects-1}{}
+
 Download git and link executable within RStudio
 
 \includegraphics[width=0.6\textwidth,height=\textheight]{../external/images/setup_1_rstudio_git.PNG}
 
 \end{frame}
 
-\begin{frame}[fragile]{Format .gitignore}
-\protect\hypertarget{format-.gitignore}{}
+\begin{frame}{Git basics}
+\protect\hypertarget{git-basics}{}
 
 \begin{itemize}[<+->]
 \tightlist
 \item
-  File types to ignore via version control
+  Pull or Fetch: get atest from a repository
 \item
-  \texttt{**} before each extentions will match directories anywhere in
-  the repo
-
-  \includegraphics[width=0.75\textwidth,height=\textheight]{../external/images/gitignore.PNG}
-\end{itemize}
-
-\end{frame}
-
-\begin{frame}{Git \& R}
-\protect\hypertarget{git-r}{}
-
-\begin{itemize}[<+->]
-\tightlist
+  Commit: make a history of your local chanes
 \item
-  The premeire Git \& R resource: \url{https://happygitwithr.com/}
+  Push: send your commits to a repository
 \end{itemize}
 
 \end{frame}
 
 \hypertarget{r}{%
 \subsection{R}\label{r}}
-
-\begin{frame}{R}
-
-\end{frame}
 
 \begin{frame}{What is R?}
 \protect\hypertarget{what-is-r}{}
@@ -697,8 +688,7 @@ Download git and link executable within RStudio
     \begin{itemize}[<+->]
     \tightlist
     \item
-      To be phased out; \texttt{stringsAsFactors\ =\ F} as default in R
-      4.0.0
+      \texttt{stringsAsFactors\ =\ F} as default in R 4.0.0
     \end{itemize}
   \item
     or use \texttt{tibble}s in the tidyverse
@@ -761,6 +751,16 @@ Download git and link executable within RStudio
 
 \begin{verbatim}
 ## [1] 5 2 3 1 4 6 6 4 3
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(}\KeywordTok{as.numeric}\NormalTok{(a_numeric2factor_vector) }\OperatorTok{+}\StringTok{ }\DecValTok{1}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 6 3 4 2 5 7 7 5 4
 \end{verbatim}
 
 \end{frame}
@@ -861,45 +861,68 @@ Download git and link executable within RStudio
 \begin{frame}{RMarkdown}
 \protect\hypertarget{rmarkdown-1}{}
 
-What it is \& why to use it \url{https://bookdown.org/yihui/rmarkdown/}
+\begin{itemize}[<+->]
+\tightlist
+\item
+  A simple markdown language
+\item
+  Create documents (or slides, websites, books, notebooks, etc\ldots)
 
-\end{frame}
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    \url{https://bookdown.org/yihui/rmarkdown/}
+  \item
+    See also:
+    \url{https://ryanpeek.github.io/2020-02-20-10-tips-to-souping-up-rmarkdown/}
+  \end{itemize}
+\item
+  ``Literate programming''
 
-\begin{frame}{RMarkdown}
-\protect\hypertarget{rmarkdown-2}{}
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Text, headers, sections
+  \item
+    Figures, tables
 
-Examples
+    \begin{itemize}[<+->]
+    \tightlist
+    \item
+      Code to generate those
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
 
 \end{frame}
 
 \begin{frame}[fragile]{RMarkdown}
-\protect\hypertarget{rmarkdown-3}{}
+\protect\hypertarget{rmarkdown-2}{}
+
+Generate reports:
 
 \begin{itemize}[<+->]
 \tightlist
 \item
-  Fancy helpers:
+  HTML
+\item
+  Word
+\item
+  PDF
 
   \begin{itemize}[<+->]
   \tightlist
   \item
-    \texttt{kable} \& \texttt{kableExtra}
-  \item
-    \texttt{grid} \& \texttt{gridExtra}
+    With \texttt{LateX}
   \end{itemize}
-\item
-  Deviations for:
-
-  \begin{itemize}[<+->]
-  \tightlist
-  \item
-    \texttt{LaTeX}
-  \item
-    \texttt{Python}
-  \end{itemize}
-\item
-  Tying it all together through here
 \end{itemize}
+
+\end{frame}
+
+\begin{frame}{RMarkdown}
+\protect\hypertarget{rmarkdown-3}{}
+
+\includegraphics{../external/images/min_markdown.PNG}
 
 \end{frame}
 
@@ -928,15 +951,53 @@ Examples
   \item
     Resampling
   \end{itemize}
+\end{itemize}
+
+\end{frame}
+
+\hypertarget{all-together}{%
+\subsection{All together}\label{all-together}}
+
+\begin{frame}{Within RStudio}
+\protect\hypertarget{within-rstudio}{}
+
+\begin{itemize}[<+->]
+\tightlist
 \item
-  avoid \texttt{eval=FALSE}
+  Integration with version control (git or SVN)
+\item
+  R Markdown
 
   \begin{itemize}[<+->]
   \tightlist
   \item
-    except to help illustrate code
+    Save and execute code
+  \item
+    Generate high quality reports that can be shared
+  \item
+    Create presentations (like this one!)
+
+    \begin{itemize}[<+->]
+    \tightlist
+    \item
+      See
+      \url{https://github.com/derekbeaton/Workshops/tree/master/Misc/R_RStudio_Workflow}
+    \end{itemize}
   \end{itemize}
+\item
+  Python, D3 (JavaScript), SQL, Shiny, LaTeX, HTML/CSS
+\item
+  And so much more
 \end{itemize}
+
+\end{frame}
+
+\hypertarget{part-2-working-with-data}{%
+\section{Part 2: Working with data}\label{part-2-working-with-data}}
+
+\begin{frame}{Part 2: Working with data}
+
+We'll move to R scripts and another RMarkdown document
 
 \end{frame}
 
