@@ -18,11 +18,11 @@ knitr::opts_chunk$set(echo = FALSE)
 ### Outline
 
 * Part 0: Project set up
-* Part 1: RStudio, R, RMarkdown, Git
+* Part 1: RStudio, Git, R, and RMarkdown
 * Part 2: Working with data
 
 
-# Project set up
+# Part 0: Project set up
 
 
 ![](../external/images/setup_4_markdown_project.PNG)
@@ -41,19 +41,15 @@ https://emilyriederer.netlify.com/post/rmarkdown-driven-development/
 * Maximize utility, minimize complexity
 
 
-# Part 1
+# Part 1: RStudio, Git, R, and RMarkdown
 
-# Part 2: RStudio & Project setup
+## RStudio
 
 ### RStudio
 
 * IDE: Integrated development environment
 * RStudio: Does so much
   * We scratch the surface here
-* Quick walk through
-  * Followed by specific set up 
-  * Generally, but
-  * Also for this workshop
 
 ### RStudio Setup
 
@@ -65,39 +61,28 @@ https://emilyriederer.netlify.com/post/rmarkdown-driven-development/
 * Download RStudio (https://www.rstudio.com/)  
 
 ### RStudio Environment
+
 ![](../external/images/rstudio_terminal_0.PNG)
 
-***
+### RStudio Environment
 
 ![](../external/images/rstudio_terminal_1_CONSOLE.png)
 
-***
+### RStudio Environment
 
 ![](../external/images/rstudio_terminal_2_FILES.png)
 
-***
+### RStudio Environment
 
 ![](../external/images/rstudio_terminal_3_ENV.png)
 
-***
+### RStudio Environment
 
 ![](../external/images/rstudio_terminal_4_CODE.png)
 
-***
+### RStudio Environment
 
 ![](../external/images/rstudio_terminal_5_DATA.png)
-
-### Benefits of RStudio
-
-* Built-in integration with version control (git or SVN)
-* R Markdown
-  * Save and execute code
-  * Generate high quality reports that can be shared
-  * Create presentations (like this one!)
-  * Even write papers
-  * This workshop
-    * See https://github.com/derekbeaton/Workshops/tree/master/Misc/R_RStudio_Workflow
-* Python, D3 (JavaScript), SQL, Shiny, LaTeX, Git/SVN, HTML/CSS, and so much more.
 
 
 ### RStudio is more
@@ -114,56 +99,322 @@ https://emilyriederer.netlify.com/post/rmarkdown-driven-development/
 ![](../external/images/rstudio_dot_com_1_main.PNG)
 
 
-***
+### RStudio Resources
 
 ![](../external/images/rstudio_dot_com_2_learning.PNG)
 
-***
+### RStudio Resources
 
 ![](../external/images/rstudio_dot_com_3_cheats.PNG)
 
-
-## Project and Environment Setup
-
-
 ### RStudio Setup
 
-* See https://jennybc.github.io/2014-05-12-ubc/r-setup.html for a detailed guide
+* For set up: https://jennybc.github.io/2014-05-12-ubc/r-setup.html
+* For R projects, see
+  * https://support.rstudio.com/hc/en-us/articles/200526207-Using-Projects 
+  * https://r4ds.had.co.nz/workflow-projects.html
 
-### For safety & collaboration 
+### R Projects
+
+Compartmentalize & collaborate:
 
 * RStudio projects
   * "RStudio projects make it straightforward to divide your work into multiple contexts, each with their own working directory, workspace, history, and source documents."
-  * Allows for return to key states
-* .Rproj files
-  * Basically a text file with some parameters for start up
+  * specific projects
+  * R package development
+  * cloning from (e.g., Git) repos
+
+*** 
+
+![](../external/images/setup_2_rstudio_project.PNG){width=75%}
+
+
+***
+
+.Rproj files: just a text file with some parameters for start up
   ![](../external/images/Rproj_inside.PNG){width=50%} 
 
-### Projects
+***
 
-Create a new one for:
+![](../external/images/this_project.PNG)
 
-* a folder
-* packages
-* (and from) git repos:
-![](../external/images/setup_2_rstudio_project.PNG){width=75%}
+
+## Git
 
 ### What is Git?
 
-SOMETHING
+* Version control (like SVN, a.k.a. subversion)
+* Traditionally for developers/software
+* Now more common to "track changes"
 
-### Git & Projects
+***
 
-* Git
-* Download git and link executable within RStudio 
+<center>
+![](../external/images/DB_GIT.PNG){width=90%} 
+</center>
+
+***
+<center>
+![](../external/images/DB_GSVD_History.PNG){width=90%} 
+</center>
+
+### Github
+
+* As students: You can get free pro accounts
+* And you really really should
+* https://education.github.com/pack
+
+
+### Git & R Projects
+
+The premeire Git & R resource: https://happygitwithr.com/
+
+### Git & R Projects
+
+Download git and link executable within RStudio 
+<center>
 ![](../external/images/setup_1_rstudio_git.PNG){width=60%} 
+</center>
+
+<!-- ### Format .gitignore -->
+<!-- * Important for sensitive information -->
+<!-- * File types to ignore via version control -->
+<!-- * `**` before each extentions will match directories anywhere in the repo -->
+<!-- <center> -->
+<!-- ![](../external/images/gitignore.PNG){width=75%} -->
+<!-- </center> -->
 
 
-### Format .gitignore
+## R
 
-* File types to ignore via version control
-* `**` before each extentions will match directories anywhere in the repo
+<!-- ### R Background -->
 
-![](../external/images/gitignore.PNG){width=75%}
+<!-- * Created in 1992 by Gentleman & Ihaka -->
+
+<!-- _[we] considered the problem of obtaining decent statistical software for our undergraduate Macintosh lab. After considering the options, we decided that the most satisfactory alternative was to write our own. […] Finally we added some syntactic sugar to make it look somewhat like S. We call the result “R”._ -->
 
 
+### What is R?
+
+* R is general purpose programming
+  * Design around & for statistics
+  * "for and by statisticians"
+* R is a collection of tools 
+  * Pre-packaged software at your disposal
+* R is free (as in beer and speech)
+  * No cost, no restrictions
+  * E.g., Microsoft (nee Revolution) R
+* R is a functional language
+  * Mathematical functions
+  * Pass expressions and functions to and from functions
+  * and Turing Complete
+
+
+### Assignment
+
+```{r assigment, eval=FALSE, echo=TRUE, tidy=FALSE}
+# allowed but not preferred
+a_variable = 10 + 1
+# preferred
+a_variable <- 10 + 1
+# a bonus
+10 + 1 -> a_variable
+```
+
+### Dots
+
+```{r dots_example, eval=FALSE, echo=TRUE}
+# allowed but not preferred
+a.variable = 10 + 1
+  ## dots have 2 meanings in R, 
+    ## with a 3rd in the tidyverse
+
+# preferred
+a_variable <- 10 + 1
+```
+
+### "Reserved" characters
+
+* `c`, `q`, `t`, `C`, `D`, `I`, `F`, and `T` (via https://www.johndcook.com/blog/r_language_for_programmers/)
+* Except that these can be redefined
+
+<!--
+### R: Data structures  
+
+* Starts counting from 1
+  * Not 0
+* vector[1]
+* matrix[1,1]
+* array[1,1,1]
+* list[[1]]
+  * Can contain mixtures of types
+  * or list$`name`
+* data.frame:
+  * Is technically a list but access in three ways
+  * data.frame[[1]][1]
+  * data.frame[1,1]
+  * data.frame$`name`
+  * tibbles: tidyverse data.frames
+  
+CASTING
+-->
+
+### R: Data Structures
+
+### R: Data Structures
+
+<!--
+![](../external/images/HW_DataStructs.PNG)
+See http://adv-r.had.co.nz/Data-structures.html
+-->
+![](../external/images/rstudio_datastructs.png)
+See https://rstudio-education.github.io/hopr/r-objects.html
+
+
+***
+
+![](../external/images/VECTOR.png)
+
+***
+
+![](../external/images/MATRIX.png)
+
+***
+
+![](../external/images/ARRAY_3.png)
+
+***
+
+![](../external/images/ARRAY_4.png)
+
+***
+
+![](../external/images/LIST.png)
+
+***
+
+![](../external/images/DF.png)
+
+### R: Data Structures
+
+* list[[1]] or list$`name`
+* data.frame[[1]][1] or data.frame[1,1] or data.frame$`name`
+
+### R: Data types
+
+* All of them are here: https://cran.r-project.org/doc/manuals/r-release/R-lang.html#Objects
+* The most common you'll use:
+  * numeric
+    * real or decimal
+    * Includes `NaN`, `Inf`, `-Inf`
+  * character
+  * logical
+    * includes `NA`, `T`, `TRUE`, `F`, `FALSE`
+* factor
+  * factors are usually not your friends
+  * with `read.csv()`: `stringsAsFactors = F` or convert these
+    * To be phased out; `stringsAsFactors = F` as default in R 4.0.0
+  * or use `tibble`s in the tidyverse
+
+
+### R: factor disasters
+
+
+```{r echo=T}
+a_numeric_vector <- c(3, 0, 1, -2, 2, 5, 5, 2, 1)
+(a_numeric_vector + 1)
+```
+
+***
+
+```{r echo=T}
+a_numeric_vector <- c(3, 0, 1, -2, 2, 5, 5, 2, 1)
+(a_numeric2factor_vector <- as.factor(a_numeric_vector))
+```
+
+***
+
+```{r echo = T}
+a_numeric_vector <- c(3, 0, 1, -2, 2, 5, 5, 2, 1)
+(a_numeric2factor_vector <- as.factor(a_numeric_vector))
+(as.numeric(a_numeric2factor_vector))
+```
+
+***
+
+```{r echo=T}
+a_numeric_vector <- c(3, 0, 1, -2, 2, 5, 5, 2, 1)
+(a_numeric2factor_vector <- as.factor(a_numeric_vector))
+(as.character(a_numeric2factor_vector))
+(as.numeric(as.character(a_numeric2factor_vector)))
+```
+
+
+### Cheatsheet for base R
+![](../external/images/r_cheatsheet_base.PNG)
+"Base R"
+
+### Tidyverse
+
+* `tidyverse`: "an opinionated collection of R packages designed for data science [that] share an underlying design philosophy, **grammar, and data structures.**"
+  * A sublanguage or dialect
+* Strongly built around a style:
+  * objects are nouns
+  * functions are verbs
+* Core packages:
+  * `ggplot2`, `dplyr`, `tidyr`, `readr`, `tibble`, `stringr`, `purrr`
+  * https://www.tidyverse.org/
+
+
+### tidyverse cheatsheet
+![](../external/images/r_cheatsheet_tidy.PNG)
+
+
+## RMarkdown
+
+
+
+### RMarkdown
+
+What it is & why to use it
+https://bookdown.org/yihui/rmarkdown/
+
+### RMarkdown
+
+Examples
+
+### RMarkdown
+
+* Fancy helpers:
+  * `kable` & `kableExtra`
+  * `grid` & `gridExtra`
+* Deviations for:
+  * `LaTeX`
+  * `Python`
+* Tying it all together through here
+
+### RMarkdown Don'ts
+
+* Don't hardcode values or absolute file paths
+  * see `here::here()`
+  * Use projects (`.Rproj`)
+* Don't do complicated or expensive stuff 
+  * Database queries
+  * Resampling
+* avoid `eval=FALSE`
+  * except to help illustrate code
+
+<!-- 
+## All together
+
+### Benefits of RStudio
+
+* Built-in integration with version control (git or SVN)
+* R Markdown
+  * Save and execute code
+  * Generate high quality reports that can be shared
+  * Python, D3 (JavaScript), SQL, Shiny, LaTeX, HTML/CSS
+  * Create presentations (like this one!)
+    * See https://github.com/derekbeaton/Workshops/tree/master/Misc/R_RStudio_Workflow
+* And so much more
+-->

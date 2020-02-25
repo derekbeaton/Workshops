@@ -81,6 +81,46 @@
   pdfcreator={LaTeX via pandoc}}
 \urlstyle{same} % disable monospaced font for URLs
 \newif\ifbibliography
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
 \usepackage{graphicx,grffile}
 \makeatletter
 \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
@@ -102,7 +142,7 @@
 
 \title{Some Essentials for Data Science with R}
 \author{Derek Beaton}
-\date{2020 FEB 23}
+\date{2020 FEB 25}
 
 \begin{document}
 \frame{\titlepage}
@@ -115,17 +155,17 @@
 \item
   Part 0: Project set up
 \item
-  Part 1: RStudio, R, RMarkdown, Git
+  Part 1: RStudio, Git, R, and RMarkdown
 \item
   Part 2: Working with data
 \end{itemize}
 
 \end{frame}
 
-\hypertarget{project-set-up}{%
-\section{Project set up}\label{project-set-up}}
+\hypertarget{part-0-project-set-up}{%
+\section{Part 0: Project set up}\label{part-0-project-set-up}}
 
-\begin{frame}{Project set up}
+\begin{frame}{Part 0: Project set up}
 
 \includegraphics{../external/images/setup_4_markdown_project.PNG}
 
@@ -154,15 +194,15 @@
 
 \end{frame}
 
-\hypertarget{part-1}{%
-\section{Part 1}\label{part-1}}
+\hypertarget{part-1-rstudio-git-r-and-rmarkdown}{%
+\section{Part 1: RStudio, Git, R, and
+RMarkdown}\label{part-1-rstudio-git-r-and-rmarkdown}}
 
-\hypertarget{part-2-rstudio-project-setup}{%
-\section{Part 2: RStudio \& Project
-setup}\label{part-2-rstudio-project-setup}}
+\hypertarget{rstudio}{%
+\subsection{RStudio}\label{rstudio}}
 
 \begin{frame}{RStudio}
-\protect\hypertarget{rstudio}{}
+\protect\hypertarget{rstudio-1}{}
 
 \begin{itemize}[<+->]
 \tightlist
@@ -175,18 +215,6 @@ setup}\label{part-2-rstudio-project-setup}}
   \tightlist
   \item
     We scratch the surface here
-  \end{itemize}
-\item
-  Quick walk through
-
-  \begin{itemize}[<+->]
-  \tightlist
-  \item
-    Followed by specific set up
-  \item
-    Generally, but
-  \item
-    Also for this workshop
   \end{itemize}
 \end{itemize}
 
@@ -229,70 +257,38 @@ setup}\label{part-2-rstudio-project-setup}}
 
 \end{frame}
 
-\begin{frame}
+\begin{frame}{RStudio Environment}
+\protect\hypertarget{rstudio-environment-1}{}
 
 \includegraphics{../external/images/rstudio_terminal_1_CONSOLE.png}
 
 \end{frame}
 
-\begin{frame}
+\begin{frame}{RStudio Environment}
+\protect\hypertarget{rstudio-environment-2}{}
 
 \includegraphics{../external/images/rstudio_terminal_2_FILES.png}
 
 \end{frame}
 
-\begin{frame}
+\begin{frame}{RStudio Environment}
+\protect\hypertarget{rstudio-environment-3}{}
 
 \includegraphics{../external/images/rstudio_terminal_3_ENV.png}
 
 \end{frame}
 
-\begin{frame}
+\begin{frame}{RStudio Environment}
+\protect\hypertarget{rstudio-environment-4}{}
 
 \includegraphics{../external/images/rstudio_terminal_4_CODE.png}
 
 \end{frame}
 
-\begin{frame}
+\begin{frame}{RStudio Environment}
+\protect\hypertarget{rstudio-environment-5}{}
 
 \includegraphics{../external/images/rstudio_terminal_5_DATA.png}
-
-\end{frame}
-
-\begin{frame}{Benefits of RStudio}
-\protect\hypertarget{benefits-of-rstudio}{}
-
-\begin{itemize}[<+->]
-\tightlist
-\item
-  Built-in integration with version control (git or SVN)
-\item
-  R Markdown
-
-  \begin{itemize}[<+->]
-  \tightlist
-  \item
-    Save and execute code
-  \item
-    Generate high quality reports that can be shared
-  \item
-    Create presentations (like this one!)
-  \item
-    Even write papers
-  \item
-    This workshop
-
-    \begin{itemize}[<+->]
-    \tightlist
-    \item
-      See
-      \url{https://github.com/derekbeaton/Workshops/tree/master/Misc/R_RStudio_Workflow}
-    \end{itemize}
-  \end{itemize}
-\item
-  Python, D3 (JavaScript), SQL, Shiny, LaTeX, Git/SVN, HTML/CSS, and so
-  much more.
-\end{itemize}
 
 \end{frame}
 
@@ -322,21 +318,19 @@ setup}\label{part-2-rstudio-project-setup}}
 
 \end{frame}
 
-\begin{frame}
+\begin{frame}{RStudio Resources}
+\protect\hypertarget{rstudio-resources-1}{}
 
 \includegraphics{../external/images/rstudio_dot_com_2_learning.PNG}
 
 \end{frame}
 
-\begin{frame}
+\begin{frame}{RStudio Resources}
+\protect\hypertarget{rstudio-resources-2}{}
 
 \includegraphics{../external/images/rstudio_dot_com_3_cheats.PNG}
 
 \end{frame}
-
-\hypertarget{project-and-environment-setup}{%
-\subsection{Project and Environment
-Setup}\label{project-and-environment-setup}}
 
 \begin{frame}{RStudio Setup}
 \protect\hypertarget{rstudio-setup-1}{}
@@ -344,14 +338,26 @@ Setup}\label{project-and-environment-setup}}
 \begin{itemize}[<+->]
 \tightlist
 \item
-  See \url{https://jennybc.github.io/2014-05-12-ubc/r-setup.html} for a
-  detailed guide
+  For set up:
+  \url{https://jennybc.github.io/2014-05-12-ubc/r-setup.html}
+\item
+  For R projects, see
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    \url{https://support.rstudio.com/hc/en-us/articles/200526207-Using-Projects}
+  \item
+    \url{https://r4ds.had.co.nz/workflow-projects.html}
+  \end{itemize}
 \end{itemize}
 
 \end{frame}
 
-\begin{frame}{For safety \& collaboration}
-\protect\hypertarget{for-safety-collaboration}{}
+\begin{frame}{R Projects}
+\protect\hypertarget{r-projects}{}
+
+Compartmentalize \& collaborate:
 
 \begin{itemize}[<+->]
 \tightlist
@@ -365,57 +371,86 @@ Setup}\label{project-and-environment-setup}}
     multiple contexts, each with their own working directory, workspace,
     history, and source documents.''
   \item
-    Allows for return to key states
-  \end{itemize}
-\item
-  .Rproj files
-
-  \begin{itemize}[<+->]
-  \tightlist
+    specific projects
   \item
-    Basically a text file with some parameters for start up
-    \includegraphics[width=0.5\textwidth,height=\textheight]{../external/images/Rproj_inside.PNG}
+    R package development
+  \item
+    cloning from (e.g., Git) repos
   \end{itemize}
 \end{itemize}
 
 \end{frame}
 
-\begin{frame}{Projects}
-\protect\hypertarget{projects}{}
+\begin{frame}
 
-Create a new one for:
-
-\begin{itemize}[<+->]
-\tightlist
-\item
-  a folder
-\item
-  packages
-\item
-  (and from) git repos:
-  \includegraphics[width=0.75\textwidth,height=\textheight]{../external/images/setup_2_rstudio_project.PNG}
-\end{itemize}
+\includegraphics[width=0.75\textwidth,height=\textheight]{../external/images/setup_2_rstudio_project.PNG}
 
 \end{frame}
+
+\begin{frame}
+
+.Rproj files: just a text file with some parameters for start up
+\includegraphics[width=0.5\textwidth,height=\textheight]{../external/images/Rproj_inside.PNG}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{../external/images/this_project.PNG}
+
+\end{frame}
+
+\hypertarget{git}{%
+\subsection{Git}\label{git}}
 
 \begin{frame}{What is Git?}
 \protect\hypertarget{what-is-git}{}
 
-SOMETHING
+\begin{itemize}[<+->]
+\tightlist
+\item
+  Version control (like SVN, a.k.a. subversion)
+\item
+  Traditionally for developers/software
+\item
+  Now more common to ``track changes''
+\end{itemize}
 
 \end{frame}
 
-\begin{frame}{Git \& Projects}
-\protect\hypertarget{git-projects}{}
+\begin{frame}
+
+\includegraphics[width=0.9\textwidth,height=\textheight]{../external/images/DB_GIT.PNG}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics[width=0.9\textwidth,height=\textheight]{../external/images/DB_GSVD_History.PNG}
+
+\end{frame}
+
+\begin{frame}{Github}
+\protect\hypertarget{github}{}
 
 \begin{itemize}[<+->]
 \tightlist
 \item
-  Git
+  As students: You can get free pro accounts
 \item
-  Download git and link executable within RStudio
-  \includegraphics[width=0.6\textwidth,height=\textheight]{../external/images/setup_1_rstudio_git.PNG}
+  And you really really should
+\item
+  \url{https://education.github.com/pack}
 \end{itemize}
+
+\end{frame}
+
+\begin{frame}{Git \& R Projects}
+\protect\hypertarget{git-r-projects}{}
+
+Download git and link executable within RStudio
+
+\includegraphics[width=0.6\textwidth,height=\textheight]{../external/images/setup_1_rstudio_git.PNG}
 
 \end{frame}
 
@@ -429,9 +464,479 @@ SOMETHING
 \item
   \texttt{**} before each extentions will match directories anywhere in
   the repo
+
+  \includegraphics[width=0.75\textwidth,height=\textheight]{../external/images/gitignore.PNG}
 \end{itemize}
 
-\includegraphics[width=0.75\textwidth,height=\textheight]{../external/images/gitignore.PNG}
+\end{frame}
+
+\begin{frame}{Git \& R}
+\protect\hypertarget{git-r}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  The premeire Git \& R resource: \url{https://happygitwithr.com/}
+\end{itemize}
+
+\end{frame}
+
+\hypertarget{r}{%
+\subsection{R}\label{r}}
+
+\begin{frame}{R}
+
+\end{frame}
+
+\begin{frame}{What is R?}
+\protect\hypertarget{what-is-r}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  R is general purpose programming
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Design around \& for statistics
+  \item
+    ``for and by statisticians''
+  \end{itemize}
+\item
+  R is a collection of tools
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Pre-packaged software at your disposal
+  \end{itemize}
+\item
+  R is free (as in beer and speech)
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    No cost, no restrictions
+  \item
+    E.g., Microsoft (nee Revolution) R
+  \end{itemize}
+\item
+  R is a functional language
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Mathematical functions
+  \item
+    Pass expressions and functions to and from functions
+  \item
+    and Turing Complete
+  \end{itemize}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]{Assignment}
+\protect\hypertarget{assignment}{}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# allowed but not preferred}
+\NormalTok{a_variable =}\StringTok{ }\DecValTok{10} \OperatorTok{+}\StringTok{ }\DecValTok{1}
+\CommentTok{# preferred}
+\NormalTok{a_variable <-}\StringTok{ }\DecValTok{10} \OperatorTok{+}\StringTok{ }\DecValTok{1}
+\CommentTok{# a bonus}
+\DecValTok{10} \OperatorTok{+}\StringTok{ }\DecValTok{1}\NormalTok{ ->}\StringTok{ }\NormalTok{a_variable}
+\end{Highlighting}
+\end{Shaded}
+
+\end{frame}
+
+\begin{frame}[fragile]{Dots}
+\protect\hypertarget{dots}{}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# allowed but not preferred}
+\NormalTok{a.variable =}\StringTok{ }\DecValTok{10} \OperatorTok{+}\StringTok{ }\DecValTok{1}
+  \CommentTok{## dots have 2 meanings in R, }
+    \CommentTok{## with a 3rd in the tidyverse}
+
+\CommentTok{# preferred}
+\NormalTok{a_variable <-}\StringTok{ }\DecValTok{10} \OperatorTok{+}\StringTok{ }\DecValTok{1}
+\end{Highlighting}
+\end{Shaded}
+
+\end{frame}
+
+\begin{frame}[fragile]{``Reserved'' characters}
+\protect\hypertarget{reserved-characters}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  \texttt{c}, \texttt{q}, \texttt{t}, \texttt{C}, \texttt{D},
+  \texttt{I}, \texttt{F}, and \texttt{T} (via
+  \url{https://www.johndcook.com/blog/r_language_for_programmers/})
+\item
+  Except that these can be redefined
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{R: Data Structures}
+\protect\hypertarget{r-data-structures}{}
+
+\end{frame}
+
+\begin{frame}{R: Data Structures}
+\protect\hypertarget{r-data-structures-1}{}
+
+\includegraphics{../external/images/rstudio_datastructs.png} See
+\url{https://rstudio-education.github.io/hopr/r-objects.html}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{../external/images/VECTOR.png}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{../external/images/MATRIX.png}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{../external/images/ARRAY_3.png}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{../external/images/ARRAY_4.png}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{../external/images/LIST.png}
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{../external/images/DF.png}
+
+\end{frame}
+
+\begin{frame}[fragile]{R: Data Structures}
+\protect\hypertarget{r-data-structures-2}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  list{[}{[}1{]}{]} or list\$\texttt{name}
+\item
+  data.frame{[}{[}1{]}{]}{[}1{]} or data.frame{[}1,1{]} or
+  data.frame\$\texttt{name}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]{R: Data types}
+\protect\hypertarget{r-data-types}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  All of them are here:
+  \url{https://cran.r-project.org/doc/manuals/r-release/R-lang.html\#Objects}
+\item
+  The most common you'll use:
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    numeric
+
+    \begin{itemize}[<+->]
+    \tightlist
+    \item
+      real or decimal
+    \item
+      Includes \texttt{NaN}, \texttt{Inf}, \texttt{-Inf}
+    \end{itemize}
+  \item
+    character
+  \item
+    logical
+
+    \begin{itemize}[<+->]
+    \tightlist
+    \item
+      includes \texttt{NA}, \texttt{T}, \texttt{TRUE}, \texttt{F},
+      \texttt{FALSE}
+    \end{itemize}
+  \end{itemize}
+\item
+  factor
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    factors are usually not your friends
+  \item
+    with \texttt{read.csv()}: \texttt{stringsAsFactors\ =\ F} or convert
+    these
+
+    \begin{itemize}[<+->]
+    \tightlist
+    \item
+      To be phased out; \texttt{stringsAsFactors\ =\ F} as default in R
+      4.0.0
+    \end{itemize}
+  \item
+    or use \texttt{tibble}s in the tidyverse
+  \end{itemize}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]{R: factor disasters}
+\protect\hypertarget{r-factor-disasters}{}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{a_numeric_vector <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{-2}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{1}\NormalTok{)}
+\NormalTok{(a_numeric_vector }\OperatorTok{+}\StringTok{ }\DecValTok{1}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1]  4  1  2 -1  3  6  6  3  2
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{a_numeric_vector <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{-2}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{1}\NormalTok{)}
+\NormalTok{(a_numeric2factor_vector <-}\StringTok{ }\KeywordTok{as.factor}\NormalTok{(a_numeric_vector))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 3  0  1  -2 2  5  5  2  1 
+## Levels: -2 0 1 2 3 5
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{a_numeric_vector <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{-2}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{1}\NormalTok{)}
+\NormalTok{(a_numeric2factor_vector <-}\StringTok{ }\KeywordTok{as.factor}\NormalTok{(a_numeric_vector))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 3  0  1  -2 2  5  5  2  1 
+## Levels: -2 0 1 2 3 5
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(}\KeywordTok{as.numeric}\NormalTok{(a_numeric2factor_vector))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 5 2 3 1 4 6 6 4 3
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{a_numeric_vector <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{-2}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{1}\NormalTok{)}
+\NormalTok{(a_numeric2factor_vector <-}\StringTok{ }\KeywordTok{as.factor}\NormalTok{(a_numeric_vector))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 3  0  1  -2 2  5  5  2  1 
+## Levels: -2 0 1 2 3 5
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(}\KeywordTok{as.character}\NormalTok{(a_numeric2factor_vector))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "3"  "0"  "1"  "-2" "2"  "5"  "5"  "2"  "1"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{as.character}\NormalTok{(a_numeric2factor_vector)))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1]  3  0  1 -2  2  5  5  2  1
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}{Cheatsheet for base R}
+\protect\hypertarget{cheatsheet-for-base-r}{}
+
+\includegraphics{../external/images/r_cheatsheet_base.PNG} ``Base R''
+
+\end{frame}
+
+\begin{frame}[fragile]{Tidyverse}
+\protect\hypertarget{tidyverse}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  \texttt{tidyverse}: ``an opinionated collection of R packages designed
+  for data science {[}that{]} share an underlying design philosophy,
+  \textbf{grammar, and data structures.}''
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    A sublanguage or dialect
+  \end{itemize}
+\item
+  Strongly built around a style:
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    objects are nouns
+  \item
+    functions are verbs
+  \end{itemize}
+\item
+  Core packages:
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    \texttt{ggplot2}, \texttt{dplyr}, \texttt{tidyr}, \texttt{readr},
+    \texttt{tibble}, \texttt{stringr}, \texttt{purrr}
+  \item
+    \url{https://www.tidyverse.org/}
+  \end{itemize}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{tidyverse cheatsheet}
+\protect\hypertarget{tidyverse-cheatsheet}{}
+
+\includegraphics{../external/images/r_cheatsheet_tidy.PNG}
+
+\end{frame}
+
+\hypertarget{rmarkdown}{%
+\subsection{RMarkdown}\label{rmarkdown}}
+
+\begin{frame}{RMarkdown}
+\protect\hypertarget{rmarkdown-1}{}
+
+What it is \& why to use it \url{https://bookdown.org/yihui/rmarkdown/}
+
+\end{frame}
+
+\begin{frame}{RMarkdown}
+\protect\hypertarget{rmarkdown-2}{}
+
+Examples
+
+\end{frame}
+
+\begin{frame}[fragile]{RMarkdown}
+\protect\hypertarget{rmarkdown-3}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  Fancy helpers:
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    \texttt{kable} \& \texttt{kableExtra}
+  \item
+    \texttt{grid} \& \texttt{gridExtra}
+  \end{itemize}
+\item
+  Deviations for:
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    \texttt{LaTeX}
+  \item
+    \texttt{Python}
+  \end{itemize}
+\item
+  Tying it all together through here
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]{RMarkdown Don'ts}
+\protect\hypertarget{rmarkdown-donts}{}
+
+\begin{itemize}[<+->]
+\tightlist
+\item
+  Don't hardcode values or absolute file paths
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    see \texttt{here::here()}
+  \item
+    Use projects (\texttt{.Rproj})
+  \end{itemize}
+\item
+  Don't do complicated or expensive stuff
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    Database queries
+  \item
+    Resampling
+  \end{itemize}
+\item
+  avoid \texttt{eval=FALSE}
+
+  \begin{itemize}[<+->]
+  \tightlist
+  \item
+    except to help illustrate code
+  \end{itemize}
+\end{itemize}
 
 \end{frame}
 
