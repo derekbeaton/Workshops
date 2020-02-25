@@ -3,7 +3,7 @@ title: "Example Report"
 subtitle: "TTC street car delays: Jan 2019"
 author: "Derek Beaton"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
-output: html_document
+output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
