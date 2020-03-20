@@ -7,7 +7,7 @@ DataExplorer::plot_bar(ttc_streetcar_delays_Jan2019)
 
 ## now let's look at the continuous variables, and get a sense of what they tell us
 summarytools::descr(ttc_streetcar_delays_Jan2019[,c("Delay","Gap")],
-      stats = c("mean", "sd", "min", "med", "max"))
+      stats = c("mean", "sd"))
 
 
 ## and now let's do that by a grouping factor: day of the week
