@@ -5,8 +5,8 @@ Almost everything you need to know about Partial Least Squares
 
 This is a short workshop on Partial Least Squares (PLS) to provide about
 90% of all things you could possibly need to know about PLS (I’ve made
-up the 90%, but it feels about right). This workshop is **reboot** of a
-previous one, which you can find \[here\]
+up the 90%, but it feels about right). This workshop is a **reboot** of
+a previous one, which you can find \[here\]
 (<https://github.com/derekbeaton/Workshops/tree/master/RTC/Oct2017>).
 This version of the PLS workshop is:
 
